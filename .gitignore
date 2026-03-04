@@ -1,0 +1,27 @@
+# Environment
+.env
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Audio files 
+*.wav
+*.mp3
+
+# Streamlit
+.streamlit/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary Scripts & Uploads
+generate_templates.py
+stitch_ai_analysis_in_progress/
