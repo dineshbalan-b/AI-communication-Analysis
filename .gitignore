@@ -6,7 +6,7 @@
 __pycache__/
 *.pyc
 
-# Audio files
+# Audio files 
 *.wav
 *.mp3
 
