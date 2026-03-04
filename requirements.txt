@@ -1,11 +1,13 @@
 streamlit
 streamlit-webrtc
-av
+openai
+python-dotenv
 numpy
+pandas
 librosa
 soundfile
 noisereduce
 moviepy
-webrtcvad
 pydub
 scipy
+av
