@@ -1,0 +1,183 @@
+<html class="dark"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#13a4ec",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101c22",
+          },
+          fontFamily: { "display": ["Lexend"] }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex h-screen overflow-hidden">
+<aside class="w-72 bg-slate-100 dark:bg-background-dark border-r border-slate-200 dark:border-primary/20 flex flex-col justify-between p-4 shrink-0">
+<div class="flex items-center gap-3 px-2">
+<div class="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">graphic_eq</span>
+</div>
+<div>
+<h1 class="text-slate-900 dark:text-slate-100 text-base font-bold">SpeakClear</h1>
+<p class="text-slate-500 text-xs font-medium" id="sidebar-username">Verbal Clarity AI</p>
+</div>
+</div>
+<nav class="mt-8 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary text-white" href="/assessment">
+<span class="material-symbols-outlined">mic</span>
+<span class="text-sm font-medium">Assessments</span>
+</a>
+</nav>
+<div class="mt-auto">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-red-500 cursor-pointer" onclick="logout()">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-sm font-medium">Logout</span>
+</a>
+</div>
+</aside>
+
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-8">
+<div class="max-w-5xl mx-auto space-y-12" id="assessment-container">
+<header>
+<h2 class="text-3xl font-black">Assessment Selection &amp; Setup</h2>
+<p class="text-slate-500">Choose a topic to analyze your verbal clarity.</p>
+</header>
+<section>
+<h3 class="text-xl font-bold flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">auto_awesome</span> Generated Topics
+</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="topic-container"></div>
+</section>
+
+<section class="pb-20">
+    <div class="bg-primary/10 border border-primary text-primary p-4 rounded-xl hidden mb-4" id="selected-topic-display">
+        <strong>Selected Topic:</strong> <span id="topic-text">None</span>
+    </div>
+    <div class="bg-slate-900/50 border border-primary/10 rounded-2xl p-8">
+        <input type="file" id="audio-file" style="display:none;" accept="audio/*">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="cursor-pointer p-6 rounded-xl border-2 border-dashed border-primary/20 bg-primary/5 hover:border-primary text-center" onclick="document.getElementById('audio-file').click()">
+            <span class="material-symbols-outlined text-3xl text-primary">cloud_upload</span>
+            <h4 class="text-lg font-bold mb-2">Upload File</h4>
+            <p id="file-name" class="text-xs text-primary font-bold hidden"></p>
+        </div>
+        <div class="flex flex-col justify-center">
+            <button id="submit-btn" class="w-full py-4 px-4 bg-primary text-white font-bold text-lg rounded-xl disabled:opacity-50" disabled>
+                Submit for Analysis
+            </button>
+            <p id="upload-status" class="text-center font-bold text-primary mt-4 hidden">Analyzing audio... please wait.</p>
+        </div>
+    </div>
+</section>
+</div>
+
+<div id="results-container" class="max-w-5xl mx-auto space-y-12 hidden">
+    <header class="flex justify-between items-center">
+        <h2 class="text-3xl font-black">Your Analysis Results</h2>
+        <button class="bg-slate-800 text-white px-4 py-2 rounded-lg" onclick="location.reload()">New Assessment</button>
+    </header>
+    <div class="grid grid-cols-3 gap-6">
+        <div class="bg-slate-800 p-6 rounded-xl text-center">
+            <p class="text-slate-400 uppercase text-xs font-bold">Overall Score</p>
+            <h1 class="text-5xl font-black text-primary" id="res-overall"></h1>
+        </div>
+        <div class="bg-slate-800 p-6 rounded-xl text-center">
+            <p class="text-slate-400 uppercase text-xs font-bold">Words / Min</p>
+            <h1 class="text-5xl font-black text-white" id="res-wpm"></h1>
+        </div>
+        <div class="bg-slate-800 p-6 rounded-xl text-center">
+            <p class="text-slate-400 uppercase text-xs font-bold">Fillers</p>
+            <h1 class="text-5xl font-black text-amber-500" id="res-fillers"></h1>
+        </div>
+    </div>
+    <div class="bg-slate-800 p-8 rounded-xl border border-slate-700">
+        <h3 class="text-xl font-bold mb-4">Extracted Transcript</h3>
+        <p id="res-transcript" class="text-slate-300 italic mb-6 border-l-4 border-slate-600 pl-4"></p>
+        <h3 class="text-xl font-bold mb-4">AI Feedback</h3>
+        <p id="res-feedback" class="text-slate-300"></p>
+        <h4 class="font-bold text-primary mt-6 mb-2">Suggested Improvements:</h4>
+        <p id="res-improvements" class="text-slate-300"></p>
+    </div>
+</div>
+</main>
+</div>
+
+<script>
+    const topics = ["Biggest achievement.", "A past failure.", "Why us?", "Technical project discussed."];
+    let selectedTopic = null; let selectedFile = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const un = localStorage.getItem("username");
+        if (!un) { window.location.href = "/login"; }
+        document.getElementById("sidebar-username").innerText = un;
+
+        const cont = document.getElementById("topic-container");
+        topics.forEach(t => {
+            const btn = document.createElement("button");
+            btn.className = "p-4 rounded-xl border border-primary/20 bg-primary/5 hover:border-primary text-left font-medium";
+            btn.innerText = t;
+            btn.onclick = () => {
+                selectedTopic = t;
+                document.getElementById("topic-text").innerText = t;
+                document.getElementById("selected-topic-display").classList.remove("hidden");
+                if (selectedFile) document.getElementById("submit-btn").disabled = false;
+            };
+            cont.appendChild(btn);
+        });
+    });
+
+    document.getElementById("audio-file").addEventListener("change", (e) => {
+        selectedFile = e.target.files[0];
+        if (selectedFile) {
+            document.getElementById("file-name").innerText = selectedFile.name;
+            document.getElementById("file-name").classList.remove("hidden");
+        }
+        if (selectedTopic && selectedFile) document.getElementById("submit-btn").disabled = false;
+    });
+
+    document.getElementById("submit-btn").addEventListener("click", async () => {
+        document.getElementById("submit-btn").disabled = true;
+        document.getElementById("upload-status").classList.remove("hidden");
+
+        const fd = new FormData();
+        fd.append("file", selectedFile);
+        fd.append("username", localStorage.getItem("username"));
+        fd.append("topic", selectedTopic);
+
+        try {
+            const res = await fetch("/api/upload", { method: "POST", body: fd });
+            const data = await res.json();
+            if (res.ok) {
+                document.getElementById("assessment-container").classList.add("hidden");
+                document.getElementById("results-container").classList.remove("hidden");
+                document.getElementById("res-overall").innerText = data.final_score + "/100";
+                document.getElementById("res-wpm").innerText = data.metrics.wpm;
+                document.getElementById("res-fillers").innerText = data.metrics.filler_count;
+                document.getElementById("res-transcript").innerText = '"' + data.transcript + '"';
+                document.getElementById("res-feedback").innerText = data.evaluation.final_feedback;
+                document.getElementById("res-improvements").innerText = data.evaluation.improvements;
+            } else {
+                alert("Error: " + data.detail); 
+                document.getElementById("submit-btn").disabled = false;
+                document.getElementById("upload-status").classList.add("hidden");
+            }
+        } catch(e) {
+            alert("Network error."); 
+            document.getElementById("submit-btn").disabled = false;
+            document.getElementById("upload-status").classList.add("hidden");
+        }
+    });
+
+    function logout() { localStorage.removeItem("username"); window.location.href = "/login"; }
+</script>
+</body></html>
