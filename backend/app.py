@@ -4,9 +4,8 @@ import tempfile
 from pathlib import Path
 
 from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File, Form, Request
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -47,29 +46,14 @@ init_evaluation_db()
 
 app = FastAPI(title="SpeakClear AI API")
 
-# Setup templates and static files (if static folder exists)
-templates = Jinja2Templates(directory="templates")
-# app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# -------------------------------
-# UI Routes (Serving HTML)
-# -------------------------------
-
-@app.get("/", response_class=HTMLResponse)
-async def home_page(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
-
-@app.get("/login", response_class=HTMLResponse)
-async def login_page(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
-
-@app.get("/dashboard", response_class=HTMLResponse)
-async def dashboard_page(request: Request):
-    return templates.TemplateResponse("code.html", {"request": request})
-
-@app.get("/assessment", response_class=HTMLResponse)
-async def assessment_page(request: Request):
-    return templates.TemplateResponse("assessment.html", {"request": request})
+# Configure CORS to allow the React/Next.js frontend to communicate securely
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8000", "http://127.0.0.1:8000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # -------------------------------
 # API Routes
