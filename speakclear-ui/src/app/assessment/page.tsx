@@ -199,8 +199,8 @@ export default function Assessment() {
                                     whileHover={{ y: -4, borderColor: 'rgb(19, 164, 236, 0.4)' }}
                                     onClick={() => setSelectedTopic(topic.name)}
                                     className={`flex items-center gap-4 p-5 rounded-2xl border transition-all text-left group ${selectedTopic === topic.name
-                                            ? 'bg-[#13a4ec]/10 border-[#13a4ec] shadow-[0_0_25px_rgba(19,164,236,0.15)]'
-                                            : 'bg-[#121820] border-[#212E3B] hover:bg-white/[0.02]'
+                                        ? 'bg-[#13a4ec]/10 border-[#13a4ec] shadow-[0_0_25px_rgba(19,164,236,0.15)]'
+                                        : 'bg-[#121820] border-[#212E3B] hover:bg-white/[0.02]'
                                         }`}
                                 >
                                     <div className={`h-11 w-11 rounded-xl flex items-center justify-center transition-all ${selectedTopic === topic.name ? 'bg-[#13a4ec] text-white shadow-lg shadow-[#13a4ec]/30' : 'bg-white/5 text-slate-400 group-hover:text-white'}`}>
@@ -232,8 +232,8 @@ export default function Assessment() {
                                         animate={{ opacity: 1, scale: 1 }}
                                         transition={{ delay: 0.5 + idx * 0.1 }}
                                         className={`relative group flex flex-col items-center text-center p-10 rounded-[32px] border-2 transition-all cursor-pointer ${method.recommended
-                                                ? 'border-[#13a4ec] bg-[#13a4ec]/5 shadow-[0_20px_60px_rgba(19,164,236,0.08)]'
-                                                : 'border-[#212E3B] border-dashed bg-white/[0.02] hover:bg-white/[0.04] hover:border-[#13a4ec]/30'
+                                            ? 'border-[#13a4ec] bg-[#13a4ec]/5 shadow-[0_20px_60px_rgba(19,164,236,0.08)]'
+                                            : 'border-[#212E3B] border-dashed bg-white/[0.02] hover:bg-white/[0.04] hover:border-[#13a4ec]/30'
                                             }`}
                                     >
                                         {method.recommended && (
@@ -270,7 +270,16 @@ export default function Assessment() {
                                                 </div>
                                             </label>
                                         ) : (
-                                            <button className={`w-full py-4 text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all ${method.recommended ? 'bg-[#13a4ec] hover:bg-[#108CCC] text-white shadow-xl shadow-[#13a4ec]/30 scale-105 hover:scale-110' : 'bg-white/5 border border-white/5 hover:bg-white/10 text-white'}`}>
+                                            <button
+                                                onClick={() => {
+                                                    if (!selectedTopic) {
+                                                        setUploadError("Please select a topic first.");
+                                                        return;
+                                                    }
+                                                    router.push(`/assessment/recording?topic=${encodeURIComponent(selectedTopic)}`);
+                                                }}
+                                                className={`w-full py-4 text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all ${method.recommended ? 'bg-[#13a4ec] hover:bg-[#108CCC] text-white shadow-xl shadow-[#13a4ec]/30 scale-105 hover:scale-110' : 'bg-white/5 border border-white/5 hover:bg-white/10 text-white'}`}
+                                            >
                                                 {method.action}
                                             </button>
                                         )}
