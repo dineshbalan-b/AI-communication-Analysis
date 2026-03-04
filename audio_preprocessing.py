@@ -1,0 +1,80 @@
+import librosa
+import numpy as np
+import soundfile as sf
+import noisereduce as nr
+from moviepy.editor import VideoFileClip
+from pydub import AudioSegment
+from pydub.effects import compress_dynamic_range
+import os
+
+
+# --------------------------------
+# Extract Audio from Video
+# --------------------------------
+def extract_audio_from_video(video_path, output_audio_path="extracted_audio.wav"):
+    video = VideoFileClip(video_path)
+    video.audio.write_audiofile(output_audio_path, verbose=False, logger=None)
+    return output_audio_path
+
+
+# --------------------------------
+# Energy-Based VAD
+# --------------------------------
+def apply_energy_vad(y, sr, frame_length=2048, hop_length=512, energy_threshold=0.02):
+
+    energy = librosa.feature.rms(
+        y=y, frame_length=frame_length, hop_length=hop_length
+    )[0]
+
+    speech_frames = energy > energy_threshold
+
+    speech_indices = librosa.frames_to_samples(
+        np.where(speech_frames)[0], hop_length=hop_length
+    )
+
+    speech_audio = []
+
+    for idx in speech_indices:
+        end = idx + hop_length
+        speech_audio.extend(y[idx:end])
+
+    speech_audio = np.array(speech_audio)
+
+    speech_ratio = np.sum(speech_frames) / len(speech_frames) if len(speech_frames) > 0 else 0
+
+    return speech_audio
+
+
+# --------------------------------
+# Main Preprocessing Function
+# --------------------------------
+def preprocess_audio(input_path):
+
+    # Load audio
+    y, sr = librosa.load(input_path, sr=16000, mono=True)
+
+    # Normalize
+    y = librosa.util.normalize(y)
+
+    # Noise reduction
+    y = nr.reduce_noise(y=y, sr=sr)
+
+      # Trim only start & end silence
+    y_trimmed, _ = librosa.effects.trim(y, top_db=12)
+
+    # Save temporary VAD audio
+    temp_vad_path = "temp_vad.wav"  
+    sf.write(temp_vad_path, y_trimmed, sr)
+
+    # Dynamic Range Compression
+    audio = AudioSegment.from_file(temp_vad_path)
+    compressed_audio = compress_dynamic_range(audio)
+
+    final_path = "processed_audio.wav"
+    compressed_audio.export(final_path, format="wav")
+
+    # Remove temporary file
+    if os.path.exists(temp_vad_path):
+        os.remove(temp_vad_path)
+
+    return final_path
