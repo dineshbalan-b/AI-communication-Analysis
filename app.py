@@ -5,7 +5,10 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from openai import OpenAI
-
+from auth import create_user, verify_user
+from auth import init_user_db
+from database import init_evaluation_db
+from database import save_evaluation, get_user_progress
 from audio_preprocessing import preprocess_audio
 from communication_analysis import (
     analyze_audio,
@@ -36,6 +39,33 @@ client = OpenAI(
     api_key=API_KEY,
     base_url=BASE_URL
 )
+init_user_db()
+init_evaluation_db()
+st.sidebar.title("Login / Register")
+
+auth_mode = st.sidebar.selectbox("Select", ["Login", "Register"])
+
+username = st.sidebar.text_input("Username")
+password = st.sidebar.text_input("Password", type="password")
+
+if auth_mode == "Register":
+    if st.sidebar.button("Create Account"):
+        if create_user(username, password):
+            st.sidebar.success("Account created!")
+        else:
+            st.sidebar.error("Username already exists.")
+
+if auth_mode == "Login":
+    if st.sidebar.button("Login"):
+        if verify_user(username, password):
+            st.session_state.logged_in = True
+            st.session_state.username = username
+            st.sidebar.success("Logged in!")
+        else:
+            st.sidebar.error("Invalid credentials")
+if "logged_in" not in st.session_state or not st.session_state.logged_in:
+    st.warning("Please login to continue.")
+    st.stop()
 
 # -------------------------------
 # UI Setup
@@ -180,6 +210,23 @@ if st.button("Submit Response"):
 
     st.subheader("🔊 Audio Feedback")
     st.audio(feedback_audio_path)
+    save_evaluation(
+    st.session_state.username,
+    st.session_state.current_topic,
+    transcript,
+    hybrid_score,
+    llm_scores["grammar"],
+    llm_scores["vocabulary"],
+    llm_scores["clarity"],
+    llm_scores["confidence"]
+)
+    import pandas as pd
 
+progress_data = get_user_progress(st.session_state.username)
+
+if progress_data:
+    df = pd.DataFrame(progress_data, columns=["Date", "Score"])
+    st.subheader("📈 Your Progress")
+    st.line_chart(df.set_index("Date"))
     if os.path.exists(temp_input_path):
         os.remove(temp_input_path)
