@@ -1,27 +1,45 @@
 # Environment
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 .venv/
 
 # Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
 
-# Audio files 
+# Audio/Video files 
 *.wav
 *.mp3
-
-# Streamlit
-.streamlit/
-
-# OS
-.DS_Store
-Thumbs.db
+*.mp4
+*.m4a
 
 # Databases
 *.db
 *.sqlite
 *.sqlite3
 
+# Node / Frontend
+node_modules/
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
 # Temporary Scripts & Uploads
 generate_templates.py
 stitch_ai_analysis_in_progress/
+temp_audio/
+uploads/

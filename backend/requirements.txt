@@ -1,12 +1,9 @@
 fastapi
 uvicorn
 python-multipart
-jinja2
-
 openai
 python-dotenv
 numpy
-pandas
 librosa
 soundfile
 noisereduce
