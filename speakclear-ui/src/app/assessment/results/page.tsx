@@ -79,140 +79,201 @@ export default function ResultsPage() {
                         </button>
                     </div>
 
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
-                        {stats.map((stat, idx) => (
-                            <motion.div
-                                key={stat.label}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: idx * 0.1 }}
-                                className="bg-[#121820]/40 border border-white/5 rounded-3xl p-8 relative group overflow-hidden"
-                            >
-                                <div className="flex items-center justify-between mb-6">
-                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</span>
-                                    <span className={`material-symbols-outlined ${stat.iconColor} text-xl opacity-50 group-hover:opacity-100 transition-opacity`}>
-                                        {stat.icon}
-                                    </span>
-                                </div>
-                                <div className="flex items-baseline gap-1 mb-4">
-                                    <span className="text-5xl font-black text-white tracking-tighter tabular-nums">{stat.value}</span>
-                                    {stat.sub && <span className="text-lg font-bold text-slate-500">{stat.sub}</span>}
-                                </div>
-                                <div className={`text-[10px] font-black ${stat.trendColor} uppercase tracking-widest flex items-center gap-2`}>
-                                    <span className="material-symbols-outlined text-sm">info</span>
-                                    {stat.trend}
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
+                    {results?.no_speech ? (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="bg-[#121820]/60 border border-white/5 rounded-[40px] p-16 md:p-24 text-center relative overflow-hidden backdrop-blur-3xl shadow-2xl"
+                        >
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-bl-full blur-[80px] pointer-events-none" />
+                            <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#13a4ec]/5 rounded-tr-full blur-[80px] pointer-events-none" />
 
-                    <div className="flex flex-col xl:grid xl:grid-cols-12 gap-8">
-                        {/* Left Column: Metrics and Transcript */}
-                        <div className="col-span-5 space-y-8">
-                            <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                className="bg-[#121820]/40 border border-white/5 rounded-[32px] p-8 shadow-xl"
-                            >
-                                <div className="flex items-center gap-3 mb-10">
-                                    <span className="material-symbols-outlined text-[#13a4ec]">bar_chart</span>
-                                    <h3 className="text-lg font-black text-white tracking-tight">Metric Breakdown</h3>
+                            <div className="relative z-10 flex flex-col items-center">
+                                <div className="w-24 h-24 bg-amber-500/10 text-amber-500 rounded-3xl flex items-center justify-center mb-10 border border-amber-500/20 shadow-[0_0_30px_rgba(245,158,11,0.2)]">
+                                    <span className="material-symbols-outlined text-5xl">mic_off</span>
                                 </div>
 
-                                <div className="space-y-10">
-                                    {breakdowns.map((m) => (
-                                        <div key={m.label}>
-                                            <div className="flex items-center justify-between mb-3">
-                                                <span className="text-[13px] font-bold text-slate-300">{m.label}</span>
-                                                <span className="text-xs font-black text-white">{m.value}%</span>
-                                            </div>
-                                            <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                                <motion.div
-                                                    initial={{ width: 0 }}
-                                                    animate={{ width: `${m.value}%` }}
-                                                    transition={{ duration: 1, delay: 0.5 }}
-                                                    className={`h-full ${m.color} rounded-full`}
-                                                />
-                                            </div>
-                                        </div>
-                                    ))}
+                                <h2 className="text-3xl md:text-4xl font-black text-white mb-6 tracking-tight italic">No Speech Detected</h2>
+
+                                <p className="text-slate-400 font-medium text-lg max-w-xl mx-auto mb-12 leading-relaxed italic">
+                                    "Your silence is powerful, but we need to hear your voice to provide an analysis."
+                                </p>
+
+                                <div className="bg-white/[0.03] border border-white/5 p-8 rounded-3xl text-left max-w-lg w-full mb-12 backdrop-blur-sm">
+                                    <h4 className="text-[10px] font-black text-[#13a4ec] uppercase tracking-[0.2em] mb-4">Troubleshooting</h4>
+                                    <ul className="space-y-3">
+                                        <li className="flex items-start gap-3 text-sm text-slate-300">
+                                            <span className="material-symbols-outlined text-xs text-amber-500 mt-1">check_circle</span>
+                                            Ensure your microphone is correctly plugged in.
+                                        </li>
+                                        <li className="flex items-start gap-3 text-sm text-slate-300">
+                                            <span className="material-symbols-outlined text-xs text-amber-500 mt-1">check_circle</span>
+                                            Check if the browser has permission to access your mic.
+                                        </li>
+                                        <li className="flex items-start gap-3 text-sm text-slate-300">
+                                            <span className="material-symbols-outlined text-xs text-amber-500 mt-1">check_circle</span>
+                                            Try to speak clearly and directly into the device.
+                                        </li>
+                                    </ul>
                                 </div>
 
-                                <div className="mt-16 pt-10 border-t border-white/5">
-                                    <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6">Detected Transcript</h4>
-                                    <div className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl h-48 overflow-y-auto">
-                                        <p className="text-sm text-slate-400 leading-relaxed italic">
-                                            "{results?.transcript || "Wait, no transcript was generated."}"
-                                        </p>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        </div>
-
-                        {/* Right Column: AI Feedback */}
-                        <div className="xl:col-span-7 space-y-8">
-                            <motion.div
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                className="bg-[#121820]/40 border border-white/5 rounded-[32px] p-10 shadow-xl"
-                            >
-                                <div className="flex items-center gap-4 mb-10">
-                                    <div className="w-12 h-12 bg-[#13a4ec]/10 rounded-2xl flex items-center justify-center text-[#13a4ec]">
-                                        <span className="material-symbols-outlined text-2xl">auto_awesome</span>
-                                    </div>
-                                    <div>
-                                        <h3 className="text-xl font-black text-white tracking-tight">AI Feedback & Suggestions</h3>
-                                        <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Tailored coaching summary</p>
-                                    </div>
-                                </div>
-
-                                <div className="bg-[#13a4ec]/5 border border-[#13a4ec]/20 rounded-[24px] p-8 mb-12 relative overflow-hidden">
-                                    <div className="absolute top-0 right-0 p-6 opacity-10">
-                                        <span className="material-symbols-outlined text-6xl text-[#13a4ec]">lightbulb</span>
-                                    </div>
-                                    <div className="flex items-center gap-3 mb-6 relative z-10">
-                                        <span className="material-symbols-outlined text-[#13a4ec] text-xl">tips_and_updates</span>
-                                        <h4 className="text-xs font-black text-[#13a4ec] uppercase tracking-[0.2em]">Summary Evaluation</h4>
-                                    </div>
-                                    <p className="text-slate-300 font-medium leading-relaxed relative z-10">
-                                        {evalData.final_feedback}
-                                    </p>
-                                </div>
-
-                                <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6">Coaching Advice</h4>
-                                <div className="bg-white/[0.02] border border-white/5 p-8 rounded-2xl">
-                                    <div className="flex gap-6">
-                                        <div className="w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center bg-emerald-500/10 text-emerald-500">
-                                            <span className="material-symbols-outlined text-xl">trending_up</span>
-                                        </div>
-                                        <div>
-                                            <h5 className="text-[15px] font-black text-white mb-2 tracking-tight">Areas to Focus On</h5>
-                                            <p className="text-sm text-slate-400 font-medium leading-relaxed whitespace-pre-line">
-                                                {evalData.improvements}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-col sm:flex-row items-center gap-4 mt-16 pt-10 border-t border-white/5">
+                                <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center">
                                     <button
-                                        onClick={() => window.print()}
-                                        className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest border border-white/5 transition-all flex items-center justify-center gap-3"
+                                        onClick={() => router.push('/assessment')}
+                                        className="w-full sm:w-auto px-10 py-5 bg-[#13a4ec] hover:bg-[#108CCC] text-white rounded-2xl flex items-center justify-center gap-3 text-[11px] font-black uppercase tracking-widest transition-all shadow-xl shadow-[#13a4ec]/20 active:scale-95"
                                     >
-                                        <span className="material-symbols-outlined text-lg">print</span>
-                                        Print Report
+                                        <span className="material-symbols-outlined text-xl">refresh</span>
+                                        Try New Recording
                                     </button>
                                     <button
                                         onClick={() => router.push('/dashboard')}
-                                        className="flex-1 py-4 bg-white text-[#0B0F15] hover:bg-slate-100 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3"
+                                        className="w-full sm:w-auto px-10 py-5 bg-white/5 hover:bg-white/10 text-white rounded-2xl flex items-center justify-center gap-3 text-[11px] font-black uppercase tracking-widest border border-white/5 transition-all"
                                     >
-                                        Finish Practice
+                                        <span className="material-symbols-outlined text-xl">dashboard</span>
+                                        Back to Dashboard
                                     </button>
                                 </div>
-                            </motion.div>
-                        </div>
-                    </div>
+                            </div>
+                        </motion.div>
+                    ) : (
+                        <>
+                            {/* Stats Grid */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
+                                {stats.map((stat, idx) => (
+                                    <motion.div
+                                        key={stat.label}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: idx * 0.1 }}
+                                        className="bg-[#121820]/40 border border-white/5 rounded-3xl p-8 relative group overflow-hidden"
+                                    >
+                                        <div className="flex items-center justify-between mb-6">
+                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</span>
+                                            <span className={`material-symbols-outlined ${stat.iconColor} text-xl opacity-50 group-hover:opacity-100 transition-opacity`}>
+                                                {stat.icon}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-baseline gap-1 mb-4">
+                                            <span className="text-5xl font-black text-white tracking-tighter tabular-nums">{stat.value}</span>
+                                            {stat.sub && <span className="text-lg font-bold text-slate-500">{stat.sub}</span>}
+                                        </div>
+                                        <div className={`text-[10px] font-black ${stat.trendColor} uppercase tracking-widest flex items-center gap-2`}>
+                                            <span className="material-symbols-outlined text-sm">info</span>
+                                            {stat.trend}
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+
+                            <div className="flex flex-col xl:grid xl:grid-cols-12 gap-8">
+                                {/* Left Column: Metrics and Transcript */}
+                                <div className="col-span-12 xl:col-span-5 space-y-8">
+                                    <motion.div
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        className="bg-[#121820]/40 border border-white/5 rounded-[32px] p-8 shadow-xl"
+                                    >
+                                        <div className="flex items-center gap-3 mb-10">
+                                            <span className="material-symbols-outlined text-[#13a4ec]">bar_chart</span>
+                                            <h3 className="text-lg font-black text-white tracking-tight">Metric Breakdown</h3>
+                                        </div>
+
+                                        <div className="space-y-10">
+                                            {breakdowns.map((m) => (
+                                                <div key={m.label}>
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        <span className="text-[13px] font-bold text-slate-300">{m.label}</span>
+                                                        <span className="text-xs font-black text-white">{m.value}%</span>
+                                                    </div>
+                                                    <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                                        <motion.div
+                                                            initial={{ width: 0 }}
+                                                            animate={{ width: `${m.value}%` }}
+                                                            transition={{ duration: 1, delay: 0.5 }}
+                                                            className={`h-full ${m.color} rounded-full`}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <div className="mt-16 pt-10 border-t border-white/5">
+                                            <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6">Detected Transcript</h4>
+                                            <div className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl h-48 overflow-y-auto">
+                                                <p className="text-sm text-slate-400 leading-relaxed italic">
+                                                    "{results?.transcript || "Wait, no transcript was generated."}"
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                </div>
+
+                                {/* Right Column: AI Feedback */}
+                                <div className="col-span-12 xl:col-span-7 space-y-8">
+                                    <motion.div
+                                        initial={{ opacity: 0, x: 20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        className="bg-[#121820]/40 border border-white/5 rounded-[32px] p-10 shadow-xl"
+                                    >
+                                        <div className="flex items-center gap-4 mb-10">
+                                            <div className="w-12 h-12 bg-[#13a4ec]/10 rounded-2xl flex items-center justify-center text-[#13a4ec]">
+                                                <span className="material-symbols-outlined text-2xl">auto_awesome</span>
+                                            </div>
+                                            <div>
+                                                <h3 className="text-xl font-black text-white tracking-tight">AI Feedback & Suggestions</h3>
+                                                <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Tailored coaching summary</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-[#13a4ec]/5 border border-[#13a4ec]/20 rounded-[24px] p-8 mb-12 relative overflow-hidden">
+                                            <div className="absolute top-0 right-0 p-6 opacity-10">
+                                                <span className="material-symbols-outlined text-6xl text-[#13a4ec]">lightbulb</span>
+                                            </div>
+                                            <div className="flex items-center gap-3 mb-6 relative z-10">
+                                                <span className="material-symbols-outlined text-[#13a4ec] text-xl">tips_and_updates</span>
+                                                <h4 className="text-xs font-black text-[#13a4ec] uppercase tracking-[0.2em]">Summary Evaluation</h4>
+                                            </div>
+                                            <p className="text-slate-300 font-medium leading-relaxed relative z-10">
+                                                {evalData.final_feedback}
+                                            </p>
+                                        </div>
+
+                                        <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6">Coaching Advice</h4>
+                                        <div className="bg-white/[0.02] border border-white/5 p-8 rounded-2xl">
+                                            <div className="flex gap-6">
+                                                <div className="w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center bg-emerald-500/10 text-emerald-500">
+                                                    <span className="material-symbols-outlined text-xl">trending_up</span>
+                                                </div>
+                                                <div>
+                                                    <h5 className="text-[15px] font-black text-white mb-2 tracking-tight">Areas to Focus On</h5>
+                                                    <p className="text-sm text-slate-400 font-medium leading-relaxed whitespace-pre-line">
+                                                        {evalData.improvements}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex flex-col sm:flex-row items-center gap-4 mt-16 pt-10 border-t border-white/5">
+                                            <button
+                                                onClick={() => window.print()}
+                                                className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest border border-white/5 transition-all flex items-center justify-center gap-3"
+                                            >
+                                                <span className="material-symbols-outlined text-lg">print</span>
+                                                Print Report
+                                            </button>
+                                            <button
+                                                onClick={() => router.push('/dashboard')}
+                                                className="flex-1 py-4 bg-white text-[#0B0F15] hover:bg-slate-100 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3"
+                                            >
+                                                <span className="material-symbols-outlined text-[11px] group-hover:scale-110 transition-transform">dashboard</span>
+                                                Finish Practice
+                                            </button>
+                                        </div>
+                                    </motion.div>
+                                </div>
+                            </div>
+                        </>
+                    )}
 
                     {/* Bottom CTA */}
                     <motion.div

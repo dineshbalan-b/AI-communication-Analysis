@@ -111,9 +111,13 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
         transcription, audio_metrics = await asyncio.gather(transcription_task, metrics_task)
         
         transcript = transcription.text.strip()
+        save_to_db = True
+        no_speech = False
         
         # Check for empty transcription or minimal content (e.g., just noise or 1-2 words)
         if not transcript or len(transcript) < 5:
+            save_to_db = False
+            no_speech = True
             text_metrics = {"wpm": 0, "filler_count": 0}
             llm_scores = {
                 "grammar": 0,
@@ -133,19 +137,20 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
             llm_scores = evaluate_with_llm(topic, transcript, audio_metrics, text_metrics)
             hybrid_score = compute_hybrid_score(rule_score, llm_scores)
 
-        # Save to DB
-        save_evaluation(
-            username, topic, transcript, hybrid_score,
-            llm_scores.get("grammar", 0),
-            llm_scores.get("vocabulary", 0),
-            llm_scores.get("clarity", 0),
-            llm_scores.get("confidence", 0),
-            wpm=text_metrics["wpm"],
-            filler_count=text_metrics["filler_count"],
-            speech_ratio=audio_metrics["speech_ratio"],
-            final_feedback=llm_scores.get("final_feedback", ""),
-            improvements=llm_scores.get("improvements", "")
-        )
+        # Save to DB only if speech was detected
+        if save_to_db:
+            save_evaluation(
+                username, topic, transcript, hybrid_score,
+                llm_scores.get("grammar", 0),
+                llm_scores.get("vocabulary", 0),
+                llm_scores.get("clarity", 0),
+                llm_scores.get("confidence", 0),
+                wpm=text_metrics["wpm"],
+                filler_count=text_metrics["filler_count"],
+                speech_ratio=audio_metrics["speech_ratio"],
+                final_feedback=llm_scores.get("final_feedback", ""),
+                improvements=llm_scores.get("improvements", "")
+            )
 
         # Clean processed file
         if os.path.exists(processed_path):
@@ -153,6 +158,7 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
 
         return {
             "status": "success",
+            "no_speech": no_speech,
             "transcript": transcript,
             "metrics": {
                 "wpm": round(text_metrics["wpm"], 2),
