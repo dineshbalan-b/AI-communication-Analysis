@@ -1,4 +1,3 @@
-import librosa
 import numpy as np
 import re
 
@@ -8,6 +7,7 @@ import re
 # --------------------------------
 
 def analyze_audio(audio_path):
+    import librosa
 
     y, sr = librosa.load(audio_path, sr=16000, mono=True)
 

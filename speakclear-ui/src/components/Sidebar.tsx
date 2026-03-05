@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,33 +12,7 @@ interface SidebarProps {
 export default function Sidebar({ username }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
-    const [clarityRate, setClarityRate] = useState(0);
-    const [confidenceRate, setConfidenceRate] = useState(0);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-
-    useEffect(() => {
-        if (username) {
-            const fetchSidebarStats = async () => {
-                try {
-                    const resp = await fetch(`http://127.0.0.1:8000/api/progress?username=${username}`);
-                    const data = await resp.json();
-                    if (data.status === "success" && data.data.length > 0) {
-                        const history = data.data;
-                        const sumClarity = history.reduce((acc: number, curr: any) => acc + (curr.clarity || 0), 0);
-                        const sumConfidence = history.reduce((acc: number, curr: any) => acc + (curr.confidence || 0), 0);
-
-                        setClarityRate(Math.round((sumClarity / history.length) * 10)); // Scale 0-10 to 0-100
-                        setConfidenceRate(Math.round((sumConfidence / history.length) * 10));
-                    }
-                } catch (err) {
-                    console.error("Failed to fetch sidebar stats:", err);
-                }
-            };
-            fetchSidebarStats();
-        }
-    }, [username]);
-
 
     const handleLogout = () => {
         localStorage.removeItem("username");
@@ -112,31 +86,6 @@ export default function Sidebar({ username }: SidebarProps) {
                             );
                         })}
                     </nav>
-
-                    {/* Lifetime Scores Section */}
-                    <div className="pt-8 border-t border-[#212E3B]/30">
-                        <p className="text-[10px] font-black text-[#4B6A88] uppercase tracking-[0.2em] mb-6">LIFETIME SCORES</p>
-                        <div className="space-y-6">
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-[10px] font-bold">
-                                    <span className="text-slate-400">Clarity</span>
-                                    <span className="text-[#13a4ec]">{clarityRate}%</span>
-                                </div>
-                                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                                    <motion.div initial={{ width: 0 }} animate={{ width: `${clarityRate}%` }} transition={{ duration: 1.5 }} className="h-full bg-[#13a4ec] rounded-full shadow-[0_0_10px_rgba(19,164,236,0.3)]" />
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-[10px] font-bold">
-                                    <span className="text-slate-400">Confidence</span>
-                                    <span className="text-[#13a4ec]">{confidenceRate}%</span>
-                                </div>
-                                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                                    <motion.div initial={{ width: 0 }} animate={{ width: `${confidenceRate}%` }} transition={{ duration: 1.5 }} className="h-full bg-[#13a4ec] rounded-full shadow-[0_0_10px_rgba(19,164,236,0.3)]" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div className="space-y-2">

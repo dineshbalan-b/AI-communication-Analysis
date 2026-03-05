@@ -1,10 +1,6 @@
-import librosa
 import numpy as np
-import soundfile as sf
-import noisereduce as nr
-# from moviepy.editor import VideoFileClip
-from pydub import AudioSegment
-from pydub.effects import compress_dynamic_range
+import os
+import subprocess
 import os
 import subprocess
 
@@ -23,6 +19,7 @@ def extract_audio_from_video(video_path, output_audio_path="extracted_audio.wav"
 # Energy-Based VAD
 # --------------------------------
 def apply_energy_vad(y, sr, frame_length=2048, hop_length=512, energy_threshold=0.02):
+    import librosa
 
     energy = librosa.feature.rms(
         y=y, frame_length=frame_length, hop_length=hop_length
@@ -67,6 +64,12 @@ def preprocess_audio(input_path):
     except Exception as e:
         print(f"FFMPEG execution failed entirely: {e}")
         safe_wav_path = input_path
+
+    import librosa
+    import noisereduce as nr
+    import soundfile as sf
+    from pydub import AudioSegment
+    from pydub.effects import compress_dynamic_range
 
     # Load audio using the standardized file
     y, sr = librosa.load(safe_wav_path, sr=16000, mono=True)
