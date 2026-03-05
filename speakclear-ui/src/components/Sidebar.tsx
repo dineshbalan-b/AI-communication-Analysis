@@ -47,7 +47,6 @@ export default function Sidebar({ username }: SidebarProps) {
         { name: "Dashboard", icon: "grid_view", path: "/dashboard" },
         { name: "Assessments", icon: "mic", path: "/assessment" },
         { name: "History", icon: "history", path: "/history" },
-        { name: "Analytics", icon: "insert_chart", path: "/analytics" },
         { name: "Settings", icon: "settings", path: "/settings" },
     ];
 
