@@ -36,7 +36,7 @@ export default function Login() {
         setErrorMsg("");
         setIsLoading(true);
 
-        const endpoint = mode === "login" ? "http://127.0.0.1:8000/api/login" : "http://127.0.0.1:8000/api/register";
+        const endpoint = mode === "login" ? "http://127.0.0.1:8001/api/login" : "http://127.0.0.1:8001/api/register";
         const formData = new FormData();
         formData.append("username", username);
         formData.append("password", password);

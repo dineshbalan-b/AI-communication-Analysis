@@ -74,7 +74,7 @@ export default function Dashboard() {
         setIsDeleting(true);
 
         try {
-            const resp = await fetch(`http://127.0.0.1:8000/api/session/${sessionToDelete}`, {
+            const resp = await fetch(`http://127.0.0.1:8001/api/session/${sessionToDelete}`, {
                 method: 'DELETE'
             });
             const data = await resp.json();

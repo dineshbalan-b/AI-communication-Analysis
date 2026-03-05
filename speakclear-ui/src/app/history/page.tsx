@@ -23,7 +23,7 @@ export default function HistoryPage() {
 
     const fetchHistory = async (user: string) => {
         try {
-            const resp = await fetch(`http://127.0.0.1:8000/api/progress?username=${user}`);
+            const resp = await fetch(`http://127.0.0.1:8001/api/progress?username=${user}`);
             const data = await resp.json();
             if (data.status === "success") {
                 setHistory(data.data); // Backend already sorts DESC
@@ -39,7 +39,7 @@ export default function HistoryPage() {
         if (!confirm("Are you sure you want to delete this session?")) return;
 
         try {
-            const resp = await fetch(`http://127.0.0.1:8000/api/session/${sessionId}`, {
+            const resp = await fetch(`http://127.0.0.1:8001/api/session/${sessionId}`, {
                 method: 'DELETE'
             });
             const data = await resp.json();
