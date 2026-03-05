@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import Hero from '@/components/Landing/Hero';
@@ -11,9 +12,12 @@ import Footer from '@/components/Landing/Footer';
 export default function Home() {
   const [mounted, setMounted] = useState(false);
 
+  const router = useRouter();
+
   useEffect(() => {
     setMounted(true);
-  }, []);
+    router.prefetch("/login");
+  }, [router]);
 
   if (!mounted) return null;
 

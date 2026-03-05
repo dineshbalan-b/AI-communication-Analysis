@@ -19,13 +19,16 @@ export default function Login() {
         setMode(prev => prev === "login" ? "register" : "login");
     };
 
+    useEffect(() => {
+        // Pre-fetch dashboard to make transition instant
+        router.prefetch("/dashboard");
+    }, [router]);
+
     const handleGoogleLogin = () => {
         setIsLoading(true);
-        // Simulate a Google OAuth login process
-        setTimeout(() => {
-            localStorage.setItem("username", "Google_User");
-            router.push("/dashboard");
-        }, 1000);
+        // Instant simulated login
+        localStorage.setItem("username", "Google_User");
+        router.push("/dashboard");
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -118,7 +121,7 @@ export default function Login() {
                         initial={{ opacity: 0, y: 20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                        transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+                        transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
                         className="w-full max-w-[460px] relative z-10"
                     >
                         <div className="bg-[#121820]/80 backdrop-blur-xl border border-white/5 rounded-[32px] p-10 md:p-12 shadow-[0_22px_70px_8px_rgba(0,0,0,0.56)]">
@@ -142,7 +145,7 @@ export default function Login() {
                                 <motion.div
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.1 }}
+                                    transition={{ duration: 0.2, delay: 0.05 }}
                                     className="space-y-2"
                                 >
                                     <label className="text-xs font-bold text-white uppercase tracking-wider ml-1">Username</label>
@@ -159,7 +162,7 @@ export default function Login() {
                                 <motion.div
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.2 }}
+                                    transition={{ delay: 0.1 }}
                                     className="space-y-2"
                                 >
                                     <div className="flex justify-between items-center ml-1">
@@ -194,7 +197,7 @@ export default function Login() {
                                 <motion.button
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.3 }}
+                                    transition={{ delay: 0.15 }}
                                     type="submit"
                                     disabled={isLoading}
                                     className="w-full h-14 bg-[#00A3FF] hover:bg-[#0081CC] text-white font-bold rounded-2xl shadow-[0_4px_24px_rgba(0,163,255,0.4)] transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
