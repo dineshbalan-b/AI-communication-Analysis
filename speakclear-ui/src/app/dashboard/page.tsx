@@ -211,33 +211,42 @@ export default function Dashboard() {
                         {stats.map((stat, idx) => (
                             <motion.div
                                 key={stat.name}
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: idx * 0.1 }}
-                                whileHover={{ y: -5 }}
-                                className="bg-[#121820] border border-[#212E3B] rounded-[24px] p-6 flex flex-col justify-between group cursor-default transition-all hover:border-[#13a4ec]/30 shadow-xl"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.1 + (idx * 0.1) }}
+                                whileHover={{
+                                    y: -8,
+                                    backgroundColor: "rgba(19, 164, 236, 0.02)",
+                                    borderColor: "rgba(19, 164, 236, 0.4)"
+                                }}
+                                className="bg-[#121820] border border-[#212E3B] rounded-[24px] p-6 flex flex-col justify-between group cursor-default transition-all shadow-xl relative overflow-hidden"
                             >
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className={`p-2.5 rounded-xl bg-white/5 text-slate-400 group-hover:bg-[#13a4ec]/10 group-hover:text-[#13a4ec] transition-colors`}>
+                                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-white/[0.02] to-transparent rounded-full -mr-12 -mt-12" />
+
+                                <div className="flex justify-between items-start mb-4 relative z-10">
+                                    <motion.div
+                                        whileHover={{ rotate: 15, scale: 1.1 }}
+                                        className={`p-2.5 rounded-xl bg-white/5 text-slate-400 group-hover:bg-[#13a4ec]/10 group-hover:text-[#13a4ec] transition-all`}
+                                    >
                                         <span className="material-symbols-outlined text-[20px]">{idx === 0 ? 'person_voice' : idx === 1 ? 'translate' : idx === 2 ? 'speed' : 'menu_book'}</span>
-                                    </div>
+                                    </motion.div>
                                     <div className="text-right">
-                                        <span className={`text-lg font-black text-white`}>{stat.score}<span className="text-[10px] text-[#4B6A88] ml-1 font-bold">/100</span></span>
-                                        <h4 className="text-[9px] font-black text-white uppercase tracking-widest mt-1">{stat.name}</h4>
+                                        <span className={`text-xl font-black text-white group-hover:text-[#13a4ec] transition-colors`}>{stat.score}<span className="text-[10px] text-[#4B6A88] ml-1 font-bold">/100</span></span>
+                                        <h4 className="text-[9px] font-black text-white uppercase tracking-widest mt-1 opacity-60">{stat.name}</h4>
                                     </div>
                                 </div>
 
-                                <div className="space-y-4">
-                                    <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                                <div className="space-y-4 relative z-10">
+                                    <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
                                         <motion.div
                                             initial={{ width: 0 }}
                                             animate={{ width: `${stat.score}%` }}
-                                            transition={{ duration: 1.5, delay: 0.5 + (idx * 0.1) }}
+                                            transition={{ duration: 1.5, delay: 0.5 + (idx * 0.1), ease: [0.34, 1.56, 0.64, 1] }}
                                             style={{ backgroundColor: stat.color }}
-                                            className="h-full rounded-full"
+                                            className="h-full rounded-full shadow-[0_0_10px_rgba(0,0,0,0.5)]"
                                         />
                                     </div>
-                                    <p className="text-[10px] text-[#8B9BB4] font-medium leading-relaxed">{stat.feedback}</p>
+                                    <p className="text-[10px] text-[#8B9BB4] font-medium leading-relaxed group-hover:text-slate-300 transition-colors">{stat.feedback}</p>
                                 </div>
                             </motion.div>
                         ))}
@@ -263,40 +272,130 @@ export default function Dashboard() {
                             </div>
                         </div>
 
-                        <div className="h-60 w-full relative flex items-end gap-2 px-6 pt-10 border-b border-[#212E3B]/30 pb-4">
+                        <div className="h-64 w-full relative px-2 pt-10 pb-4">
                             {/* Chart Grid Lines */}
-                            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-10 py-4 pb-0 z-0 pr-6">
+                            <div className="absolute inset-x-8 inset-y-10 flex flex-col justify-between pointer-events-none opacity-5 z-0">
                                 {[100, 75, 50, 25, 0].map(v => (
-                                    <div key={v} className="w-full border-t border-white/20 flex justify-end">
-                                        <span className="text-[9px] font-bold text-slate-500 -translate-y-1/2 mr-2">{v}%</span>
-                                    </div>
+                                    <div key={v} className="w-full border-t border-white" />
                                 ))}
                             </div>
 
-                            <div className="flex-1 w-full h-full flex items-end gap-2 relative z-10">
+                            <div className="w-full h-full relative z-10 px-8">
                                 {loading ? (
                                     <div className="absolute inset-0 flex items-center justify-center">
-                                        <p className="text-slate-500 italic font-bold text-xs">Loading analytics...</p>
+                                        <p className="text-slate-500 italic font-bold text-xs">Generating visual analytics...</p>
                                     </div>
                                 ) : history.length === 0 ? (
                                     <div className="absolute inset-0 flex items-center justify-center">
-                                        <p className="text-slate-500 italic font-bold text-xs">No data available.</p>
+                                        <p className="text-slate-500 italic font-bold text-xs">No progression data available yet.</p>
                                     </div>
                                 ) : (
+                                    <svg className="w-full h-full overflow-visible" preserveAspectRatio="none">
+                                        <defs>
+                                            <linearGradient id="trendGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" stopColor="#13a4ec" stopOpacity="0.3" />
+                                                <stop offset="100%" stopColor="#13a4ec" stopOpacity="0" />
+                                            </linearGradient>
+                                            <filter id="glow">
+                                                <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                                                <feMerge>
+                                                    <feMergeNode in="coloredBlur" />
+                                                    <feMergeNode in="SourceGraphic" />
+                                                </feMerge>
+                                            </filter>
+                                        </defs>
+
+                                        {/* Smooth Path Calculation */}
+                                        {(() => {
+                                            const data = [...history].reverse().slice(-10);
+                                            if (data.length < 2) return null;
+
+                                            const width = 100; // percent units
+                                            const height = 100;
+                                            const points = data.map((h, i) => ({
+                                                x: (i / (data.length - 1)) * 100,
+                                                y: 100 - h.score
+                                            }));
+
+                                            // Area Path
+                                            let areaD = `M ${points[0].x} 100 `;
+                                            points.forEach((p, i) => {
+                                                if (i === 0) areaD += `L ${p.x} ${p.y} `;
+                                                else {
+                                                    const prev = points[i - 1];
+                                                    const cp1x = prev.x + (p.x - prev.x) / 2;
+                                                    areaD += `C ${cp1x} ${prev.y}, ${cp1x} ${p.y}, ${p.x} ${p.y} `;
+                                                }
+                                            });
+                                            areaD += `L ${points[points.length - 1].x} 100 Z`;
+
+                                            // Line Path
+                                            let lineD = `M ${points[0].x} ${points[0].y} `;
+                                            points.forEach((p, i) => {
+                                                if (i > 0) {
+                                                    const prev = points[i - 1];
+                                                    const cp1x = prev.x + (p.x - prev.x) / 2;
+                                                    lineD += `C ${cp1x} ${prev.y}, ${cp1x} ${p.y}, ${p.x} ${p.y} `;
+                                                }
+                                            });
+
+                                            return (
+                                                <>
+                                                    <motion.path
+                                                        d={areaD}
+                                                        fill="url(#trendGradient)"
+                                                        initial={{ opacity: 0 }}
+                                                        animate={{ opacity: 1 }}
+                                                        transition={{ duration: 1.5 }}
+                                                    />
+                                                    <motion.path
+                                                        d={lineD}
+                                                        fill="none"
+                                                        stroke="#13a4ec"
+                                                        strokeWidth="3"
+                                                        strokeLinecap="round"
+                                                        initial={{ pathLength: 0 }}
+                                                        animate={{ pathLength: 1 }}
+                                                        transition={{ duration: 2, ease: "easeInOut" }}
+                                                        filter="url(#glow)"
+                                                    />
+                                                    {points.map((p, i) => (
+                                                        <g key={i} className="group/point">
+                                                            <motion.circle
+                                                                cx={p.x + "%"}
+                                                                cy={p.y + "%"}
+                                                                r="4"
+                                                                fill="#0B0F15"
+                                                                stroke="#13a4ec"
+                                                                strokeWidth="2"
+                                                                initial={{ scale: 0 }}
+                                                                animate={{ scale: 1 }}
+                                                                transition={{ delay: 1.5 + (i * 0.1) }}
+                                                                className="cursor-pointer transition-all hover:r-6"
+                                                            />
+                                                            <foreignObject x={p.x + "%"} y={p.y + "%"} width="1" height="1" className="overflow-visible pointer-events-none">
+                                                                <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-[#1B2939] border border-[#13a4ec]/30 py-1.5 px-3 rounded-lg opacity-0 group-hover/point:opacity-100 transition-all scale-75 group-hover/point:scale-100 shadow-[0_0_20px_rgba(0,0,0,0.5)] z-50">
+                                                                    <p className="text-[10px] font-black text-white whitespace-nowrap">{data[i].score}%</p>
+                                                                    <p className="text-[7px] font-bold text-slate-500 uppercase tracking-tighter whitespace-nowrap">{new Date(data[i].date).toLocaleDateString()}</p>
+                                                                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#1B2939] rotate-45 border-r border-b border-[#13a4ec]/30" />
+                                                                </div>
+                                                            </foreignObject>
+                                                        </g>
+                                                    ))}
+                                                </>
+                                            );
+                                        })()}
+                                    </svg>
+                                )}
+                            </div>
+
+                            {/* X-Axis Labels */}
+                            <div className="absolute bottom-0 inset-x-8 flex justify-between px-2 h-4 items-center">
+                                {loading || history.length === 0 ? null : (
                                     [...history].reverse().slice(-10).map((h, i) => (
-                                        <div key={i} className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-                                            <motion.div
-                                                initial={{ height: 0 }}
-                                                animate={{ height: `${h.score}%` }}
-                                                transition={{ duration: 1, delay: i * 0.05 + 0.6 }}
-                                                className="w-full max-w-[40px] bg-[#13a4ec]/10 hover:bg-[#13a4ec]/30 border-t-2 border-[#13a4ec] rounded-t-md transition-all relative group-hover:shadow-[0_0_15px_rgba(19,164,236,0.3)]"
-                                            >
-                                                <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-[#1B2939] border border-[#212E3B] px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100 whitespace-nowrap z-20 pointer-events-none shadow-xl flex items-center gap-2">
-                                                    <span className="text-[10px] font-black text-white">{h.score}%</span>
-                                                </div>
-                                            </motion.div>
-                                            <div className="text-[8px] font-black text-slate-600 uppercase">S#{i + 1}</div>
-                                        </div>
+                                        <span key={i} className="text-[8px] font-black text-slate-600 uppercase tracking-tighter w-0 overflow-visible whitespace-nowrap text-center">
+                                            {new Date(h.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                        </span>
                                     ))
                                 )}
                             </div>
