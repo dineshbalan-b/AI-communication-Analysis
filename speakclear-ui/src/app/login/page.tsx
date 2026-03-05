@@ -19,6 +19,15 @@ export default function Login() {
         setMode(prev => prev === "login" ? "register" : "login");
     };
 
+    const handleGoogleLogin = () => {
+        setIsLoading(true);
+        // Simulate a Google OAuth login process
+        setTimeout(() => {
+            localStorage.setItem("username", "Google_User");
+            router.push("/dashboard");
+        }, 1000);
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrorMsg("");
@@ -136,13 +145,13 @@ export default function Login() {
                                     transition={{ delay: 0.1 }}
                                     className="space-y-2"
                                 >
-                                    <label className="text-xs font-bold text-white uppercase tracking-wider ml-1">Email Address</label>
+                                    <label className="text-xs font-bold text-white uppercase tracking-wider ml-1">Username</label>
                                     <input
                                         type="text"
                                         value={username}
                                         onChange={e => setUsername(e.target.value)}
                                         className="w-full h-14 rounded-2xl border border-white/10 bg-white/5 focus:bg-white/10 focus:border-[#00A3FF] px-5 text-white transition-all outline-none placeholder:text-slate-600"
-                                        placeholder="name@company.com"
+                                        placeholder="Enter your username"
                                         required
                                     />
                                 </motion.div>
@@ -214,14 +223,14 @@ export default function Login() {
                                 <div className="h-px flex-1 bg-white/5"></div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <button className="group h-14 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center gap-3 font-bold text-xs">
+                            <div className="grid grid-cols-1 gap-4">
+                                <button
+                                    type="button"
+                                    onClick={handleGoogleLogin}
+                                    className="group h-14 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center gap-3 font-bold text-xs"
+                                >
                                     <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" className="w-5 h-5 grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all" alt="Google" />
-                                    Google
-                                </button>
-                                <button className="group h-14 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center gap-3 font-bold text-xs">
-                                    <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" className="w-5 h-5 grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all" alt="LinkedIn" />
-                                    LinkedIn
+                                    Continue with Google
                                 </button>
                             </div>
 
