@@ -19,6 +19,7 @@ function RecordingPageContent() {
     // Recording states
     const [isRecording, setIsRecording] = useState(false);
     const [audioLevels, setAudioLevels] = useState<number[]>(new Array(40).fill(10));
+    const [showMicError, setShowMicError] = useState(false);
 
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
@@ -101,7 +102,7 @@ function RecordingPageContent() {
 
         } catch (err) {
             console.error("Error accessing microphone:", err);
-            alert("Microphone access is required for this assessment.");
+            setShowMicError(true);
         }
     };
 
@@ -345,6 +346,58 @@ function RecordingPageContent() {
                         </div>
                     </div>
                 </div>
+                {/* Mic Error Modal */}
+                {showMicError && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B0F15]/80 backdrop-blur-sm"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            className="bg-[#121820] border border-white/5 p-8 rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.6)] max-w-md w-full relative overflow-hidden"
+                        >
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-bl-full blur-[40px] pointer-events-none" />
+
+                            <div className="flex items-center gap-4 mb-6 relative z-10">
+                                <div className="p-3 bg-amber-500/10 text-amber-500 rounded-2xl border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                                    <span className="material-symbols-outlined text-2xl">mic_off</span>
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold text-white tracking-tight">Microphone Access Needed</h3>
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#8B9BB4] mt-1">Permission Required</p>
+                                </div>
+                            </div>
+
+                            <p className="text-sm text-slate-400 font-medium leading-relaxed mb-8 relative z-10">
+                                <span className="text-white font-bold">Microphone access is required</span> for this assessment to evaluate your communication skills. Please grant microphone permissions in your browser and try again.
+                            </p>
+
+                            <div className="flex items-center justify-end gap-3 relative z-10">
+                                <button
+                                    onClick={() => {
+                                        setShowMicError(false);
+                                        router.push('/dashboard');
+                                    }}
+                                    className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-slate-300 bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] hover:text-white transition-all"
+                                >
+                                    Return to Dashboard
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setShowMicError(false);
+                                        startMicrophone();
+                                    }}
+                                    className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-[#13a4ec] bg-[#13a4ec]/10 hover:bg-[#13a4ec]/20 border border-[#13a4ec]/30 transition-all flex items-center gap-2 group/btn"
+                                >
+                                    <span className="material-symbols-outlined text-[16px] group-hover/btn:scale-110 transition-transform">refresh</span>
+                                    Try Again
+                                </button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
             </main>
         </div>
     );
