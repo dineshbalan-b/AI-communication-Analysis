@@ -97,21 +97,15 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
         processed_path = preprocess_audio(temp_input_path)
 
         # Run Transcription and Audio Metrics concurrently to save time
-        async def get_transcription():
+        def get_transcription_sync():
             with open(processed_path, "rb") as audio_data:
                 return client.audio.transcriptions.create(
                     model="whisper-1",
                     file=audio_data
                 )
 
-        async def get_audio_metrics():
-            return analyze_audio(processed_path)
-
         # Execute both tasks in parallel
-        transcription_task = asyncio.to_thread(lambda: client.audio.transcriptions.create(
-            model="whisper-1",
-            file=open(processed_path, "rb")
-        ))
+        transcription_task = asyncio.to_thread(get_transcription_sync)
         metrics_task = asyncio.to_thread(analyze_audio, processed_path)
         
         transcription, audio_metrics = await asyncio.gather(transcription_task, metrics_task)
