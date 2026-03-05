@@ -262,15 +262,22 @@ export default function Dashboard() {
                         className="bg-[#121820] border border-[#212E3B] rounded-[32px] p-8 shadow-2xl overflow-hidden"
                     >
                         {/* Card Header */}
-                        <div className="flex items-center justify-between mb-6">
+                        {/* Card Header */}
+                        <div className="flex items-center justify-between mb-8">
                             <div>
-                                <h3 className="text-xl font-black text-white tracking-tight">Score Progression</h3>
-                                <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-widest mt-0.5">Last {Math.min(history.length, 10)} sessions</p>
+                                <h3 className="text-xl font-bold text-white tracking-tight">Performance Analytics</h3>
+                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.1em] mt-1 relative inline-flex items-center gap-1.5">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#13a4ec]/40" />
+                                    Continuous Skill Tracking
+                                </p>
                             </div>
                             <div className="flex items-center gap-3">
-                                <div className="flex items-center gap-1.5 bg-[#13a4ec]/10 border border-[#13a4ec]/20 px-3 py-1.5 rounded-full">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#13a4ec] animate-pulse" />
-                                    <span className="text-[9px] font-black text-[#13a4ec] uppercase tracking-widest">Live</span>
+                                <div className="flex flex-col items-end">
+                                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">Status</span>
+                                    <span className="text-[11px] font-bold text-[#13a4ec] mt-1">Live Feed</span>
+                                </div>
+                                <div className="w-10 h-10 rounded-2xl bg-[#13a4ec]/5 border border-[#13a4ec]/10 flex items-center justify-center text-[#13a4ec]">
+                                    <span className="material-symbols-outlined text-xl">insights</span>
                                 </div>
                             </div>
                         </div>
@@ -278,229 +285,170 @@ export default function Dashboard() {
                         {/* Chart Body */}
                         {loading ? (
                             <div className="h-64 flex items-center justify-center">
-                                <div className="flex flex-col items-center gap-3">
-                                    <div className="w-8 h-8 border-2 border-[#13a4ec]/30 border-t-[#13a4ec] rounded-full animate-spin" />
-                                    <p className="text-slate-500 font-bold text-xs">Loading your data...</p>
+                                <div className="flex flex-col items-center gap-4">
+                                    <div className="relative w-12 h-12">
+                                        <div className="absolute inset-0 border-2 border-[#13a4ec]/10 rounded-full" />
+                                        <div className="absolute inset-0 border-2 border-t-[#13a4ec] rounded-full animate-spin" />
+                                    </div>
+                                    <p className="text-slate-500 font-bold text-xs uppercase tracking-widest animate-pulse">Initializing Data Stream...</p>
                                 </div>
                             </div>
                         ) : history.length === 0 ? (
-                            <div className="h-64 flex flex-col items-center justify-center gap-3">
-                                <span className="material-symbols-outlined text-5xl text-slate-700">bar_chart</span>
-                                <p className="text-slate-500 font-bold text-xs">Complete a session to see your progress.</p>
+                            <div className="h-64 flex flex-col items-center justify-center border-2 border-dashed border-[#212E3B] rounded-[24px]">
+                                <div className="w-16 h-16 rounded-full bg-[#13a4ec]/5 flex items-center justify-center mb-4">
+                                    <span className="material-symbols-outlined text-3xl text-slate-700">query_stats</span>
+                                </div>
+                                <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">No Analytics Available</p>
+                                <p className="text-slate-600 text-[10px] mt-1">Complete your first session to begin tracking.</p>
                             </div>
                         ) : (() => {
-                            const data = [...history].reverse().slice(-10);
-                            const W = 620, H = 260, padL = 44, padB = 32, padT = 28, padR = 12;
+                            const data = [...history].reverse().slice(-12);
+                            const avgScore = data.reduce((acc, h) => acc + h.score, 0) / data.length;
+
+                            const W = 620, H = 280, padL = 40, padB = 40, padT = 30, padR = 10;
                             const innerW = W - padL - padR;
                             const innerH = H - padB - padT;
-                            const barCount = data.length;
-                            const barGap = 10;
-                            const barW = (innerW - (barCount - 1) * barGap) / barCount;
+
+                            const xSpacing = innerW / (data.length - 1 || 1);
 
                             const getColor = (score: number) => {
-                                if (score >= 80) return { top: '#34d399', bot: '#059669', glow: 'rgba(52,211,153,0.25)', text: '#34d399' };
-                                if (score >= 60) return { top: '#38bdf8', bot: '#0284c7', glow: 'rgba(56,189,248,0.25)', text: '#38bdf8' };
-                                if (score >= 40) return { top: '#fbbf24', bot: '#d97706', glow: 'rgba(251,191,36,0.25)', text: '#fbbf24' };
-                                return { top: '#f87171', bot: '#dc2626', glow: 'rgba(248,113,113,0.25)', text: '#f87171' };
+                                if (score >= 80) return { main: '#34d399', bg: 'rgba(52,211,153,0.1)' };
+                                if (score >= 60) return { main: '#38bdf8', bg: 'rgba(56,189,248,0.1)' };
+                                if (score >= 40) return { main: '#fbbf24', bg: 'rgba(251,191,36,0.1)' };
+                                return { main: '#f87171', bg: 'rgba(248,113,113,0.1)' };
                             };
 
                             const points = data.map((h, i) => ({
-                                x: padL + i * (barW + barGap) + barW / 2,
+                                x: padL + i * xSpacing,
                                 y: padT + innerH - (h.score / 100) * innerH,
                                 score: h.score,
                                 color: getColor(h.score),
-                                barH: (h.score / 100) * innerH,
-                                barX: padL + i * (barW + barGap),
                             }));
 
-                            // Smooth bezier line
-                            let lineD = '';
-                            let areaD = '';
-                            points.forEach((p, i) => {
-                                if (i === 0) {
-                                    lineD = `M ${p.x} ${p.y}`;
-                                    areaD = `M ${p.x} ${padT + innerH} L ${p.x} ${p.y}`;
-                                } else {
-                                    const prev = points[i - 1];
-                                    const cpX = (prev.x + p.x) / 2;
-                                    lineD += ` C ${cpX} ${prev.y}, ${cpX} ${p.y}, ${p.x} ${p.y}`;
-                                    areaD += ` C ${cpX} ${prev.y}, ${cpX} ${p.y}, ${p.x} ${p.y}`;
+                            const avgY = padT + innerH - (avgScore / 100) * innerH;
+
+                            // Professional Spline Logic
+                            const getPath = (pts: typeof points, type: 'area' | 'line') => {
+                                let d = `M ${pts[0].x} ${pts[0].y}`;
+                                pts.forEach((p, i) => {
+                                    if (i === 0) return;
+                                    const prev = pts[i - 1];
+                                    const cx = (prev.x + p.x) / 2;
+                                    d += ` C ${cx} ${prev.y}, ${cx} ${p.y}, ${p.x} ${p.y}`;
+                                });
+                                if (type === 'area') {
+                                    d += ` L ${pts[pts.length - 1].x} ${padT + innerH} L ${pts[0].x} ${padT + innerH} Z`;
                                 }
-                            });
-                            if (points.length >= 1) {
-                                areaD += ` L ${points[points.length - 1].x} ${padT + innerH} Z`;
-                            }
+                                return d;
+                            };
 
                             return (
                                 <div className="relative w-full">
-                                    <svg
-                                        viewBox={`0 0 ${W} ${H}`}
-                                        className="w-full"
-                                        style={{ height: '300px' }}
-                                        preserveAspectRatio="xMidYMid meet"
-                                    >
+                                    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: '320px' }} preserveAspectRatio="xMidYMid meet">
                                         <defs>
-                                            {data.map((h, i) => {
-                                                const c = getColor(h.score);
-                                                return (
-                                                    <linearGradient key={i} id={`bg${i}`} x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="0%" stopColor={c.top} stopOpacity="0.85" />
-                                                        <stop offset="100%" stopColor={c.bot} stopOpacity="0.2" />
-                                                    </linearGradient>
-                                                );
-                                            })}
-                                            <linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.18" />
-                                                <stop offset="100%" stopColor="#38bdf8" stopOpacity="0" />
+                                            <linearGradient id="splineAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stopColor="#13a4ec" stopOpacity="0.25" />
+                                                <stop offset="100%" stopColor="#13a4ec" stopOpacity="0" />
                                             </linearGradient>
-                                            <filter id="barGlow" x="-30%" y="-30%" width="160%" height="160%">
-                                                <feGaussianBlur stdDeviation="4" result="b" />
-                                                <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-                                            </filter>
-                                            <filter id="lineGlow">
-                                                <feGaussianBlur stdDeviation="2.5" result="b" />
-                                                <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+                                            <filter id="pointGlow">
+                                                <feGaussianBlur stdDeviation="3" result="blur" />
+                                                <feMerge>
+                                                    <feMergeNode in="blur" />
+                                                    <feMergeNode in="SourceGraphic" />
+                                                </feMerge>
                                             </filter>
                                         </defs>
 
-                                        {/* Background subtle grid */}
-                                        {[0, 25, 50, 75, 100].map(v => {
+                                        {/* Grid Matrix */}
+                                        {[0, 20, 40, 60, 80, 100].map((v, i) => {
                                             const y = padT + innerH - (v / 100) * innerH;
                                             return (
                                                 <g key={v}>
-                                                    <line
-                                                        x1={padL} y1={y} x2={W - padR} y2={y}
-                                                        stroke={v === 0 ? '#2A3D52' : '#192534'}
-                                                        strokeWidth={v === 0 ? 1.5 : 1}
-                                                        strokeDasharray={v === 0 ? '0' : '5 5'}
-                                                    />
-                                                    <text x={padL - 8} y={y + 4} fill="#3A5470" fontSize="9" textAnchor="end" fontWeight="800" fontFamily="monospace">
-                                                        {v}
-                                                    </text>
+                                                    <line x1={padL} y1={y} x2={W - padR} y2={y} stroke={v === 0 ? '#212E3B' : '#161F29'} strokeWidth={v === 0 ? 2 : 1} />
+                                                    <text x={padL - 10} y={y + 3} fill="#4B6A88" fontSize="8" fontWeight="800" textAnchor="end" fontFamily="monospace">{v}</text>
                                                 </g>
                                             );
                                         })}
 
-                                        {/* Y-axis label */}
-                                        <text x={10} y={padT + innerH / 2} fill="#3A5470" fontSize="8" textAnchor="middle" fontWeight="700" transform={`rotate(-90, 10, ${padT + innerH / 2})`}>SCORE %</text>
+                                        {/* Average Line */}
+                                        <g opacity="0.3">
+                                            <line x1={padL} y1={avgY} x2={W - padR} y2={avgY} stroke="#13a4ec" strokeWidth="1" strokeDasharray="6 4" />
+                                            <text x={W - padR - 5} y={avgY - 5} fill="#13a4ec" fontSize="7" fontWeight="900" textAnchor="end" style={{ textTransform: 'uppercase' }}>Average Score: {avgScore.toFixed(0)}%</text>
+                                        </g>
 
-                                        {/* Area fill under trend line */}
-                                        {points.length >= 2 && (
-                                            <motion.path
-                                                d={areaD}
-                                                fill="url(#areaFill)"
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                transition={{ duration: 1.2, delay: 0.9 }}
-                                            />
-                                        )}
+                                        {/* Spline Area Fill */}
+                                        <motion.path
+                                            d={getPath(points, 'area')}
+                                            fill="url(#splineAreaGrad)"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ duration: 1 }}
+                                        />
 
-                                        {/* Bars */}
+                                        {/* Spline Line */}
+                                        <motion.path
+                                            d={getPath(points, 'line')}
+                                            fill="none"
+                                            stroke="#13a4ec"
+                                            strokeWidth="3.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            initial={{ pathLength: 0 }}
+                                            animate={{ pathLength: 1 }}
+                                            transition={{ duration: 1.5, ease: "easeInOut" }}
+                                        />
+
+                                        {/* Data Nodes & Tooltip Pills */}
                                         {points.map((p, i) => (
                                             <g key={i}>
-                                                {/* Track (background bar) */}
-                                                <rect
-                                                    x={p.barX} y={padT}
-                                                    width={barW} height={innerH}
-                                                    rx="7" fill="#0D1822"
+                                                {/* Connecting line to axis */}
+                                                <line x1={p.x} y1={p.y} x2={p.x} y2={padT + innerH} stroke="#13a4ec" strokeWidth="1" strokeDasharray="4 4" opacity="0.1" />
+
+                                                {/* Node */}
+                                                <motion.circle
+                                                    cx={p.x} cy={p.y} r="5"
+                                                    fill="#121820" stroke={p.color.main} strokeWidth="2.5"
+                                                    filter="url(#pointGlow)"
+                                                    initial={{ scale: 0 }}
+                                                    animate={{ scale: 1 }}
+                                                    transition={{ delay: 1 + i * 0.05, type: "spring" }}
                                                 />
-                                                {/* Glow behind bar */}
-                                                <rect
-                                                    x={p.barX + 2} y={padT + innerH - p.barH + 2}
-                                                    width={barW - 4} height={p.barH}
-                                                    rx="6" fill={p.color.glow}
-                                                    style={{ filter: 'blur(6px)' }}
-                                                />
-                                                {/* Main bar */}
-                                                <motion.rect
-                                                    x={p.barX + 2} y={padT + innerH}
-                                                    width={barW - 4} height={0}
-                                                    rx="6"
-                                                    fill={`url(#bg${i})`}
-                                                    animate={{ y: padT + innerH - p.barH, height: p.barH }}
-                                                    transition={{ duration: 0.9, delay: i * 0.08, ease: [0.34, 1.56, 0.64, 1] }}
-                                                />
-                                                {/* Top highlight cap */}
-                                                <motion.rect
-                                                    x={p.barX + 2} y={padT + innerH}
-                                                    width={barW - 4} height={4}
-                                                    rx="6"
-                                                    fill={p.color.top}
-                                                    opacity={0.9}
-                                                    animate={{ y: padT + innerH - p.barH, opacity: 0.9 }}
-                                                    transition={{ duration: 0.9, delay: i * 0.08, ease: [0.34, 1.56, 0.64, 1] }}
-                                                />
-                                                {/* Score badge above */}
+
+                                                {/* Floating Score Pill */}
                                                 <motion.g
-                                                    initial={{ opacity: 0, y: 6 }}
+                                                    initial={{ opacity: 0, y: 10 }}
                                                     animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ delay: 0.9 + i * 0.08 }}
+                                                    transition={{ delay: 1.5 + i * 0.05 }}
                                                 >
-                                                    <rect
-                                                        x={p.x - 14} y={p.y - 18}
-                                                        width={28} height={14}
-                                                        rx="4" fill={p.color.top} opacity={0.15}
-                                                    />
-                                                    <text x={p.x} y={p.y - 8} textAnchor="middle" fill={p.color.top} fontSize="8.5" fontWeight="900">
-                                                        {p.score}%
-                                                    </text>
+                                                    <rect x={p.x - 14} y={p.y - 25} width={28} height={14} rx="7" fill={p.color.main} />
+                                                    <text x={p.x} y={p.y - 15} textAnchor="middle" fill="#121820" fontSize="8" fontWeight="900">{p.score}%</text>
                                                 </motion.g>
-                                                {/* Date label */}
-                                                <text x={p.x} y={H - 6} textAnchor="middle" fill="#3A5470" fontSize="7.5" fontWeight="700">
+
+                                                {/* Date Label on Axis */}
+                                                <text x={p.x} y={H - 15} textAnchor="middle" fill="#4B6A88" fontSize="7" fontWeight="800" transform={`rotate(0, ${p.x}, ${H - 15})`}>
                                                     {new Date(data[i].date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                                                 </text>
                                             </g>
                                         ))}
-
-                                        {/* Trend line glow */}
-                                        {points.length >= 2 && (
-                                            <motion.path
-                                                d={lineD} fill="none"
-                                                stroke="#38bdf8" strokeWidth="4"
-                                                strokeLinecap="round" strokeLinejoin="round"
-                                                opacity={0.2}
-                                                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-                                                transition={{ duration: 1.8, delay: 0.8, ease: 'easeInOut' }}
-                                            />
-                                        )}
-                                        {/* Trend line */}
-                                        {points.length >= 2 && (
-                                            <motion.path
-                                                d={lineD} fill="none"
-                                                stroke="#38bdf8" strokeWidth="2"
-                                                strokeLinecap="round" strokeLinejoin="round"
-                                                filter="url(#lineGlow)"
-                                                initial={{ pathLength: 0, opacity: 0 }}
-                                                animate={{ pathLength: 1, opacity: 1 }}
-                                                transition={{ duration: 1.8, delay: 0.8, ease: 'easeInOut' }}
-                                            />
-                                        )}
-                                        {/* Trend dots */}
-                                        {points.map((p, i) => (
-                                            <motion.g key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 1.8 + i * 0.07, type: 'spring', stiffness: 300 }}>
-                                                <circle cx={p.x} cy={p.y} r="5" fill="#0D1822" stroke="#38bdf8" strokeWidth="2" />
-                                                <circle cx={p.x} cy={p.y} r="2" fill="#38bdf8" />
-                                            </motion.g>
-                                        ))}
                                     </svg>
 
-                                    {/* Legend */}
-                                    <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-3 pl-10">
-                                        {[
-                                            { color: '#34d399', label: 'Excellent', range: '80–100' },
-                                            { color: '#38bdf8', label: 'Good', range: '60–79' },
-                                            { color: '#fbbf24', label: 'Fair', range: '40–59' },
-                                            { color: '#f87171', label: 'Needs Work', range: '<40' },
-                                        ].map(l => (
-                                            <div key={l.label} className="flex items-center gap-1.5">
-                                                <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: l.color, opacity: 0.85 }} />
-                                                <span className="text-[9px] font-bold text-slate-400">{l.label}</span>
-                                                <span className="text-[8px] font-medium text-slate-600">({l.range})</span>
+                                    {/* Professional Legend */}
+                                    <div className="flex items-center gap-8 mt-4 px-10 border-t border-[#161F29] pt-6">
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex -space-x-1.5">
+                                                {['#34d399', '#38bdf8', '#fbbf24', '#f87171'].map(c => (
+                                                    <div key={c} className="w-2.5 h-2.5 rounded-full border-2 border-[#121820]" style={{ backgroundColor: c }} />
+                                                ))}
                                             </div>
-                                        ))}
-                                        <div className="flex items-center gap-1.5 ml-2">
-                                            <div className="w-5 h-0.5 bg-sky-400 rounded-full" />
-                                            <span className="text-[9px] font-bold text-slate-400">Trend</span>
+                                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Skill Tiers</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-6 h-0.5 rounded-full bg-gradient-to-r from-transparent via-[#13a4ec] to-transparent" />
+                                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Growth Trajectory</span>
+                                        </div>
+                                        <div className="ml-auto flex items-center gap-2 px-3 py-1 bg-white/5 rounded-lg border border-white/5">
+                                            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em]">Efficiency Range</span>
+                                            <span className="text-[10px] font-black text-white">40-100%</span>
                                         </div>
                                     </div>
                                 </div>
@@ -670,7 +618,7 @@ export default function Dashboard() {
                         </table>
                     </div>
                 </motion.section>
-            </main>
-        </div>
+            </main >
+        </div >
     );
 }
