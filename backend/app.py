@@ -191,6 +191,6 @@ async def delete_session(session_id: int):
     raise HTTPException(status_code=400, detail="Failed to delete session")
 
 @app.get("/api/topics")
-async def get_topics():
-    topics = generate_topics()
+async def get_topics(force: bool = False):
+    topics = generate_topics(force_refresh=force)
     return {"status": "success", "topics": [{"name": t, "icon": "auto_awesome"} for t in topics]}

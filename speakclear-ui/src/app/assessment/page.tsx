@@ -22,10 +22,10 @@ export default function Assessment() {
     const [refreshing, setRefreshing] = useState(false);
     const router = useRouter();
 
-    const fetchTopics = async () => {
+    const fetchTopics = async (force = false) => {
         setRefreshing(true);
         try {
-            const resp = await fetch("http://127.0.0.1:8000/api/topics");
+            const resp = await fetch(`http://127.0.0.1:8000/api/topics${force ? "?force=true" : ""}`);
             const data = await resp.json();
             if (data.status === "success") {
                 setTopics(data.topics);
@@ -43,7 +43,7 @@ export default function Assessment() {
             router.push("/login");
         } else {
             setUsername(un);
-            fetchTopics();
+            fetchTopics(false);
         }
     }, [router]);
 
@@ -124,7 +124,7 @@ export default function Assessment() {
                                 <h3 className="text-lg font-bold text-white">Generated Topics for Practice</h3>
                             </div>
                             <button
-                                onClick={fetchTopics}
+                                onClick={() => fetchTopics(true)}
                                 disabled={refreshing}
                                 className={`text-[#13a4ec] text-[10px] font-black uppercase tracking-widest hover:underline transition-all ${refreshing ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >

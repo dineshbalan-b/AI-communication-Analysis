@@ -139,17 +139,17 @@ Improvement suggestions:
 _TOPIC_CACHE = []
 _LAST_FETCH_TIME = 0
 
-def generate_topics():
+def generate_topics(force_refresh=False):
     """
     Generates a list of 6 simple and everyday communication practice topics.
-    Uses caching to avoid hitting the API on every request.
+    Uses caching to avoid hitting the API on every request unless forced.
     """
     global _TOPIC_CACHE, _LAST_FETCH_TIME
     import time
 
     current_time = time.time()
     # Cache for 1 hour (3600 seconds)
-    if _TOPIC_CACHE and (current_time - _LAST_FETCH_TIME < 3600):
+    if not force_refresh and _TOPIC_CACHE and (current_time - _LAST_FETCH_TIME < 3600):
         return _TOPIC_CACHE
 
     try:
