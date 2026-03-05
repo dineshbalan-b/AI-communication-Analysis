@@ -272,164 +272,200 @@ export default function Dashboard() {
                             </div>
                         </div>
 
-                        <div className="h-64 w-full relative px-2 pt-10 pb-4">
-                            {/* Chart Grid Lines & Y-Axis Labels */}
-                            <div className="absolute inset-y-10 left-0 w-full flex flex-col justify-between pointer-events-none z-0">
-                                {[100, 75, 50, 25, 0].map(v => (
-                                    <div key={v} className="flex items-center w-full gap-4">
-                                        <span className="text-[9px] font-bold text-slate-500 w-6 text-right">{v}%</span>
-                                        <div className="flex-1 border-t border-white/5" />
-                                    </div>
-                                ))}
+                        {/* Chart Body */}
+                        {loading ? (
+                            <div className="h-52 flex items-center justify-center">
+                                <p className="text-slate-500 italic font-bold text-xs animate-pulse">Loading your data...</p>
                             </div>
+                        ) : history.length === 0 ? (
+                            <div className="h-52 flex flex-col items-center justify-center gap-3">
+                                <span className="material-symbols-outlined text-4xl text-slate-700">bar_chart</span>
+                                <p className="text-slate-500 italic font-bold text-xs">Complete a session to see your progress.</p>
+                            </div>
+                        ) : (() => {
+                            const data = [...history].reverse().slice(-10);
+                            const W = 600, H = 200, padL = 40, padB = 30, padT = 30, padR = 10;
+                            const innerW = W - padL - padR;
+                            const innerH = H - padB - padT;
+                            const barCount = data.length;
+                            const barGap = 8;
+                            const barW = (innerW - (barCount - 1) * barGap) / barCount;
 
-                            <div className="w-full h-full relative z-10 pl-12 pr-8">
-                                {loading ? (
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <p className="text-slate-500 italic font-bold text-xs">Generating visual analytics...</p>
-                                    </div>
-                                ) : history.length === 0 ? (
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <p className="text-slate-500 italic font-bold text-xs">No progression data available yet.</p>
-                                    </div>
-                                ) : (
-                                    <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible" preserveAspectRatio="none">
+                            const getColor = (score: number) => {
+                                if (score >= 80) return { bar: '#22c55e', glow: 'rgba(34,197,94,0.3)' };
+                                if (score >= 60) return { bar: '#13a4ec', glow: 'rgba(19,164,236,0.3)' };
+                                if (score >= 40) return { bar: '#f59e0b', glow: 'rgba(245,158,11,0.3)' };
+                                return { bar: '#ef4444', glow: 'rgba(239,68,68,0.3)' };
+                            };
+
+                            const points = data.map((h, i) => ({
+                                x: padL + i * (barW + barGap) + barW / 2,
+                                y: padT + innerH - (h.score / 100) * innerH,
+                                score: h.score,
+                                color: getColor(h.score),
+                                date: h.date,
+                                barH: (h.score / 100) * innerH,
+                            }));
+
+                            // Smooth line path over bar tops
+                            let lineD = '';
+                            points.forEach((p, i) => {
+                                if (i === 0) { lineD = `M ${p.x} ${p.y}`; }
+                                else {
+                                    const prev = points[i - 1];
+                                    const cpX = (prev.x + p.x) / 2;
+                                    lineD += ` C ${cpX} ${prev.y}, ${cpX} ${p.y}, ${p.x} ${p.y}`;
+                                }
+                            });
+
+                            return (
+                                <div className="relative w-full">
+                                    <svg
+                                        viewBox={`0 0 ${W} ${H}`}
+                                        className="w-full"
+                                        style={{ height: '220px' }}
+                                        preserveAspectRatio="xMidYMid meet"
+                                    >
                                         <defs>
-                                            <linearGradient id="trendGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                                <stop offset="0%" stopColor="#13a4ec" stopOpacity="0.3" />
-                                                <stop offset="100%" stopColor="#13a4ec" stopOpacity="0" />
-                                            </linearGradient>
-                                            <filter id="glow">
-                                                <feGaussianBlur stdDeviation="2" result="coloredBlur" />
-                                                <feMerge>
-                                                    <feMergeNode in="coloredBlur" />
-                                                    <feMergeNode in="SourceGraphic" />
-                                                </feMerge>
+                                            {data.map((h, i) => (
+                                                <linearGradient key={i} id={`barGrad${i}`} x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor={getColor(h.score).bar} stopOpacity="0.9" />
+                                                    <stop offset="100%" stopColor={getColor(h.score).bar} stopOpacity="0.3" />
+                                                </linearGradient>
+                                            ))}
+                                            <filter id="lineShadow" x="-20%" y="-20%" width="140%" height="140%">
+                                                <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="#13a4ec" floodOpacity="0.5" />
                                             </filter>
                                         </defs>
 
-                                        {/* Axis Lines */}
-                                        <line x1="0" y1="100" x2="100" y2="100" stroke="#212E3B" strokeWidth="0.5" />
-                                        <line x1="0" y1="0" x2="0" y2="100" stroke="#212E3B" strokeWidth="0.5" />
-
-                                        {/* Smooth Path Calculation */}
-                                        {(() => {
-                                            const data = [...history].reverse().slice(-10);
-                                            const width = 100; // percent units
-                                            const height = 100;
-
-                                            // Handle single point case
-                                            if (data.length === 1) {
-                                                const p = { x: 50, y: 100 - data[0].score };
-                                                return (
-                                                    <g className="group/point">
-                                                        <motion.circle
-                                                            cx={50}
-                                                            cy={p.y}
-                                                            r="2"
-                                                            fill="#13a4ec"
-                                                            initial={{ scale: 0 }}
-                                                            animate={{ scale: 1 }}
-                                                            filter="url(#glow)"
-                                                        />
-                                                        <foreignObject x={50} y={p.y} width="1" height="1" className="overflow-visible pointer-events-none">
-                                                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-[#1B2939] border border-[#13a4ec]/30 py-1.5 px-3 rounded-lg opacity-100 transition-all shadow-[0_0_20px_rgba(0,0,0,0.5)] z-50">
-                                                                <p className="text-[10px] font-black text-white whitespace-nowrap">{data[0].score}%</p>
-                                                                <p className="text-[7px] font-bold text-slate-500 uppercase tracking-tighter whitespace-nowrap">{new Date(data[0].date).toLocaleDateString()}</p>
-                                                                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#1B2939] rotate-45 border-r border-b border-[#13a4ec]/30" />
-                                                            </div>
-                                                        </foreignObject>
-                                                    </g>
-                                                );
-                                            }
-                                            const points = data.map((h, i) => ({
-                                                x: (i / (data.length - 1)) * 100,
-                                                y: 100 - h.score
-                                            }));
-
-                                            // Area Path
-                                            let areaD = `M ${points[0].x} 100 `;
-                                            points.forEach((p, i) => {
-                                                if (i === 0) areaD += `L ${p.x} ${p.y} `;
-                                                else {
-                                                    const prev = points[i - 1];
-                                                    const cp1x = prev.x + (p.x - prev.x) / 2;
-                                                    areaD += `C ${cp1x} ${prev.y}, ${cp1x} ${p.y}, ${p.x} ${p.y} `;
-                                                }
-                                            });
-                                            areaD += `L ${points[points.length - 1].x} 100 Z`;
-
-                                            // Line Path
-                                            let lineD = `M ${points[0].x} ${points[0].y} `;
-                                            points.forEach((p, i) => {
-                                                if (i > 0) {
-                                                    const prev = points[i - 1];
-                                                    const cp1x = prev.x + (p.x - prev.x) / 2;
-                                                    lineD += `C ${cp1x} ${prev.y}, ${cp1x} ${p.y}, ${p.x} ${p.y} `;
-                                                }
-                                            });
-
+                                        {/* Horizontal Grid Lines & Y Labels */}
+                                        {[0, 25, 50, 75, 100].map(v => {
+                                            const y = padT + innerH - (v / 100) * innerH;
                                             return (
-                                                <>
-                                                    <motion.path
-                                                        d={areaD}
-                                                        fill="url(#trendGradient)"
-                                                        initial={{ opacity: 0 }}
-                                                        animate={{ opacity: 1 }}
-                                                        transition={{ duration: 1.5 }}
-                                                    />
-                                                    <motion.path
-                                                        d={lineD}
-                                                        fill="none"
-                                                        stroke="#13a4ec"
-                                                        strokeWidth="1"
-                                                        strokeLinecap="round"
-                                                        initial={{ pathLength: 0 }}
-                                                        animate={{ pathLength: 1 }}
-                                                        transition={{ duration: 2, ease: "easeInOut" }}
-                                                        filter="url(#glow)"
-                                                    />
-                                                    {points.map((p, i) => (
-                                                        <g key={i} className="group/point">
-                                                            <motion.circle
-                                                                cx={p.x}
-                                                                cy={p.y}
-                                                                r="1.2"
-                                                                fill="#0B0F15"
-                                                                stroke="#13a4ec"
-                                                                strokeWidth="0.4"
-                                                                initial={{ scale: 0 }}
-                                                                animate={{ scale: 1 }}
-                                                                transition={{ delay: 1.5 + (i * 0.1) }}
-                                                                className="cursor-pointer transition-all hover:r-6"
-                                                            />
-                                                            <foreignObject x={p.x} y={p.y} width="1" height="1" className="overflow-visible pointer-events-none">
-                                                                <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-[#1B2939] border border-[#13a4ec]/30 py-1.5 px-3 rounded-lg opacity-0 group-hover/point:opacity-100 transition-all scale-75 group-hover/point:scale-100 shadow-[0_0_20px_rgba(0,0,0,0.5)] z-50">
-                                                                    <p className="text-[10px] font-black text-white whitespace-nowrap">{data[i].score}%</p>
-                                                                    <p className="text-[7px] font-bold text-slate-500 uppercase tracking-tighter whitespace-nowrap">{new Date(data[i].date).toLocaleDateString()}</p>
-                                                                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#1B2939] rotate-45 border-r border-b border-[#13a4ec]/30" />
-                                                                </div>
-                                                            </foreignObject>
-                                                        </g>
-                                                    ))}
-                                                </>
+                                                <g key={v}>
+                                                    <line x1={padL} y1={y} x2={W - padR} y2={y} stroke="#1E2D3D" strokeWidth="1" strokeDasharray={v === 0 ? '0' : '4 4'} />
+                                                    <text x={padL - 6} y={y + 4} fill="#4B6A88" fontSize="9" textAnchor="end" fontWeight="700">{v}%</text>
+                                                </g>
                                             );
-                                        })()}
-                                    </svg>
-                                )}
-                            </div>
+                                        })}
 
-                            {/* X-Axis Labels */}
-                            <div className="absolute bottom-1 left-12 right-8 flex justify-between h-4 items-center">
-                                {loading || history.length === 0 ? null : (
-                                    [...history].reverse().slice(-10).map((h, i) => (
-                                        <span key={i} className="text-[8px] font-black text-slate-600 uppercase tracking-tighter w-0 overflow-visible whitespace-nowrap text-center">
-                                            {new Date(h.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                                        </span>
-                                    ))
-                                )}
-                            </div>
-                        </div>
+                                        {/* Bars */}
+                                        {points.map((p, i) => (
+                                            <g key={i}>
+                                                {/* Bar shadow/glow */}
+                                                <rect
+                                                    x={padL + i * (barW + barGap)}
+                                                    y={padT + innerH - p.barH + 2}
+                                                    width={barW}
+                                                    height={p.barH}
+                                                    rx="4"
+                                                    fill={p.color.glow}
+                                                    className="blur-sm"
+                                                />
+                                                {/* Main bar */}
+                                                <motion.rect
+                                                    x={padL + i * (barW + barGap)}
+                                                    y={padT + innerH}
+                                                    width={barW}
+                                                    height={0}
+                                                    rx="5"
+                                                    fill={`url(#barGrad${i})`}
+                                                    animate={{
+                                                        y: padT + innerH - p.barH,
+                                                        height: p.barH,
+                                                    }}
+                                                    transition={{ duration: 0.8, delay: i * 0.07, ease: [0.34, 1.56, 0.64, 1] }}
+                                                />
+                                                {/* Score label on top */}
+                                                <motion.text
+                                                    x={p.x}
+                                                    y={p.y - 6}
+                                                    textAnchor="middle"
+                                                    fill={p.color.bar}
+                                                    fontSize="9"
+                                                    fontWeight="800"
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    transition={{ delay: 0.8 + i * 0.07 }}
+                                                >
+                                                    {p.score}%
+                                                </motion.text>
+                                                {/* X-axis date label */}
+                                                <text
+                                                    x={p.x}
+                                                    y={H - 8}
+                                                    textAnchor="middle"
+                                                    fill="#4B6A88"
+                                                    fontSize="8"
+                                                    fontWeight="700"
+                                                >
+                                                    {new Date(data[i].date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                                </text>
+                                            </g>
+                                        ))}
+
+                                        {/* Smooth Trend Line */}
+                                        {points.length >= 2 && (
+                                            <motion.path
+                                                d={lineD}
+                                                fill="none"
+                                                stroke="white"
+                                                strokeWidth="1.5"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeDasharray="4 3"
+                                                opacity="0.25"
+                                                initial={{ pathLength: 0, opacity: 0 }}
+                                                animate={{ pathLength: 1, opacity: 0.25 }}
+                                                transition={{ duration: 1.5, delay: 0.5, ease: 'easeInOut' }}
+                                            />
+                                        )}
+
+                                        {/* Solid trend line on top */}
+                                        {points.length >= 2 && (
+                                            <motion.path
+                                                d={lineD}
+                                                fill="none"
+                                                stroke="#13a4ec"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                filter="url(#lineShadow)"
+                                                initial={{ pathLength: 0, opacity: 0 }}
+                                                animate={{ pathLength: 1, opacity: 1 }}
+                                                transition={{ duration: 1.5, delay: 0.8, ease: 'easeInOut' }}
+                                            />
+                                        )}
+
+                                        {/* Dots on trend line */}
+                                        {points.map((p, i) => (
+                                            <motion.circle
+                                                key={i}
+                                                cx={p.x}
+                                                cy={p.y}
+                                                r="3"
+                                                fill="white"
+                                                stroke={p.color.bar}
+                                                strokeWidth="1.5"
+                                                initial={{ scale: 0 }}
+                                                animate={{ scale: 1 }}
+                                                transition={{ delay: 1.5 + i * 0.07, type: 'spring' }}
+                                            />
+                                        ))}
+                                    </svg>
+
+                                    {/* Legend */}
+                                    <div className="flex items-center gap-6 mt-2 pl-10">
+                                        {[{ color: '#22c55e', label: 'Excellent (80+)' }, { color: '#13a4ec', label: 'Good (60–79)' }, { color: '#f59e0b', label: 'Fair (40–59)' }, { color: '#ef4444', label: 'Needs Work (<40)' }].map(l => (
+                                            <div key={l.label} className="flex items-center gap-1.5">
+                                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: l.color }} />
+                                                <span className="text-[8px] font-bold text-slate-500 uppercase tracking-wider">{l.label}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            );
+                        })()}
                     </motion.div>
 
                     <div className="flex flex-col gap-6">
