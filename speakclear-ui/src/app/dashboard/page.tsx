@@ -273,14 +273,17 @@ export default function Dashboard() {
                         </div>
 
                         <div className="h-64 w-full relative px-2 pt-10 pb-4">
-                            {/* Chart Grid Lines */}
-                            <div className="absolute inset-x-8 inset-y-10 flex flex-col justify-between pointer-events-none opacity-5 z-0">
+                            {/* Chart Grid Lines & Y-Axis Labels */}
+                            <div className="absolute inset-y-10 left-0 w-full flex flex-col justify-between pointer-events-none z-0">
                                 {[100, 75, 50, 25, 0].map(v => (
-                                    <div key={v} className="w-full border-t border-white" />
+                                    <div key={v} className="flex items-center w-full gap-4">
+                                        <span className="text-[9px] font-bold text-slate-500 w-6 text-right">{v}%</span>
+                                        <div className="flex-1 border-t border-white/5" />
+                                    </div>
                                 ))}
                             </div>
 
-                            <div className="w-full h-full relative z-10 px-8">
+                            <div className="w-full h-full relative z-10 pl-12 pr-8">
                                 {loading ? (
                                     <div className="absolute inset-0 flex items-center justify-center">
                                         <p className="text-slate-500 italic font-bold text-xs">Generating visual analytics...</p>
@@ -305,13 +308,40 @@ export default function Dashboard() {
                                             </filter>
                                         </defs>
 
+                                        {/* Axis Lines */}
+                                        <line x1="0" y1="100%" x2="100%" y2="100%" stroke="#212E3B" strokeWidth="1" />
+                                        <line x1="0" y1="0" x2="0" y2="100%" stroke="#212E3B" strokeWidth="1" />
+
                                         {/* Smooth Path Calculation */}
                                         {(() => {
                                             const data = [...history].reverse().slice(-10);
-                                            if (data.length < 2) return null;
-
                                             const width = 100; // percent units
                                             const height = 100;
+
+                                            // Handle single point case
+                                            if (data.length === 1) {
+                                                const p = { x: 50, y: 100 - data[0].score };
+                                                return (
+                                                    <g className="group/point">
+                                                        <motion.circle
+                                                            cx="50%"
+                                                            cy={p.y + "%"}
+                                                            r="6"
+                                                            fill="#13a4ec"
+                                                            initial={{ scale: 0 }}
+                                                            animate={{ scale: 1 }}
+                                                            filter="url(#glow)"
+                                                        />
+                                                        <foreignObject x="50%" y={p.y + "%"} width="1" height="1" className="overflow-visible pointer-events-none">
+                                                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-[#1B2939] border border-[#13a4ec]/30 py-1.5 px-3 rounded-lg opacity-100 transition-all shadow-[0_0_20px_rgba(0,0,0,0.5)] z-50">
+                                                                <p className="text-[10px] font-black text-white whitespace-nowrap">{data[0].score}%</p>
+                                                                <p className="text-[7px] font-bold text-slate-500 uppercase tracking-tighter whitespace-nowrap">{new Date(data[0].date).toLocaleDateString()}</p>
+                                                                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#1B2939] rotate-45 border-r border-b border-[#13a4ec]/30" />
+                                                            </div>
+                                                        </foreignObject>
+                                                    </g>
+                                                );
+                                            }
                                             const points = data.map((h, i) => ({
                                                 x: (i / (data.length - 1)) * 100,
                                                 y: 100 - h.score
@@ -390,7 +420,7 @@ export default function Dashboard() {
                             </div>
 
                             {/* X-Axis Labels */}
-                            <div className="absolute bottom-0 inset-x-8 flex justify-between px-2 h-4 items-center">
+                            <div className="absolute bottom-1 left-12 right-8 flex justify-between h-4 items-center">
                                 {loading || history.length === 0 ? null : (
                                     [...history].reverse().slice(-10).map((h, i) => (
                                         <span key={i} className="text-[8px] font-black text-slate-600 uppercase tracking-tighter w-0 overflow-visible whitespace-nowrap text-center">
