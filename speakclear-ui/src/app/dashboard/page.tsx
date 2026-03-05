@@ -5,6 +5,27 @@ import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import { motion } from 'framer-motion';
 
+const AudioWave = ({ color = "#13a4ec" }: { color?: string }) => (
+    <div className="flex items-end gap-1 h-5">
+        {[1, 2, 3, 4, 5].map((i) => (
+            <motion.div
+                key={i}
+                animate={{
+                    height: ["20%", "100%", "30%", "80%", "20%"]
+                }}
+                transition={{
+                    duration: 1.2 + (i * 0.1),
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: i * 0.1
+                }}
+                className="w-1 rounded-full"
+                style={{ backgroundColor: color }}
+            />
+        ))}
+    </div>
+);
+
 export default function Dashboard() {
     const [username, setUsername] = useState("");
     const [history, setHistory] = useState<any[]>([]);
@@ -130,25 +151,33 @@ export default function Dashboard() {
             name: "Avg Clarity",
             score: average("clarity"),
             feedback: average("clarity") >= 80 ? "Your enunciation is professional." : "Practice clear articulation.",
-            color: "#13a4ec"
+            color: "#13a4ec",
+            icon: "mic",
+            bgIcon: "graphic_eq"
         },
         {
             name: "Grammar",
             score: average("grammar"),
             feedback: average("grammar") >= 80 ? "Strong syntactic control." : "Focus on sentence structure.",
-            color: "#FFBD2E"
+            color: "#FFBD2E",
+            icon: "forum",
+            bgIcon: "chat_bubble"
         },
         {
             name: "Confidence",
             score: average("confidence"),
             feedback: average("confidence") >= 80 ? "Confident delivery." : "Work on your vocal presence.",
-            color: "#45EBA5"
+            color: "#45EBA5",
+            icon: "record_voice_over",
+            bgIcon: "mic_none"
         },
         {
             name: "Vocabulary",
             score: average("vocabulary"),
             feedback: average("vocabulary") >= 80 ? "Rich word choice." : "Try using more varied synonyms.",
-            color: "#A87FF3"
+            color: "#A87FF3",
+            icon: "keyboard_voice",
+            bgIcon: "volume_up"
         },
     ];
 
@@ -200,10 +229,15 @@ export default function Dashboard() {
 
                         <div className="grid grid-cols-2 gap-8 w-full mb-10">
                             {/* Latest Score */}
-                            <div className="flex flex-col items-center justify-center">
+                            <div className="flex flex-col items-center justify-center relative">
+                                <motion.div
+                                    animate={{ scale: [1, 1.4, 1], opacity: [0.1, 0.3, 0.1] }}
+                                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                                    className="absolute inset-0 border border-[#13a4ec]/20 rounded-full"
+                                />
                                 <span className="text-[10px] font-bold text-[#4B6A88] uppercase tracking-widest mb-4">Latest Score</span>
                                 <div className="relative w-28 h-28 flex items-center justify-center">
-                                    <svg className="w-full h-full -rotate-90">
+                                    <svg className="w-full h-full -rotate-90 relative z-10">
                                         <circle cx="56" cy="56" r="48" stroke="rgba(255,255,255,0.05)" strokeWidth="6" fill="none" />
                                         <motion.circle
                                             cx="56" cy="56" r="48"
@@ -275,12 +309,18 @@ export default function Dashboard() {
                             >
                                 <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-white/[0.02] to-transparent rounded-full -mr-12 -mt-12" />
 
+                                {/* Communication Visual Watermark */}
+                                <span className="material-symbols-outlined absolute -bottom-4 -right-2 text-[100px] opacity-[0.03] rotate-[-15deg] group-hover:scale-110 group-hover:rotate-0 transition-transform duration-500 blur-[1px]">
+                                    {stat.bgIcon}
+                                </span>
+
                                 <div className="flex justify-between items-start mb-4 relative z-10">
                                     <motion.div
                                         whileHover={{ rotate: 15, scale: 1.1 }}
-                                        className={`p-2.5 rounded-xl bg-white/5 text-slate-400 group-hover:bg-[#13a4ec]/10 group-hover:text-[#13a4ec] transition-all`}
+                                        className={`p-2.5 rounded-xl bg-white/5 text-slate-400 group-hover:bg-[${stat.color}]/10 transition-all`}
+                                        style={{ color: stat.color }}
                                     >
-                                        <span className="material-symbols-outlined text-[20px]">{idx === 0 ? 'person_voice' : idx === 1 ? 'translate' : idx === 2 ? 'speed' : 'menu_book'}</span>
+                                        <span className="material-symbols-outlined text-[20px]">{stat.icon}</span>
                                     </motion.div>
                                     <div className="text-right">
                                         <span className={`text-xl font-black text-white group-hover:text-[#13a4ec] transition-colors`}>{stat.score}<span className="text-[10px] text-[#4B6A88] ml-1 font-bold">/100</span></span>
@@ -331,12 +371,7 @@ export default function Dashboard() {
                                 <div className="flex flex-col items-end">
                                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">Status</span>
                                     <span className="text-[11px] font-bold text-[#13a4ec] mt-1 flex items-center gap-2">
-                                        <motion.span
-                                            variants={pulseVariants}
-                                            initial="initial"
-                                            animate="animate"
-                                            className="w-2 h-2 rounded-full bg-[#13a4ec]"
-                                        />
+                                        <AudioWave color="#13a4ec" />
                                         Live Feed
                                     </span>
                                 </div>
@@ -549,11 +584,22 @@ export default function Dashboard() {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.6 }}
-                            className="bg-gradient-to-br from-[#13a4ec] to-[#13a4ec]/80 p-8 rounded-[32px] text-white flex flex-col justify-between shadow-lg relative overflow-hidden"
+                            className="bg-gradient-to-br from-[#13a4ec] to-[#13a4ec]/80 p-8 rounded-[32px] text-white flex flex-col justify-between shadow-lg relative overflow-hidden group"
                         >
                             <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-3xl"></div>
-                            <span className="material-symbols-outlined text-4xl mb-6">workspace_premium</span>
-                            <div>
+
+                            <span className="material-symbols-outlined absolute -bottom-6 -right-6 text-[120px] opacity-[0.15] rotate-[-15deg] mix-blend-overlay group-hover:scale-110 transition-transform duration-700 blur-[2px]">
+                                settings_voice
+                            </span>
+
+                            <div className="flex items-center justify-between mb-6 relative z-10">
+                                <span className="material-symbols-outlined text-4xl">workspace_premium</span>
+                                <div className="opacity-80 scale-75">
+                                    <AudioWave color="#ffffff" />
+                                </div>
+                            </div>
+
+                            <div className="relative z-10">
                                 <h4 className="text-md font-black uppercase tracking-tight mb-2">Pro Milestone</h4>
                                 <p className="text-[11px] font-bold opacity-90 leading-relaxed italic">"Consistency is the key to mastering public presence."</p>
                             </div>
