@@ -1,47 +1,123 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
 export default function AnalysisPage() {
     const router = useRouter();
     const [progress, setProgress] = useState(0);
     const [isMounted, setIsMounted] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const apiCalledRef = useRef(false);
 
     const statusItems = [
-        { id: 1, label: "Analyzing Clarity...", target: 30 },
-        { id: 2, label: "Checking Grammar...", target: 55 },
-        { id: 3, label: "Identifying Thinking Gaps...", target: 85 },
-        { id: 4, label: "Scanning Filler Words...", target: 100 },
+        { id: 1, label: "Uploading Audio...", target: 20 },
+        { id: 2, label: "Transcribing Speech...", target: 50 },
+        { id: 3, label: "Analyzing Metrics...", target: 75 },
+        { id: 4, label: "Generating AI Feedback...", target: 100 },
     ];
 
     useEffect(() => {
         setIsMounted(true);
+        const dataUrl = sessionStorage.getItem("pending_recording");
+        const topic = sessionStorage.getItem("pending_topic") || "General Communication";
+        const username = localStorage.getItem("username") || "Guest";
+
+        if (!dataUrl && isMounted) {
+            setError("No recording found. Please try again.");
+            return;
+        }
+
+        if (dataUrl && !apiCalledRef.current) {
+            apiCalledRef.current = true;
+            processAnalysis(dataUrl, topic, username);
+        }
+
+        // Visual progress simulation
         const interval = setInterval(() => {
             setProgress(prev => {
-                if (prev >= 100) {
+                if (prev >= 98) {
                     clearInterval(interval);
-                    setTimeout(() => router.push('/assessment/results'), 1500);
-                    return 100;
+                    return 98;
                 }
-                return prev + 1;
+                return prev + 0.5;
             });
-        }, 100);
+        }, 200);
+
         return () => clearInterval(interval);
-    }, [router]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isMounted]);
+
+    const processAnalysis = async (dataUrl: string, topic: string, username: string) => {
+        try {
+            // Convert Data URL to Blob
+            const response = await fetch(dataUrl);
+            const blob = await response.blob();
+
+            // Detect if it's video or audio
+            const isVideo = blob.type.includes('video') || dataUrl.startsWith('data:video');
+            const filename = isVideo ? "recording.webm" : "recording.wav";
+            const file = new File([blob], filename, { type: blob.type || (isVideo ? 'video/webm' : 'audio/wav') });
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("username", username);
+            formData.append("topic", topic);
+
+            const apiResponse = await fetch("http://127.0.0.1:8000/api/upload", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!apiResponse.ok) {
+                throw new Error("Failed to process audio on server.");
+            }
+
+            const data = await apiResponse.json();
+
+            // Success! Store result and finish progress
+            setProgress(100);
+            sessionStorage.setItem("last_analysis_result", JSON.stringify(data));
+
+            setTimeout(() => {
+                router.push('/assessment/results');
+            }, 1000);
+
+        } catch (err: any) {
+            console.error("Analysis Error:", err);
+            setError(err.message || "An unexpected error occurred during analysis.");
+        }
+    };
 
     if (!isMounted) return null;
 
     const getStatus = (target: number) => {
         if (progress >= target) return { label: "COMPLETED", color: "text-emerald-500", icon: "check_circle" };
-        if (progress > target - 25) return { label: "IN PROGRESS", color: "text-[#13a4ec]", icon: "sync" }; // Animated sync in JSX
+        if (progress > target - 25) return { label: "IN PROGRESS", color: "text-[#13a4ec]", icon: "sync" };
         return { label: "PENDING", color: "text-slate-600", icon: "schedule" };
     };
 
+    if (error) {
+        return (
+            <div className="min-h-screen bg-[#0B1219] text-slate-200 flex flex-col items-center justify-center p-6">
+                <div className="bg-red-500/10 border border-red-500/20 p-12 rounded-[40px] max-w-lg w-full text-center">
+                    <span className="material-symbols-outlined text-red-500 text-6xl mb-6">error</span>
+                    <h2 className="text-2xl font-black mb-4">Analysis Failed</h2>
+                    <p className="text-slate-400 mb-8">{error}</p>
+                    <button
+                        onClick={() => router.push('/assessment')}
+                        className="w-full py-4 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 transition-all"
+                    >
+                        Return to Assessments
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-[#0B1219] text-slate-200 font-sans flex flex-col">
-            {/* Top Navigation */}
             <nav className="px-12 py-6 flex items-center justify-between border-b border-white/5 bg-[#0B1219]/50 backdrop-blur-xl sticky top-0 z-50">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-[#13a4ec] rounded-xl flex items-center justify-center shadow-lg shadow-[#13a4ec]/20">
@@ -49,27 +125,9 @@ export default function AnalysisPage() {
                     </div>
                     <span className="text-xl font-black text-white tracking-tight">SpeakClear</span>
                 </div>
-
-                <div className="flex items-center gap-10">
-                    {['Dashboard', 'History', 'Resources', 'Settings'].map((item) => (
-                        <button
-                            key={item}
-                            onClick={() => router.push(`/${item.toLowerCase()}`)}
-                            className="text-sm font-bold text-slate-400 hover:text-white transition-colors"
-                        >
-                            {item}
-                        </button>
-                    ))}
-                    <div className="w-10 h-10 rounded-full border border-white/10 p-0.5 ml-4">
-                        <div className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center text-[#13a4ec]">
-                            <span className="material-symbols-outlined text-xl">person</span>
-                        </div>
-                    </div>
-                </div>
             </nav>
 
             <main className="flex-1 flex flex-col items-center justify-center px-6 max-w-4xl mx-auto w-full py-20">
-                {/* Header Section */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -81,7 +139,6 @@ export default function AnalysisPage() {
                     </p>
                 </motion.div>
 
-                {/* Central Visualization Card */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -123,14 +180,12 @@ export default function AnalysisPage() {
                     </div>
                 </motion.div>
 
-                {/* Progress Indicators Section */}
                 <div className="w-full max-w-2xl">
                     <div className="flex items-center justify-between mb-4">
                         <span className="text-sm font-black text-white uppercase tracking-widest">Overall Analysis Progress</span>
-                        <span className="text-xl font-black text-[#13a4ec] tabular-nums">{progress}%</span>
+                        <span className="text-xl font-black text-[#13a4ec] tabular-nums">{Math.round(progress)}%</span>
                     </div>
 
-                    {/* Progress Bar Container */}
                     <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden mb-4 p-0.5">
                         <motion.div
                             initial={{ width: 0 }}
@@ -142,12 +197,10 @@ export default function AnalysisPage() {
                     </div>
 
                     <p className="text-[10px] font-bold text-slate-500 italic mb-12 text-right">
-                        {progress < 100 ? "Almost there, finalizing data extraction..." : "Analysis complete! Finalizing report..."}
+                        {progress < 100 ? "Processing your speech patterns..." : "Analysis complete! Finalizing report..."}
                     </p>
 
                     <div className="space-y-4">
-                        <h3 className="text-xs font-black text-slate-500 uppercase tracking-[0.2em] mb-6">Status Indicators</h3>
-
                         {statusItems.map((item, idx) => {
                             const status = getStatus(item.target);
                             return (
@@ -185,10 +238,7 @@ export default function AnalysisPage() {
                     </div>
                 </div>
 
-                <div className="mt-20 flex flex-col items-center gap-8">
-                    <p className="text-xs text-slate-500 font-medium">
-                        Average processing time: 45 seconds per minute of audio.
-                    </p>
+                <div className="mt-20">
                     <button
                         onClick={() => router.push('/assessment')}
                         className="px-10 py-4 bg-white/5 border border-white/10 rounded-2xl text-[11px] font-black text-slate-300 uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all group"

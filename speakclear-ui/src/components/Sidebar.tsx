@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -11,6 +12,31 @@ interface SidebarProps {
 export default function Sidebar({ username }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
+    const [clarityRate, setClarityRate] = useState(0);
+    const [confidenceRate, setConfidenceRate] = useState(0);
+
+    useEffect(() => {
+        if (username) {
+            const fetchSidebarStats = async () => {
+                try {
+                    const resp = await fetch(`http://127.0.0.1:8000/api/progress?username=${username}`);
+                    const data = await resp.json();
+                    if (data.status === "success" && data.data.length > 0) {
+                        const history = data.data;
+                        const sumClarity = history.reduce((acc: number, curr: any) => acc + (curr.clarity || 0), 0);
+                        const sumConfidence = history.reduce((acc: number, curr: any) => acc + (curr.confidence || 0), 0);
+
+                        setClarityRate(Math.round((sumClarity / history.length) * 10)); // Scale 0-10 to 0-100
+                        setConfidenceRate(Math.round((sumConfidence / history.length) * 10));
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch sidebar stats:", err);
+                }
+            };
+            fetchSidebarStats();
+        }
+    }, [username]);
+
 
     const handleLogout = () => {
         localStorage.removeItem("username");
@@ -39,20 +65,26 @@ export default function Sidebar({ username }: SidebarProps) {
                 </div>
 
                 <nav className="flex flex-col gap-1">
-                    {navItems.map((item) => {
+                    {navItems.map((item, idx) => {
                         const isActive = pathname === item.path;
                         return (
-                            <Link
+                            <motion.div
                                 key={item.name}
-                                href={item.path}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
-                                        ? 'bg-[#13a4ec] text-white shadow-[0_8px_30px_rgb(19,164,236,0.2)] font-bold'
-                                        : 'text-[#8B9BB4] hover:text-white hover:bg-white/5'
-                                    }`}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.3, delay: idx * 0.05 + 0.1 }}
                             >
-                                <span className={`material-symbols-outlined text-[22px]`}>{item.icon}</span>
-                                <span className="text-sm">{item.name}</span>
-                            </Link>
+                                <Link
+                                    href={item.path}
+                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group ${isActive
+                                        ? 'bg-[#13a4ec] text-white shadow-[0_4px_20px_rgb(19,164,236,0.3)] font-bold'
+                                        : 'text-[#8B9BB4] hover:text-white hover:bg-white/5 hover:translate-x-1'
+                                        }`}
+                                >
+                                    <span className={`material-symbols-outlined text-[22px] transition-transform duration-300 ${!isActive && 'group-hover:scale-110 group-hover:text-[#13a4ec]'}`}>{item.icon}</span>
+                                    <span className="text-sm">{item.name}</span>
+                                </Link>
+                            </motion.div>
                         );
                     })}
                 </nav>
@@ -64,19 +96,19 @@ export default function Sidebar({ username }: SidebarProps) {
                         <div className="space-y-2">
                             <div className="flex justify-between text-[10px] font-bold">
                                 <span className="text-slate-400">Clarity</span>
-                                <span className="text-[#13a4ec]">84%</span>
+                                <span className="text-[#13a4ec]">{clarityRate}%</span>
                             </div>
                             <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                                <motion.div initial={{ width: 0 }} animate={{ width: '84%' }} transition={{ duration: 1.5 }} className="h-full bg-[#13a4ec] rounded-full shadow-[0_0_10px_rgba(19,164,236,0.3)]" />
+                                <motion.div initial={{ width: 0 }} animate={{ width: `${clarityRate}%` }} transition={{ duration: 1.5 }} className="h-full bg-[#13a4ec] rounded-full shadow-[0_0_10px_rgba(19,164,236,0.3)]" />
                             </div>
                         </div>
                         <div className="space-y-2">
                             <div className="flex justify-between text-[10px] font-bold">
                                 <span className="text-slate-400">Confidence</span>
-                                <span className="text-[#13a4ec]">72%</span>
+                                <span className="text-[#13a4ec]">{confidenceRate}%</span>
                             </div>
                             <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                                <motion.div initial={{ width: 0 }} animate={{ width: '72%' }} transition={{ duration: 1.5 }} className="h-full bg-[#13a4ec] rounded-full shadow-[0_0_10px_rgba(19,164,236,0.3)]" />
+                                <motion.div initial={{ width: 0 }} animate={{ width: `${confidenceRate}%` }} transition={{ duration: 1.5 }} className="h-full bg-[#13a4ec] rounded-full shadow-[0_0_10px_rgba(19,164,236,0.3)]" />
                             </div>
                         </div>
                     </div>

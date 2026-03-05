@@ -8,21 +8,44 @@ import Sidebar from '@/components/Sidebar';
 
 export default function Assessment() {
     const [username, setUsername] = useState("");
-    const [selectedTopic, setSelectedTopic] = useState("");
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [isUploading, setIsUploading] = useState(false);
-    const [uploadError, setUploadError] = useState("");
-    const [results, setResults] = useState<any>(null);
-    const router = useRouter();
-
-    const topics = [
+    const [topics, setTopics] = useState([
         { name: "Daily Standup Sync", icon: "groups" },
         { name: "Investor Pitch", icon: "trending_up" },
         { name: "Technical Concept Explanation", icon: "terminal" },
         { name: "Conflict Resolution", icon: "psychology" },
         { name: "Casual Networking", icon: "diversity_3" },
         { name: "Project Post-Mortem", icon: "assignment_turned_in" },
-    ];
+    ]);
+    const [selectedTopic, setSelectedTopic] = useState("");
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [uploadError, setUploadError] = useState("");
+    const [refreshing, setRefreshing] = useState(false);
+    const router = useRouter();
+
+    const fetchTopics = async () => {
+        setRefreshing(true);
+        try {
+            const resp = await fetch("http://127.0.0.1:8000/api/topics");
+            const data = await resp.json();
+            if (data.status === "success") {
+                setTopics(data.topics);
+            }
+        } catch (err) {
+            console.error("Failed to fetch topics:", err);
+        } finally {
+            setRefreshing(false);
+        }
+    };
+
+    useEffect(() => {
+        const un = localStorage.getItem("username");
+        if (!un) {
+            router.push("/login");
+        } else {
+            setUsername(un);
+            fetchTopics();
+        }
+    }, [router]);
 
     const methods = [
         {
@@ -39,14 +62,7 @@ export default function Assessment() {
             desc: "Direct audio analysis for best accuracy",
             action: "Start Recording",
             recommended: true
-        },
-        {
-            id: "video",
-            name: "Record Video",
-            icon: "videocam",
-            desc: "Analyze body language & clarity",
-            action: "Open Camera"
-        },
+        }
     ];
 
     useEffect(() => {
@@ -65,99 +81,20 @@ export default function Assessment() {
             return;
         }
 
-        setIsUploading(true);
         setUploadError("");
 
-        const fd = new FormData();
-        fd.append("file", fileToUpload);
-        fd.append("username", username);
-        fd.append("topic", selectedTopic);
-
-        try {
-            const res = await fetch("http://127.0.0.1:8000/api/upload", {
-                method: "POST",
-                body: fd
-            });
-            const data = await res.json();
-            if (res.ok) {
-                setResults(data);
-            } else {
-                setUploadError("Error: " + (data.detail || "API failure"));
-            }
-        } catch (e) {
-            setUploadError("Network error. Ensure the FastAPI server is running.");
-        } finally {
-            setIsUploading(false);
-        }
+        const reader = new FileReader();
+        reader.readAsDataURL(fileToUpload);
+        reader.onloadend = () => {
+            sessionStorage.setItem("pending_recording", reader.result as string);
+            sessionStorage.setItem("pending_topic", selectedTopic);
+            router.push('/assessment/analysis');
+        };
     };
+
 
     if (!username) return null;
 
-    if (results) {
-        return (
-            <div className="flex h-screen overflow-hidden bg-[#0B0F15] text-slate-100 font-display transition-colors duration-500">
-                <Sidebar username={username} />
-                <main className="flex-1 overflow-y-auto p-12 relative">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="max-w-4xl mx-auto"
-                    >
-                        <header className="mb-12">
-                            <h2 className="text-3xl font-bold text-white mb-2">Analysis Complete</h2>
-                            <p className="text-slate-400 font-medium">Results for <span className="text-[#13a4ec] font-bold">{selectedTopic}</span></p>
-                        </header>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                            <div className="bg-[#121820] border border-[#212E3B] rounded-3xl p-8 flex flex-col items-center justify-center relative shadow-2xl">
-                                <span className="text-5xl font-black text-[#13a4ec] mb-2">{results.final_score}%</span>
-                                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">CLARITY SCORE</span>
-                            </div>
-                            <div className="bg-[#121820] border border-[#212E3B] rounded-3xl p-8 flex flex-col items-center justify-center shadow-xl">
-                                <span className="text-5xl font-black text-white mb-2">{results.metrics.wpm}</span>
-                                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">WPM (PACE)</span>
-                            </div>
-                            <div className="bg-[#121820] border border-[#212E3B] rounded-3xl p-8 flex flex-col items-center justify-center shadow-xl">
-                                <span className="text-5xl font-black text-[#FFBD2E] mb-2">{results.metrics.filler_count}</span>
-                                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">FILLER WORDS</span>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <section className="bg-[#121820] border border-[#212E3B] rounded-3xl p-8 space-y-6 shadow-lg">
-                                <h3 className="text-sm font-bold text-[#4B6A88] uppercase tracking-widest flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-[18px]">psychology</span> AI Evaluation
-                                </h3>
-                                <p className="text-slate-200 leading-loose text-[15px] italic">"{results.evaluation.final_feedback}"</p>
-                                <div className="pt-4 border-t border-[#212E3B]">
-                                    <h4 className="text-[10px] font-bold text-[#13a4ec] uppercase tracking-[0.2em] mb-3">Improvements</h4>
-                                    <p className="text-slate-400 text-sm leading-relaxed">{results.evaluation.improvements}</p>
-                                </div>
-                            </section>
-
-                            <section className="bg-[#121820] border border-[#212E3B] rounded-3xl p-8 shadow-lg flex flex-col">
-                                <h3 className="text-sm font-bold text-[#4B6A88] uppercase tracking-widest mb-6 flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-[18px]">notes</span> Transcript
-                                </h3>
-                                <div className="flex-1 bg-[#0B0F15] rounded-xl p-6 border border-white/5 overflow-y-auto text-slate-400 text-sm leading-loose mb-2 max-h-[300px]">
-                                    "{results.transcript}"
-                                </div>
-                            </section>
-                        </div>
-
-                        <div className="mt-12 flex justify-center pb-10">
-                            <button
-                                onClick={() => { setResults(null); setSelectedFile(null); }}
-                                className="px-12 py-4 bg-[#13a4ec] hover:bg-[#108CCC] text-white font-bold rounded-2xl shadow-xl shadow-[#13a4ec]/20 transition-all active:scale-95"
-                            >
-                                Start New Session
-                            </button>
-                        </div>
-                    </motion.div>
-                </main>
-            </div>
-        );
-    }
 
     return (
         <div className="flex h-screen overflow-hidden bg-[#0B0F15] text-slate-100 font-display transition-colors duration-500">
@@ -186,7 +123,13 @@ export default function Assessment() {
                                 </div>
                                 <h3 className="text-lg font-bold text-white">Generated Topics for Practice</h3>
                             </div>
-                            <button className="text-[#13a4ec] text-[10px] font-black uppercase tracking-widest hover:underline transition-all">Refresh Topics</button>
+                            <button
+                                onClick={fetchTopics}
+                                disabled={refreshing}
+                                className={`text-[#13a4ec] text-[10px] font-black uppercase tracking-widest hover:underline transition-all ${refreshing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            >
+                                {refreshing ? 'Refreshing...' : 'Refresh Topics'}
+                            </button>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -204,15 +147,43 @@ export default function Assessment() {
                                         }`}
                                 >
                                     <div className={`h-11 w-11 rounded-xl flex items-center justify-center transition-all ${selectedTopic === topic.name ? 'bg-[#13a4ec] text-white shadow-lg shadow-[#13a4ec]/30' : 'bg-white/5 text-slate-400 group-hover:text-white'}`}>
-                                        <span className="material-symbols-outlined text-xl">{topic.icon}</span>
+                                        <span className="material-symbols-outlined text-xl">{topic.icon || 'auto_awesome'}</span>
                                     </div>
                                     <span className={`text-sm font-bold ${selectedTopic === topic.name ? 'text-white' : 'text-slate-300 group-hover:text-white'}`}>{topic.name}</span>
                                 </motion.button>
                             ))}
                         </div>
+
+                        {/* Manual Topic Input */}
+                        <div className="mt-10 max-w-2xl mx-auto">
+                            <div className="flex flex-col gap-4 p-8 bg-[#121820]/60 border border-white/5 rounded-3xl shadow-2xl relative group overflow-hidden">
+                                <div className="absolute top-0 left-0 w-1 h-full bg-[#13a4ec] opacity-40 group-focus-within:opacity-100 transition-opacity"></div>
+                                <div className="flex items-center gap-3 mb-2">
+                                    <span className="material-symbols-outlined text-[#13a4ec] text-xl">edit_note</span>
+                                    <label className="text-[11px] font-black text-[#4B6A88] uppercase tracking-[0.2em]">Or Enter Topic Manually</label>
+                                </div>
+                                <input
+                                    type="text"
+                                    value={selectedTopic}
+                                    onChange={(e) => setSelectedTopic(e.target.value)}
+                                    placeholder="Type your own topic here... (e.g. My Career Vision)"
+                                    className="bg-[#0B0F15] border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-slate-600 focus:outline-none focus:border-[#13a4ec]/50 transition-all font-bold text-sm"
+                                />
+                            </div>
+                        </div>
                     </section>
 
                     {/* Start Your Assessment Section */}
+                    {uploadError && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mb-8 p-5 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold text-center flex items-center justify-center gap-3"
+                        >
+                            <span className="material-symbols-outlined">error</span>
+                            {uploadError}
+                        </motion.div>
+                    )}
                     <section>
                         <div className="flex items-center gap-3 mb-10">
                             <div className="p-2 rounded-lg bg-[#13a4ec]/10 text-[#13a4ec]">
@@ -224,7 +195,7 @@ export default function Assessment() {
                         <div className="bg-[#121820]/40 border border-[#212E3B] rounded-[40px] p-10 md:p-14 relative overflow-hidden">
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#13a4ec]/20 to-transparent"></div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 relative z-10">
+                            <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-10 relative z-10">
                                 {methods.map((method, idx) => (
                                     <motion.div
                                         key={idx}
@@ -276,8 +247,13 @@ export default function Assessment() {
                                                         setUploadError("Please select a topic first.");
                                                         return;
                                                     }
-                                                    router.push(`/assessment/recording?topic=${encodeURIComponent(selectedTopic)}`);
+                                                    if (method.id === "video") {
+                                                        router.push(`/assessment/recording?topic=${encodeURIComponent(selectedTopic)}&type=video`);
+                                                    } else {
+                                                        router.push(`/assessment/recording?topic=${encodeURIComponent(selectedTopic)}`);
+                                                    }
                                                 }}
+
                                                 className={`w-full py-4 text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all ${method.recommended ? 'bg-[#13a4ec] hover:bg-[#108CCC] text-white shadow-xl shadow-[#13a4ec]/30 scale-105 hover:scale-110' : 'bg-white/5 border border-white/5 hover:bg-white/10 text-white'}`}
                                             >
                                                 {method.action}
@@ -299,26 +275,7 @@ export default function Assessment() {
                         </div>
                     </section>
 
-                    {isUploading && (
-                        <div className="fixed inset-0 bg-[#0B0F15]/90 backdrop-blur-xl z-[100] flex flex-col items-center justify-center text-center p-8">
-                            <div className="h-24 w-24 mb-10 relative">
-                                <div className="absolute inset-0 rounded-full border-4 border-white/5"></div>
-                                <div className="absolute inset-0 rounded-full border-4 border-t-[#13a4ec] animate-spin"></div>
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className="material-symbols-outlined text-[#13a4ec] text-3xl animate-pulse">mic</span>
-                                </div>
-                            </div>
-                            <h3 className="text-2xl font-bold text-white mb-3">Analyzing Clarity...</h3>
-                            <p className="text-slate-400 font-medium max-w-sm">Please wait while our high-fidelity AI model processes your verbal patterns and insights.</p>
-                        </div>
-                    )}
 
-                    {uploadError && (
-                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-10 p-5 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold text-center flex items-center justify-center gap-3">
-                            <span className="material-symbols-outlined">error</span>
-                            {uploadError}
-                        </motion.div>
-                    )}
                 </motion.div>
             </main>
         </div>

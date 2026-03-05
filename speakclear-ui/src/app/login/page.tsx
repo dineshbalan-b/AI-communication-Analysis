@@ -130,7 +130,12 @@ export default function Login() {
                             </div>
 
                             <form onSubmit={handleSubmit} className="space-y-6">
-                                <div className="space-y-2">
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.1 }}
+                                    className="space-y-2"
+                                >
                                     <label className="text-xs font-bold text-white uppercase tracking-wider ml-1">Email Address</label>
                                     <input
                                         type="text"
@@ -140,9 +145,14 @@ export default function Login() {
                                         placeholder="name@company.com"
                                         required
                                     />
-                                </div>
+                                </motion.div>
 
-                                <div className="space-y-2">
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2 }}
+                                    className="space-y-2"
+                                >
                                     <div className="flex justify-between items-center ml-1">
                                         <label className="text-xs font-bold text-white uppercase tracking-wider">Password</label>
                                         {mode === "login" && (
@@ -170,9 +180,12 @@ export default function Login() {
                                             </span>
                                         </button>
                                     </div>
-                                </div>
+                                </motion.div>
 
-                                <button
+                                <motion.button
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.3 }}
                                     type="submit"
                                     disabled={isLoading}
                                     className="w-full h-14 bg-[#00A3FF] hover:bg-[#0081CC] text-white font-bold rounded-2xl shadow-[0_4px_24px_rgba(0,163,255,0.4)] transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
@@ -182,7 +195,7 @@ export default function Login() {
                                     ) : (
                                         mode === "login" ? "Sign In" : "Sign Up"
                                     )}
-                                </button>
+                                </motion.button>
 
                                 {errorMsg && (
                                     <motion.p

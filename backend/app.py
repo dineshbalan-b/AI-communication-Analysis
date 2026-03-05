@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 from auth import create_user, verify_user, init_user_db
-from database import init_evaluation_db, save_evaluation, get_user_progress
+from database import init_evaluation_db, save_evaluation, get_user_progress, delete_evaluation
 from audio_preprocessing import preprocess_audio
 from communication_analysis import (
     analyze_audio,
@@ -20,7 +20,8 @@ from communication_analysis import (
 from llm_engine import (
     evaluate_with_llm,
     compute_hybrid_score,
-    generate_spoken_feedback
+    generate_spoken_feedback,
+    generate_topics
 )
 
 # -------------------------------
@@ -79,8 +80,11 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
         
     temp_input_path = None
     try:
+        # Extract extension from filename
+        ext = os.path.splitext(file.filename)[1] if file.filename else ".wav"
+        
         # Save uploaded file
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp:
             content = await file.read()
             tmp.write(content)
             temp_input_path = tmp.name
@@ -142,4 +146,26 @@ async def get_progress(username: str):
     data = get_user_progress(username)
     if not data:
         return {"status": "success", "data": []}
-    return {"status": "success", "data": [{"date": row[0], "score": row[1]} for row in data]}
+    return {"status": "success", "data": [
+        {
+            "id": row[0], 
+            "date": row[1], 
+            "topic": row[2], 
+            "score": row[3],
+            "grammar": row[4],
+            "vocabulary": row[5],
+            "clarity": row[6],
+            "confidence": row[7]
+        } for row in data
+    ]}
+
+@app.delete("/api/session/{session_id}")
+async def delete_session(session_id: int):
+    if delete_evaluation(session_id):
+        return {"status": "success", "message": "Session deleted"}
+    raise HTTPException(status_code=400, detail="Failed to delete session")
+
+@app.get("/api/topics")
+async def get_topics():
+    topics = generate_topics()
+    return {"status": "success", "topics": [{"name": t, "icon": "auto_awesome"} for t in topics]}

@@ -9,6 +9,7 @@ export default function ResultsPage() {
     const router = useRouter();
     const [username, setUsername] = useState("");
     const [isMounted, setIsMounted] = useState(false);
+    const [results, setResults] = useState<any>(null);
 
     useEffect(() => {
         setIsMounted(true);
@@ -18,53 +19,36 @@ export default function ResultsPage() {
         } else {
             router.push("/login");
         }
+
+        const storedResults = sessionStorage.getItem("last_analysis_result");
+        if (storedResults) {
+            setResults(JSON.parse(storedResults));
+        }
     }, [router]);
 
     if (!isMounted) return null;
 
+    // Use actual results or fallbacks if something went wrong
+    const metrics = results?.metrics || { wpm: 0, filler_count: 0, speech_ratio: 0 };
+    const evalData = results?.evaluation || {
+        grammar: 0, vocabulary: 0, clarity: 0, confidence: 0, relevance: 0,
+        final_feedback: "Evaluation data not available.",
+        improvements: "No suggestions available."
+    };
+    const finalScore = results?.final_score || 0;
+
     const stats = [
-        { label: "OVERALL SCORE", value: "84", sub: "/100", trend: "+5% from last session", trendColor: "text-emerald-500", icon: "assessment", iconColor: "text-[#13a4ec]" },
-        { label: "FILLER WORDS", value: "12", sub: "", trend: "+2 \"ums\" detected", trendColor: "text-amber-500", icon: "do_not_disturb_on", iconColor: "text-amber-500" },
-        { label: "SPEECH RATE", value: "145", sub: "wpm", trend: "Ideal pace maintained", trendColor: "text-emerald-500", icon: "speed", iconColor: "text-[#13a4ec]" },
-        { label: "THINKING GAPS", value: "04", sub: "total", trend: "-15% duration", trendColor: "text-emerald-500", icon: "hourglass_empty", iconColor: "text-emerald-500" },
+        { label: "OVERALL SCORE", value: finalScore.toString(), sub: "/100", trend: results ? "Session analyzed" : "No data", trendColor: "text-emerald-500", icon: "assessment", iconColor: "text-[#13a4ec]" },
+        { label: "FILLER WORDS", value: metrics.filler_count.toString(), sub: "", trend: "Detected in transcript", trendColor: "text-amber-500", icon: "do_not_disturb_on", iconColor: "text-amber-500" },
+        { label: "SPEECH RATE", value: Math.round(metrics.wpm).toString(), sub: "wpm", trend: metrics.wpm > 130 && metrics.wpm < 160 ? "Ideal pace" : "Adjust pace", trendColor: "text-emerald-500", icon: "speed", iconColor: "text-[#13a4ec]" },
+        { label: "SPEECH RATIO", value: Math.round(metrics.speech_ratio * 100).toString(), sub: "%", trend: "Active speaking time", trendColor: "text-emerald-500", icon: "hourglass_empty", iconColor: "text-emerald-500" },
     ];
 
     const breakdowns = [
-        { label: "Enunciation Clarity", value: 92, color: "bg-[#13a4ec]" },
-        { label: "Grammar & Structure", value: 88, color: "bg-[#13a4ec]" },
-        { label: "Tone Consistency", value: 76, color: "bg-[#13a4ec]" },
-        { label: "Thinking Gaps", value: 65, color: "bg-orange-500" },
-    ];
-
-    const fillers = [
-        { label: "\"Um / Ah\"", count: 12 },
-        { label: "\"Like\"", count: 5 },
-        { label: "\"So\"", count: 8 },
-        { label: "\"You know\"", count: 3 },
-    ];
-
-    const improvements = [
-        {
-            title: "Reduce Transition Fillers",
-            text: "We noticed a spike in \"ums\" and \"ahs\" specifically when transitioning between the project scope and the budget section. Tip: Try to pause for 1 second instead of filling the silence when moving to a new topic.",
-            icon: "psychology",
-            color: "text-amber-500",
-            bg: "bg-amber-500/10"
-        },
-        {
-            title: "Pitch Variation",
-            text: "During the data analysis part, your pitch became somewhat monotone. Varying your inflection slightly more can help keep the audience engaged during dense information sections.",
-            icon: "record_voice_over",
-            color: "text-[#13a4ec]",
-            bg: "bg-[#13a4ec]/10"
-        },
-        {
-            title: "Clarity on Complex Terms",
-            text: "Enunciation dropped slightly when pronouncing \"multidimentional\" and \"infrastructure\". Practice these specific multi-syllabic words to maintain 95%+ clarity.",
-            icon: "trending_up",
-            color: "text-emerald-500",
-            bg: "bg-emerald-500/10"
-        },
+        { label: "Grammar & Structure", value: evalData.grammar * 10, color: "bg-[#13a4ec]" },
+        { label: "Vocabulary Richness", value: evalData.vocabulary * 10, color: "bg-[#13a4ec]" },
+        { label: "Communication Clarity", value: evalData.clarity * 10, color: "bg-[#13a4ec]" },
+        { label: "Confidence Perception", value: evalData.confidence * 10, color: "bg-[#13a4ec]" },
     ];
 
     return (
@@ -72,12 +56,11 @@ export default function ResultsPage() {
             <Sidebar username={username} />
 
             <main className="flex-1 overflow-y-auto relative pb-20">
-                {/* Header Section */}
                 <div className="px-12 py-10">
                     <div className="flex items-center gap-3 text-[10px] text-slate-500 font-black uppercase tracking-widest mb-6">
                         <span className="hover:text-white cursor-pointer transition-colors" onClick={() => router.push('/dashboard')}>Sessions</span>
                         <span className="material-symbols-outlined text-sm opacity-30">chevron_right</span>
-                        <span className="text-slate-300">Session #1042 - Clarity Analysis</span>
+                        <span className="text-slate-300">Session Results</span>
                     </div>
 
                     <div className="flex items-end justify-between mb-12">
@@ -117,7 +100,7 @@ export default function ResultsPage() {
                                     {stat.sub && <span className="text-lg font-bold text-slate-500">{stat.sub}</span>}
                                 </div>
                                 <div className={`text-[10px] font-black ${stat.trendColor} uppercase tracking-widest flex items-center gap-2`}>
-                                    <span className="material-symbols-outlined text-sm">trending_up</span>
+                                    <span className="material-symbols-outlined text-sm">info</span>
                                     {stat.trend}
                                 </div>
                             </motion.div>
@@ -125,8 +108,8 @@ export default function ResultsPage() {
                     </div>
 
                     <div className="grid grid-cols-12 gap-8">
-                        {/* Left Column: Metrics and Fillers */}
-                        <div className="col-span-4 space-y-8">
+                        {/* Left Column: Metrics and Transcript */}
+                        <div className="col-span-5 space-y-8">
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
@@ -157,21 +140,18 @@ export default function ResultsPage() {
                                 </div>
 
                                 <div className="mt-16 pt-10 border-t border-white/5">
-                                    <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-8">Specific Filler Counts</h4>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        {fillers.map((f) => (
-                                            <div key={f.label} className="bg-white/[0.02] border border-white/5 p-4 rounded-2xl flex items-center justify-between group hover:border-[#13a4ec]/30 transition-colors">
-                                                <span className="text-xs font-bold text-slate-400 group-hover:text-white transition-colors">{f.label}</span>
-                                                <span className="text-sm font-black text-white">{f.count}</span>
-                                            </div>
-                                        ))}
+                                    <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6">Detected Transcript</h4>
+                                    <div className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl h-48 overflow-y-auto">
+                                        <p className="text-sm text-slate-400 leading-relaxed italic">
+                                            "{results?.transcript || "Wait, no transcript was generated."}"
+                                        </p>
                                     </div>
                                 </div>
                             </motion.div>
                         </div>
 
                         {/* Right Column: AI Feedback */}
-                        <div className="col-span-8 space-y-8">
+                        <div className="col-span-7 space-y-8">
                             <motion.div
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
@@ -183,48 +163,51 @@ export default function ResultsPage() {
                                     </div>
                                     <div>
                                         <h3 className="text-xl font-black text-white tracking-tight">AI Feedback & Suggestions</h3>
-                                        <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Tailored coaching based on Session #1042</p>
+                                        <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Tailored coaching summary</p>
                                     </div>
                                 </div>
 
-                                {/* Strengths Box */}
                                 <div className="bg-[#13a4ec]/5 border border-[#13a4ec]/20 rounded-[24px] p-8 mb-12 relative overflow-hidden">
                                     <div className="absolute top-0 right-0 p-6 opacity-10">
                                         <span className="material-symbols-outlined text-6xl text-[#13a4ec]">lightbulb</span>
                                     </div>
                                     <div className="flex items-center gap-3 mb-6 relative z-10">
                                         <span className="material-symbols-outlined text-[#13a4ec] text-xl">tips_and_updates</span>
-                                        <h4 className="text-xs font-black text-[#13a4ec] uppercase tracking-[0.2em]">Key Strengths</h4>
+                                        <h4 className="text-xs font-black text-[#13a4ec] uppercase tracking-[0.2em]">Summary Evaluation</h4>
                                     </div>
-                                    <p className="text-slate-300 font-medium leading-relaxed max-w-2xl relative z-10">
-                                        Your opening statement was exceptionally clear. You maintained a strong rhythmic flow during the middle 2 minutes of the presentation, showing high confidence in the technical subject matter. Your tone was professional yet approachable.
+                                    <p className="text-slate-300 font-medium leading-relaxed relative z-10">
+                                        {evalData.final_feedback}
                                     </p>
                                 </div>
 
-                                <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-8">Areas for Improvement</h4>
-                                <div className="space-y-6">
-                                    {improvements.map((item, id) => (
-                                        <div key={id} className="flex gap-6 p-6 rounded-2xl hover:bg-white/[0.02] transition-colors border border-transparent hover:border-white/5">
-                                            <div className={`w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center ${item.bg}`}>
-                                                <span className={`material-symbols-outlined ${item.color} text-xl`}>{item.icon}</span>
-                                            </div>
-                                            <div>
-                                                <h5 className="text-[15px] font-black text-white mb-2 tracking-tight">{item.title}</h5>
-                                                <p className="text-sm text-slate-400 font-medium leading-relaxed">
-                                                    {item.text}
-                                                </p>
-                                            </div>
+                                <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6">Coaching Advice</h4>
+                                <div className="bg-white/[0.02] border border-white/5 p-8 rounded-2xl">
+                                    <div className="flex gap-6">
+                                        <div className="w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center bg-emerald-500/10 text-emerald-500">
+                                            <span className="material-symbols-outlined text-xl">trending_up</span>
                                         </div>
-                                    ))}
+                                        <div>
+                                            <h5 className="text-[15px] font-black text-white mb-2 tracking-tight">Areas to Focus On</h5>
+                                            <p className="text-sm text-slate-400 font-medium leading-relaxed whitespace-pre-line">
+                                                {evalData.improvements}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="flex items-center gap-4 mt-16 pt-10 border-t border-white/5">
-                                    <button className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest border border-white/5 transition-all">
-                                        View Full Transcript
+                                    <button
+                                        onClick={() => window.print()}
+                                        className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest border border-white/5 transition-all flex items-center justify-center gap-3"
+                                    >
+                                        <span className="material-symbols-outlined text-lg">print</span>
+                                        Print Report
                                     </button>
-                                    <button className="flex-1 py-4 bg-white text-[#0B0F15] hover:bg-slate-100 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3">
-                                        <span className="material-symbols-outlined text-lg">share</span>
-                                        Export PDF
+                                    <button
+                                        onClick={() => router.push('/dashboard')}
+                                        className="flex-1 py-4 bg-white text-[#0B0F15] hover:bg-slate-100 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3"
+                                    >
+                                        Finish Practice
                                     </button>
                                 </div>
                             </motion.div>
@@ -244,8 +227,8 @@ export default function ResultsPage() {
                                 <span className="material-symbols-outlined text-3xl">rocket_launch</span>
                             </div>
                             <div>
-                                <h2 className="text-3xl font-black text-white mb-2 tracking-tight">Ready for your next session?</h2>
-                                <p className="text-white/70 font-bold uppercase text-[10px] tracking-widest">Apply these suggestions in a practice run to see your score grow.</p>
+                                <h2 className="text-3xl font-black text-white mb-2 tracking-tight">Keep the momentum going!</h2>
+                                <p className="text-white/70 font-bold uppercase text-[10px] tracking-widest">Regular practice is the fastest way to master communication.</p>
                             </div>
                         </div>
 
@@ -253,20 +236,10 @@ export default function ResultsPage() {
                             onClick={() => router.push('/assessment')}
                             className="bg-white text-[#13a4ec] px-10 py-5 rounded-2xl text-sm font-black uppercase tracking-widest shadow-2xl transition-all hover:scale-105 active:scale-95 relative z-10"
                         >
-                            Start New Session
+                            Start Next Practice
                         </button>
                     </motion.div>
                 </div>
-
-                {/* Visual Footer */}
-                <footer className="px-12 py-10 border-t border-white/5 flex items-center justify-between text-[10px] font-black text-slate-600 uppercase tracking-widest">
-                    <span>© 2024 SpeakClear AI. All rights reserved.</span>
-                    <div className="flex items-center gap-8">
-                        <span className="hover:text-white cursor-pointer transition-colors">Privacy Policy</span>
-                        <span className="hover:text-white cursor-pointer transition-colors">Terms of Service</span>
-                        <span className="hover:text-white cursor-pointer transition-colors">Contact Support</span>
-                    </div>
-                </footer>
             </main>
         </div>
     );

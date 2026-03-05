@@ -115,15 +115,66 @@ Improvement suggestions:
 {llm_scores['improvements']}
 """
 
-    response = client.audio.speech.create(
-        model="gpt-4o-mini-tts",
-        voice="alloy",
-        input=spoken_text
-    )
+    try:
+        response = client.audio.speech.create(
+            model="gpt-4o-mini-tts",
+            voice="alloy",
+            input=spoken_text
+        )
 
-    output_path = "final_feedback_audio.mp3"
+        output_path = "final_feedback_audio.mp3"
 
-    with open(output_path, "wb") as f:
-        f.write(response.content)
+        with open(output_path, "wb") as f:
+            f.write(response.content)
 
-    return output_path
+        return output_path
+    except Exception as e:
+        print(f"Error generating spoken feedback: {e}")
+        return None
+
+# -------------------------------
+# Generate Dynamic Topics
+# -------------------------------
+
+def generate_topics():
+    """
+    Generates a list of 6 simple and everyday communication practice topics.
+    """
+    try:
+        import time
+        seed = time.time()
+        prompt = f"""
+        Generate 6 simple and everyday communication practice topics. 
+        Each topic should be easy to talk about for 1-2 minutes.
+        Include common daily scenarios (Hobby, Food, Travel, School/Work, Family).
+        CRITICAL: Ensure all 6 topics are completely unique and different from each other.
+        Variety hint: {seed}
+        Return ONLY a JSON list of strings under key "topics".
+        Example: {{"topics": ["My Favorite Hobby", "A Memorable Vacation", "How to Make Tea", "My Weekend Plans", "Favorite Childhood Movie", "My Best Friend"]}}
+        """
+
+        response = client.chat.completions.create(
+            model="gpt-4.1-nano", # Using the smaller nano model for speed
+            messages=[{"role": "user", "content": prompt}],
+            response_format={"type": "json_object"}
+        )
+
+        import json
+        res_text = response.choices[0].message.content
+        data = json.loads(res_text)
+        
+        # Extract list regardless of key name used by AI
+        if isinstance(data, list):
+            return data[:6]
+        if isinstance(data, dict):
+            if "topics" in data:
+                return data["topics"][:6]
+            for val in data.values():
+                if isinstance(val, list):
+                    return val[:6]
+        
+        return ["My Favorite Hobby", "A Memorable Trip", "The Best Meal I Had", "My Role Model", "Future Goals", "A Productive Day"]
+        
+    except Exception as e:
+        print(f"Error generating topics: {e}")
+        return ["My Favorite Hobby", "A Memorable Trip", "The Best Meal I Had", "My Role Model", "Future Goals", "A Productive Day"]

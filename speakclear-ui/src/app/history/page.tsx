@@ -1,0 +1,177 @@
+"use client";
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Sidebar from '@/components/Sidebar';
+import { motion } from 'framer-motion';
+
+export default function HistoryPage() {
+    const [username, setUsername] = useState("");
+    const [history, setHistory] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const router = useRouter();
+
+    useEffect(() => {
+        const un = localStorage.getItem("username");
+        if (!un) {
+            router.push("/login");
+        } else {
+            setUsername(un);
+            fetchHistory(un);
+        }
+    }, [router]);
+
+    const fetchHistory = async (user: string) => {
+        try {
+            const resp = await fetch(`http://127.0.0.1:8000/api/progress?username=${user}`);
+            const data = await resp.json();
+            if (data.status === "success") {
+                setHistory(data.data); // Backend already sorts DESC
+            }
+        } catch (err) {
+            console.error("Failed to fetch history:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDelete = async (sessionId: number) => {
+        if (!confirm("Are you sure you want to delete this session?")) return;
+
+        try {
+            const resp = await fetch(`http://127.0.0.1:8000/api/session/${sessionId}`, {
+                method: 'DELETE'
+            });
+            const data = await resp.json();
+            if (data.status === "success") {
+                fetchHistory(username);
+            }
+        } catch (err) {
+            console.error("Failed to delete session:", err);
+        }
+    };
+
+    if (!username) return null;
+
+    return (
+        <div className="flex h-screen overflow-hidden bg-[#0B0F15] text-slate-100 font-display">
+            <Sidebar username={username} />
+
+            <main className="flex-1 overflow-y-auto p-12 relative">
+                <header className="mb-12">
+                    <div className="flex items-center gap-3 text-[10px] text-slate-500 font-black uppercase tracking-widest mb-4">
+                        <span className="hover:text-white cursor-pointer transition-colors" onClick={() => router.push('/dashboard')}>Dashboard</span>
+                        <span className="material-symbols-outlined text-sm opacity-30">chevron_right</span>
+                        <span className="text-slate-300">Session History</span>
+                    </div>
+                    <h2 className="text-4xl font-black text-white tracking-tight">Full Session History</h2>
+                    <p className="text-slate-400 mt-2 font-medium">Review and analyze all your past communication assessments.</p>
+                </header>
+
+                <motion.section
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-[#121820] border border-[#212E3B] rounded-[32px] overflow-hidden shadow-2xl"
+                >
+                    <div className="p-8 border-b border-[#212E3B] flex justify-between items-center bg-white/[0.01]">
+                        <div className="flex items-center gap-4">
+                            <span className="material-symbols-outlined text-[#13a4ec]">history</span>
+                            <h3 className="text-lg font-bold text-white">All Attempts ({history.length})</h3>
+                        </div>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead>
+                                <tr className="text-left border-b border-[#212E3B] bg-white/[0.02]">
+                                    <th className="px-10 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Date & Time</th>
+                                    <th className="px-10 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Assessment Topic</th>
+                                    <th className="px-10 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Score</th>
+                                    <th className="px-10 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Performance</th>
+                                    <th className="px-10 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-[#212E3B]/50">
+                                {loading ? (
+                                    <tr>
+                                        <td colSpan={5} className="px-10 py-32 text-center">
+                                            <div className="flex flex-col items-center gap-4">
+                                                <div className="w-12 h-12 border-4 border-[#13a4ec]/20 border-t-[#13a4ec] rounded-full animate-spin" />
+                                                <p className="text-slate-500 font-bold italic">Loading your history...</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ) : history.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={5} className="px-10 py-32 text-center text-slate-500 font-bold italic">
+                                            No sessions found. Start a new assessment to begin your journey.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    history.map((attempt, idx) => (
+                                        <motion.tr
+                                            key={idx}
+                                            initial={{ opacity: 0, x: -10 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: 0.2 + (idx * 0.05) }}
+                                            className="hover:bg-[#13a4ec]/5 transition-all group border-b border-[#212E3B]/50"
+                                        >
+                                            <td className="px-10 py-8">
+                                                <p className="text-md font-bold text-white mb-1">
+                                                    {new Date(attempt.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                </p>
+                                                <p className="text-xs font-medium text-[#4B6A88]">{new Date(attempt.date).toLocaleTimeString()}</p>
+                                            </td>
+                                            <td className="px-10 py-8 text-[#13a4ec] font-black uppercase text-xs tracking-widest">
+                                                {attempt.topic || "General Practice"}
+                                            </td>
+                                            <td className="px-10 py-8">
+                                                <div className="flex items-center gap-4">
+                                                    <span className="text-2xl font-black text-white tabular-nums">{attempt.score}</span>
+                                                    <div className="flex-1 w-24 h-1.5 bg-white/5 rounded-full overflow-hidden hidden md:block">
+                                                        <motion.div
+                                                            initial={{ width: 0 }}
+                                                            animate={{ width: `${attempt.score}%` }}
+                                                            className="h-full bg-[#13a4ec] shadow-[0_0_10px_rgba(19,164,236,0.3)]"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-10 py-8 text-xs font-black uppercase tracking-wider">
+                                                <span className={`px-4 py-1.5 rounded-full border ${attempt.score >= 80
+                                                    ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+                                                    : attempt.score >= 60
+                                                        ? 'bg-[#13a4ec]/10 text-[#13a4ec] border-[#13a4ec]/20'
+                                                        : 'bg-orange-500/10 text-orange-500 border-orange-500/20'
+                                                    }`}>
+                                                    {attempt.score >= 80 ? 'Mastery' : attempt.score >= 60 ? 'Proficient' : 'Developing'}
+                                                </span>
+                                            </td>
+                                            <td className="px-10 py-8 text-right">
+                                                <div className="flex items-center justify-end gap-3">
+                                                    <button
+                                                        onClick={() => router.push('/assessment/results')}
+                                                        className="bg-white/5 hover:bg-white/10 text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border border-white/5 active:scale-95"
+                                                    >
+                                                        View Details
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(attempt.id)}
+                                                        className="p-3 text-slate-500 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all"
+                                                        title="Delete Session"
+                                                    >
+                                                        <span className="material-symbols-outlined text-[20px]">delete</span>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </motion.tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </motion.section>
+            </main>
+        </div>
+    );
+}

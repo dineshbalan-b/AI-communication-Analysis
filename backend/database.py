@@ -68,13 +68,28 @@ def get_user_progress(username):
     c = conn.cursor()
 
     c.execute("""
-        SELECT date, hybrid_score
+        SELECT rowid, date, topic, hybrid_score, grammar, vocabulary, clarity, confidence
         FROM evaluations
         WHERE username=?
-        ORDER BY date
+        ORDER BY date DESC
     """, (username,))
 
     data = c.fetchall()
     conn.close()
 
     return data
+
+
+# -------------------------------
+# Delete Evaluation
+# -------------------------------
+
+def delete_evaluation(rowid):
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+
+    c.execute("DELETE FROM evaluations WHERE rowid=?", (rowid,))
+
+    conn.commit()
+    conn.close()
+    return True
