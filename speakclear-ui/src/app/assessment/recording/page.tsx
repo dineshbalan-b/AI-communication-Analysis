@@ -160,6 +160,17 @@ function RecordingPageContent() {
         }
     };
 
+    const handleDiscard = () => {
+        if (mediaRecorderRef.current) {
+            // Remove the onstop handler so it doesn't trigger the analysis redirect
+            mediaRecorderRef.current.onstop = null;
+            if (mediaRecorderRef.current.state !== "inactive") {
+                mediaRecorderRef.current.stop();
+            }
+        }
+        router.push('/assessment');
+    };
+
     // Timer logic
     useEffect(() => {
         let interval: NodeJS.Timeout;
@@ -296,7 +307,7 @@ function RecordingPageContent() {
 
                         <div className="flex flex-col items-center gap-4 group">
                             <button
-                                onClick={() => router.push('/assessment')}
+                                onClick={handleDiscard}
                                 className="w-16 h-16 rounded-full border-2 border-white/10 flex items-center justify-center text-white hover:border-red-500/50 hover:bg-red-500/10 transition-all duration-300"
                             >
                                 <span className="material-symbols-outlined text-2xl text-red-500/80">close</span>
