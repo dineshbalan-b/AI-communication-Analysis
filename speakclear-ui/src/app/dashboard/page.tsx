@@ -156,7 +156,7 @@ export default function Dashboard() {
         <div className="flex h-screen overflow-hidden bg-[#0B0F15] text-slate-100 font-display">
             <Sidebar username={username} />
 
-            <main className="flex-1 overflow-y-auto p-10 relative">
+            <main className="flex-1 overflow-y-auto pt-24 p-6 md:p-10 relative">
                 <motion.header
                     initial="hidden"
                     animate="visible"

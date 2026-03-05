@@ -31,7 +31,7 @@ export default function SettingsPage() {
         <div className="flex h-screen overflow-hidden bg-[#0B0F15] text-slate-100 font-display">
             <Sidebar username={username} />
 
-            <main className="flex-1 overflow-y-auto p-12 relative">
+            <main className="flex-1 overflow-y-auto pt-24 p-6 md:p-12 relative">
                 <header className="mb-12">
                     <div className="flex items-center gap-3 text-[10px] text-slate-500 font-black uppercase tracking-widest mb-4">
                         <span className="hover:text-white cursor-pointer transition-colors" onClick={() => router.push('/dashboard')}>Dashboard</span>

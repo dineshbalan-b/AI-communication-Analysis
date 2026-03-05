@@ -215,12 +215,12 @@ export default function Login() {
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
-                                <button className="h-14 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center gap-3 font-bold text-xs">
-                                    <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" className="w-5 h-5 grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100" alt="Google" />
+                                <button className="group h-14 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center gap-3 font-bold text-xs">
+                                    <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" className="w-5 h-5 grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all" alt="Google" />
                                     Google
                                 </button>
-                                <button className="h-14 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center gap-3 font-bold text-xs">
-                                    <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" className="w-5 h-5 grayscale opacity-70" alt="LinkedIn" />
+                                <button className="group h-14 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center gap-3 font-bold text-xs">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" className="w-5 h-5 grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all" alt="LinkedIn" />
                                     LinkedIn
                                 </button>
                             </div>

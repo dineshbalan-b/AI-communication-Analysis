@@ -100,7 +100,7 @@ export default function Assessment() {
         <div className="flex h-screen overflow-hidden bg-[#0B0F15] text-slate-100 font-display transition-colors duration-500">
             <Sidebar username={username} />
 
-            <main className="flex-1 overflow-y-auto p-12 relative">
+            <main className="flex-1 overflow-y-auto pt-24 md:pt-12 p-6 md:p-12 relative">
                 <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -108,7 +108,7 @@ export default function Assessment() {
                 >
                     {/* Header */}
                     <header className="mb-12">
-                        <h2 className="text-4xl font-bold text-white mb-3 tracking-tight">Assessment Selection & Setup</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">Assessment Selection & Setup</h2>
                         <p className="text-[#8B9BB4] font-medium text-lg leading-relaxed max-w-3xl">
                             Choose a topic or start a new session to analyze your verbal clarity and thinking gaps.
                         </p>
@@ -192,7 +192,7 @@ export default function Assessment() {
                             <h3 className="text-lg font-bold text-white">Start Your Assessment</h3>
                         </div>
 
-                        <div className="bg-[#121820]/40 border border-[#212E3B] rounded-[40px] p-10 md:p-14 relative overflow-hidden">
+                        <div className="bg-[#121820]/40 border border-[#212E3B] rounded-[40px] p-8 md:p-14 relative overflow-hidden">
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#13a4ec]/20 to-transparent"></div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-10 relative z-10">

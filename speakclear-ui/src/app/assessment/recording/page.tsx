@@ -184,7 +184,7 @@ function RecordingPageContent() {
             <Sidebar username={username} />
 
             <main className="flex-1 overflow-y-auto relative flex flex-col">
-                <div className="px-12 py-8 flex items-center justify-between border-b border-white/5">
+                <div className="pt-24 md:pt-8 px-6 md:px-12 pb-6 md:pb-8 flex flex-col md:flex-row items-start md:items-center justify-between border-b border-white/5 gap-4 md:gap-0">
                     <div className="flex items-center gap-3 text-xs text-slate-500 font-black uppercase tracking-widest">
                         <span className="hover:text-[#13a4ec] cursor-pointer transition-colors" onClick={() => router.push('/assessment')}>Assessments</span>
                         <span className="material-symbols-outlined text-sm opacity-30">chevron_right</span>
@@ -208,7 +208,7 @@ function RecordingPageContent() {
                     </div>
                 </div>
 
-                <div className="flex-1 max-w-5xl mx-auto w-full px-12 pt-16 pb-32 flex flex-col items-center">
+                <div className="flex-1 max-w-5xl mx-auto w-full px-6 md:px-12 pt-10 md:pt-16 pb-48 md:pb-32 flex flex-col items-center">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -306,8 +306,8 @@ function RecordingPageContent() {
                     </div>
                 </div>
 
-                <div className="fixed bottom-0 left-[280px] right-0 py-8 px-12 border-t border-white/5 bg-[#0B0F15]/80 backdrop-blur-2xl z-20">
-                    <div className="max-w-4xl mx-auto flex items-center justify-between">
+                <div className="fixed bottom-0 left-0 md:left-72 right-0 py-6 md:py-8 px-6 md:px-12 border-t border-white/5 bg-[#0B0F15]/90 backdrop-blur-2xl z-20">
+                    <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-0">
                         <div className="flex flex-col gap-3">
                             <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Mic Status</span>
                             <div className="flex items-center gap-4">

@@ -55,17 +55,17 @@ export default function ResultsPage() {
         <div className="flex h-screen bg-[#0B0F15] text-slate-200 overflow-hidden font-sans">
             <Sidebar username={username} />
 
-            <main className="flex-1 overflow-y-auto relative pb-20">
-                <div className="px-12 py-10">
+            <main className="flex-1 overflow-y-auto pt-24 md:pt-0 relative pb-20">
+                <div className="px-6 md:px-12 py-10">
                     <div className="flex items-center gap-3 text-[10px] text-slate-500 font-black uppercase tracking-widest mb-6">
                         <span className="hover:text-white cursor-pointer transition-colors" onClick={() => router.push('/dashboard')}>Sessions</span>
                         <span className="material-symbols-outlined text-sm opacity-30">chevron_right</span>
                         <span className="text-slate-300">Session Results</span>
                     </div>
 
-                    <div className="flex items-end justify-between mb-12">
+                    <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-12 gap-6 md:gap-0">
                         <div>
-                            <h1 className="text-5xl font-black text-white mb-4 tracking-tight">Session Results & Feedback</h1>
+                            <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Session Results & Feedback</h1>
                             <p className="text-slate-400 font-medium text-lg">
                                 Comprehensive verbal impact analysis and AI-driven growth metrics.
                             </p>
@@ -80,7 +80,7 @@ export default function ResultsPage() {
                     </div>
 
                     {/* Stats Grid */}
-                    <div className="grid grid-cols-4 gap-6 mb-12">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
                         {stats.map((stat, idx) => (
                             <motion.div
                                 key={stat.label}
@@ -107,7 +107,7 @@ export default function ResultsPage() {
                         ))}
                     </div>
 
-                    <div className="grid grid-cols-12 gap-8">
+                    <div className="flex flex-col xl:grid xl:grid-cols-12 gap-8">
                         {/* Left Column: Metrics and Transcript */}
                         <div className="col-span-5 space-y-8">
                             <motion.div
@@ -151,7 +151,7 @@ export default function ResultsPage() {
                         </div>
 
                         {/* Right Column: AI Feedback */}
-                        <div className="col-span-7 space-y-8">
+                        <div className="xl:col-span-7 space-y-8">
                             <motion.div
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
@@ -195,7 +195,7 @@ export default function ResultsPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-4 mt-16 pt-10 border-t border-white/5">
+                                <div className="flex flex-col sm:flex-row items-center gap-4 mt-16 pt-10 border-t border-white/5">
                                     <button
                                         onClick={() => window.print()}
                                         className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest border border-white/5 transition-all flex items-center justify-center gap-3"
@@ -218,7 +218,7 @@ export default function ResultsPage() {
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="mt-16 bg-[#13a4ec] rounded-[32px] p-12 flex items-center justify-between relative overflow-hidden group"
+                        className="mt-16 bg-[#13a4ec] rounded-[32px] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between relative overflow-hidden group gap-8 md:gap-0"
                     >
                         <div className="absolute top-0 bottom-0 left-0 right-0 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-30deg] translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
 

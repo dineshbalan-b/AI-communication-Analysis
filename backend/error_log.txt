@@ -1,0 +1,32 @@
+Traceback (most recent call last):
+  File "D:\NAVIGATE_LABS\3_Voice_Ai\3_Capstone\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 176, in load
+    y, sr_native = __soundfile_load(path, offset, duration, dtype)
+                   ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\NAVIGATE_LABS\3_Voice_Ai\3_Capstone\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 209, in __soundfile_load
+    context = sf.SoundFile(path)
+  File "D:\NAVIGATE_LABS\3_Voice_Ai\3_Capstone\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 690, in __init__
+    self._file = self._open(file, mode_int, closefd)
+                 ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\NAVIGATE_LABS\3_Voice_Ai\3_Capstone\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 1265, in _open
+    raise LibsndfileError(err, prefix="Error opening {0!r}: ".format(self.name))
+soundfile.LibsndfileError: Error opening 'C:\\Users\\Admin\\AppData\\Local\\Temp\\tmpsoy3x4kr.py': Format not recognised.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\NAVIGATE_LABS\3_Voice_Ai\3_Capstone\AI-communication-Analysis-main\backend\app.py", line 93, in upload_audio
+    processed_path = preprocess_audio(temp_input_path)
+  File "D:\NAVIGATE_LABS\3_Voice_Ai\3_Capstone\AI-communication-Analysis-main\backend\audio_preprocessing.py", line 71, in preprocess_audio
+    y, sr = librosa.load(safe_wav_path, sr=16000, mono=True)
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\NAVIGATE_LABS\3_Voice_Ai\3_Capstone\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 184, in load
+    y, sr_native = __audioread_load(path, offset, duration, dtype)
+                   ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<decorator-gen-100>", line 2, in __audioread_load
+  File "D:\NAVIGATE_LABS\3_Voice_Ai\3_Capstone\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\util\decorators.py", line 63, in __wrapper
+    return func(*args, **kwargs)
+  File "D:\NAVIGATE_LABS\3_Voice_Ai\3_Capstone\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 240, in __audioread_load
+    reader = audioread.audio_open(path)
+  File "D:\NAVIGATE_LABS\3_Voice_Ai\3_Capstone\AI-communication-Analysis-main\.venv\Lib\site-packages\audioread\__init__.py", line 131, in audio_open
+    raise NoBackendError()
+audioread.exceptions.NoBackendError
