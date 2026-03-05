@@ -56,6 +56,27 @@ export default function Dashboard() {
             console.error("Failed to delete session:", err);
         }
     };
+    const handleViewDetails = (attempt: any) => {
+        const payload = {
+            transcript: attempt.transcript || "Transcript not available.",
+            metrics: {
+                wpm: attempt.wpm || 0,
+                filler_count: attempt.filler_count || 0,
+                speech_ratio: attempt.speech_ratio || 0
+            },
+            evaluation: {
+                grammar: attempt.grammar || 0,
+                vocabulary: attempt.vocabulary || 0,
+                clarity: attempt.clarity || 0,
+                confidence: attempt.confidence || 0,
+                final_feedback: attempt.final_feedback || "No final feedback stored.",
+                improvements: attempt.improvements || "No improvements stored."
+            },
+            final_score: attempt.score || 0
+        };
+        sessionStorage.setItem("last_analysis_result", JSON.stringify(payload));
+        router.push("/assessment/results");
+    };
 
     if (!username) return null;
 
@@ -289,7 +310,7 @@ export default function Dashboard() {
                                             <td className="px-8 py-6 text-right">
                                                 <div className="flex items-center justify-end gap-3">
                                                     <button
-                                                        onClick={() => router.push('/assessment/results')}
+                                                        onClick={() => handleViewDetails(attempt)}
                                                         className="text-[#13a4ec] hover:text-white transition-colors flex items-center gap-2 text-[10px] font-black uppercase tracking-widest bg-white/5 px-3 py-2 rounded-lg"
                                                     >
                                                         <span className="material-symbols-outlined text-[16px]">open_in_new</span>

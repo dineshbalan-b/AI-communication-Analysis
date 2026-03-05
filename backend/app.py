@@ -115,7 +115,12 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
             llm_scores.get("grammar", 0),
             llm_scores.get("vocabulary", 0),
             llm_scores.get("clarity", 0),
-            llm_scores.get("confidence", 0)
+            llm_scores.get("confidence", 0),
+            wpm=text_metrics["wpm"],
+            filler_count=text_metrics["filler_count"],
+            speech_ratio=audio_metrics["speech_ratio"],
+            final_feedback=llm_scores.get("final_feedback", ""),
+            improvements=llm_scores.get("improvements", "")
         )
 
         # Clean processed file
@@ -155,7 +160,13 @@ async def get_progress(username: str):
             "grammar": row[4],
             "vocabulary": row[5],
             "clarity": row[6],
-            "confidence": row[7]
+            "confidence": row[7],
+            "transcript": row[8],
+            "wpm": row[9],
+            "filler_count": row[10],
+            "speech_ratio": row[11],
+            "final_feedback": row[12],
+            "improvements": row[13]
         } for row in data
     ]}
 

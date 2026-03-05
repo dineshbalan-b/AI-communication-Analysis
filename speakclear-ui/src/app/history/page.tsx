@@ -51,6 +51,28 @@ export default function HistoryPage() {
         }
     };
 
+    const handleViewDetails = (attempt: any) => {
+        const payload = {
+            transcript: attempt.transcript || "Transcript not available.",
+            metrics: {
+                wpm: attempt.wpm || 0,
+                filler_count: attempt.filler_count || 0,
+                speech_ratio: attempt.speech_ratio || 0
+            },
+            evaluation: {
+                grammar: attempt.grammar || 0,
+                vocabulary: attempt.vocabulary || 0,
+                clarity: attempt.clarity || 0,
+                confidence: attempt.confidence || 0,
+                final_feedback: attempt.final_feedback || "No final feedback stored.",
+                improvements: attempt.improvements || "No improvements stored."
+            },
+            final_score: attempt.score || 0
+        };
+        sessionStorage.setItem("last_analysis_result", JSON.stringify(payload));
+        router.push("/assessment/results");
+    };
+
     if (!username) return null;
 
     return (
@@ -150,7 +172,7 @@ export default function HistoryPage() {
                                             <td className="px-10 py-8 text-right">
                                                 <div className="flex items-center justify-end gap-3">
                                                     <button
-                                                        onClick={() => router.push('/assessment/results')}
+                                                        onClick={() => handleViewDetails(attempt)}
                                                         className="bg-white/5 hover:bg-white/10 text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border border-white/5 active:scale-95"
                                                     >
                                                         View Details
