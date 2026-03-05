@@ -6,6 +6,7 @@ from moviepy.editor import VideoFileClip
 from pydub import AudioSegment
 from pydub.effects import compress_dynamic_range
 import os
+import subprocess
 
 
 # --------------------------------
@@ -50,8 +51,24 @@ def apply_energy_vad(y, sr, frame_length=2048, hop_length=512, energy_threshold=
 # --------------------------------
 def preprocess_audio(input_path):
 
-    # Load audio
-    y, sr = librosa.load(input_path, sr=16000, mono=True)
+    # Use ffmpeg directly to bypass any library detection heuristics.
+    safe_wav_path = "temp_safe_format.wav"
+    try:
+        subprocess.run([
+            "ffmpeg", "-y", "-i", input_path, 
+            "-ar", "16000", "-ac", "1", "-f", "wav", 
+            safe_wav_path
+        ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+    except subprocess.CalledProcessError as e:
+        error_output = e.stderr.decode(errors='ignore') if e.stderr else str(e)
+        print(f"FFMPEG conversion failed: {error_output}")
+        safe_wav_path = input_path
+    except Exception as e:
+        print(f"FFMPEG execution failed entirely: {e}")
+        safe_wav_path = input_path
+
+    # Load audio using the standardized file
+    y, sr = librosa.load(safe_wav_path, sr=16000, mono=True)
 
     # Normalize
     y = librosa.util.normalize(y)
@@ -73,8 +90,10 @@ def preprocess_audio(input_path):
     final_path = "processed_audio.wav"
     compressed_audio.export(final_path, format="wav")
 
-    # Remove temporary file
+    # Remove temporary files
     if os.path.exists(temp_vad_path):
         os.remove(temp_vad_path)
+    if os.path.exists(safe_wav_path) and safe_wav_path != input_path:
+        os.remove(safe_wav_path)
 
     return final_path
