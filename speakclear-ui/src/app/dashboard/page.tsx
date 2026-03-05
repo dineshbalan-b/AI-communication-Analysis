@@ -80,6 +80,43 @@ export default function Dashboard() {
         router.push("/assessment/results");
     };
 
+    const containerVariants: any = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.1
+            }
+        }
+    };
+
+    const itemVariants: any = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                type: 'spring',
+                stiffness: 100,
+                damping: 20
+            }
+        }
+    };
+
+    const pulseVariants: any = {
+        initial: { scale: 1, opacity: 0.4 },
+        animate: {
+            scale: [1, 1.5, 1],
+            opacity: [0.4, 0.8, 0.4],
+            transition: {
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+            }
+        }
+    };
+
     if (!username) return null;
 
     const average = (key: string) => {
@@ -120,26 +157,42 @@ export default function Dashboard() {
             <Sidebar username={username} />
 
             <main className="flex-1 overflow-y-auto p-10 relative">
-                <header className="flex justify-between items-center mb-10">
+                <motion.header
+                    initial="hidden"
+                    animate="visible"
+                    variants={itemVariants}
+                    className="flex justify-between items-center mb-10"
+                >
                     <h2 className="text-2xl font-bold text-white tracking-tight">User Dashboard</h2>
                     <div className="flex items-center gap-6">
                         <div className="flex items-center gap-3 border-l border-[#212E3B] pl-6">
                             <div className="text-right">
                                 <p className="text-sm font-bold text-white leading-tight">{username}</p>
-                                <p className="text-[10px] font-bold text-[#4B6A88] uppercase tracking-wider">Communication Pro</p>
+                                <motion.p
+                                    animate={{ opacity: [0.6, 1, 0.6] }}
+                                    transition={{ duration: 3, repeat: Infinity }}
+                                    className="text-[10px] font-bold text-[#4B6A88] uppercase tracking-wider"
+                                >
+                                    Communication Pro
+                                </motion.p>
                             </div>
                             <div className="h-10 w-10 rounded-full bg-[#1B2939] border border-[#212E3B] flex items-center justify-center text-[#13a4ec] font-black uppercase">
                                 {username.substring(0, 2)}
                             </div>
                         </div>
                     </div>
-                </header>
+                </motion.header>
 
-                <div className="grid grid-cols-1 xl:grid-cols-[420px_1fr] gap-8 mb-10">
+                <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    variants={containerVariants}
+                    className="grid grid-cols-1 xl:grid-cols-[420px_1fr] gap-8 mb-10"
+                >
                     {/* Historical Performance Card */}
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        variants={itemVariants}
+                        whileHover={{ y: -5, transition: { duration: 0.2 } }}
                         className="bg-[#121820] border border-[#212E3B] rounded-3xl p-10 flex flex-col items-center justify-center relative overflow-hidden group shadow-2xl"
                     >
                         <div className="absolute top-0 right-0 w-32 h-32 bg-[#13a4ec]/5 rounded-full blur-3xl group-hover:bg-[#13a4ec]/10 transition-all"></div>
@@ -211,13 +264,12 @@ export default function Dashboard() {
                         {stats.map((stat, idx) => (
                             <motion.div
                                 key={stat.name}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1 + (idx * 0.1) }}
+                                variants={itemVariants}
                                 whileHover={{
-                                    y: -8,
-                                    backgroundColor: "rgba(19, 164, 236, 0.02)",
-                                    borderColor: "rgba(19, 164, 236, 0.4)"
+                                    y: -10,
+                                    scale: 1.02,
+                                    borderColor: "rgba(19, 164, 236, 0.4)",
+                                    boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(19, 164, 236, 0.05)"
                                 }}
                                 className="bg-[#121820] border border-[#212E3B] rounded-[24px] p-6 flex flex-col justify-between group cursor-default transition-all shadow-xl relative overflow-hidden"
                             >
@@ -251,14 +303,18 @@ export default function Dashboard() {
                             </motion.div>
                         ))}
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Score Progression & Insights Section */}
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8 mb-10">
+                <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-100px" }}
+                    variants={containerVariants}
+                    className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8 mb-10"
+                >
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4 }}
+                        variants={itemVariants}
                         className="bg-[#121820] border border-[#212E3B] rounded-[32px] p-8 shadow-2xl overflow-hidden"
                     >
                         {/* Card Header */}
@@ -274,7 +330,15 @@ export default function Dashboard() {
                             <div className="flex items-center gap-3">
                                 <div className="flex flex-col items-end">
                                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">Status</span>
-                                    <span className="text-[11px] font-bold text-[#13a4ec] mt-1">Live Feed</span>
+                                    <span className="text-[11px] font-bold text-[#13a4ec] mt-1 flex items-center gap-2">
+                                        <motion.span
+                                            variants={pulseVariants}
+                                            initial="initial"
+                                            animate="animate"
+                                            className="w-2 h-2 rounded-full bg-[#13a4ec]"
+                                        />
+                                        Live Feed
+                                    </span>
                                 </div>
                                 <div className="w-10 h-10 rounded-2xl bg-[#13a4ec]/5 border border-[#13a4ec]/10 flex items-center justify-center text-[#13a4ec]">
                                     <span className="material-symbols-outlined text-xl">insights</span>
@@ -495,13 +559,18 @@ export default function Dashboard() {
                             </div>
                         </motion.div>
                     </div>
-                </div>
+                </motion.div>
 
-                <div className="grid grid-cols-1 mb-20">
+                <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-100px" }}
+                    variants={containerVariants}
+                    className="grid grid-cols-1 mb-20"
+                >
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
+                        variants={itemVariants}
+                        whileHover={{ scale: 1.01 }}
                         className="bg-[#121820] border border-[#212E3B] rounded-[32px] p-8 shadow-xl"
                     >
                         <h4 className="text-md font-bold text-white mb-6 flex items-center gap-3">
@@ -525,7 +594,7 @@ export default function Dashboard() {
                             </div>
                         </div>
                     </motion.div>
-                </div>
+                </motion.div>
 
 
                 {/* Recent Attempts Table */}
