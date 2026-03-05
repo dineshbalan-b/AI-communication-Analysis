@@ -80,8 +80,11 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
         
     temp_input_path = None
     try:
-        # Extract extension from filename
-        ext = os.path.splitext(file.filename)[1] if file.filename else ".wav"
+        # Extract extension from filename, or default to .webm for browser blobs
+        ext = os.path.splitext(file.filename)[1] if (file.filename and '.' in file.filename) else ".webm"
+        # If it's a blob from the browser with a fake 'audio.wav' name but webm content, force webm
+        if ext.lower() == ".wav" and file.content_type == "audio/webm":
+            ext = ".webm"
         
         # Save uploaded file
         with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp:
@@ -140,6 +143,9 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
         }
 
     except Exception as e:
+        import traceback
+        with open("error_log.txt", "w") as f:
+            traceback.print_exc(file=f)
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         # Clean temp input
