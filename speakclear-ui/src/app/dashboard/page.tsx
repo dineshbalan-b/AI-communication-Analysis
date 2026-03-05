@@ -284,7 +284,7 @@ export default function Dashboard() {
                             </div>
                         ) : (() => {
                             const data = [...history].reverse().slice(-10);
-                            const W = 600, H = 200, padL = 40, padB = 30, padT = 30, padR = 10;
+                            const W = 620, H = 280, padL = 42, padB = 36, padT = 36, padR = 10;
                             const innerW = W - padL - padR;
                             const innerH = H - padB - padT;
                             const barCount = data.length;
@@ -323,7 +323,7 @@ export default function Dashboard() {
                                     <svg
                                         viewBox={`0 0 ${W} ${H}`}
                                         className="w-full"
-                                        style={{ height: '220px' }}
+                                        style={{ height: '320px' }}
                                         preserveAspectRatio="xMidYMid meet"
                                     >
                                         <defs>
