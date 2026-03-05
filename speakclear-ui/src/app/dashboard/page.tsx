@@ -261,41 +261,47 @@ export default function Dashboard() {
                         transition={{ delay: 0.4 }}
                         className="bg-[#121820] border border-[#212E3B] rounded-[32px] p-8 shadow-2xl overflow-hidden"
                     >
-                        <div className="flex items-center justify-between mb-8">
+                        {/* Card Header */}
+                        <div className="flex items-center justify-between mb-6">
                             <div>
-                                <h3 className="text-lg font-bold text-white mb-1">Progression Trend</h3>
-                                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Performance over time</p>
+                                <h3 className="text-xl font-black text-white tracking-tight">Score Progression</h3>
+                                <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-widest mt-0.5">Last {Math.min(history.length, 10)} sessions</p>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <span className="w-2 h-2 rounded-full bg-[#13a4ec] animate-pulse" />
-                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Growth View</span>
+                            <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-1.5 bg-[#13a4ec]/10 border border-[#13a4ec]/20 px-3 py-1.5 rounded-full">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#13a4ec] animate-pulse" />
+                                    <span className="text-[9px] font-black text-[#13a4ec] uppercase tracking-widest">Live</span>
+                                </div>
                             </div>
                         </div>
 
                         {/* Chart Body */}
                         {loading ? (
-                            <div className="h-52 flex items-center justify-center">
-                                <p className="text-slate-500 italic font-bold text-xs animate-pulse">Loading your data...</p>
+                            <div className="h-64 flex items-center justify-center">
+                                <div className="flex flex-col items-center gap-3">
+                                    <div className="w-8 h-8 border-2 border-[#13a4ec]/30 border-t-[#13a4ec] rounded-full animate-spin" />
+                                    <p className="text-slate-500 font-bold text-xs">Loading your data...</p>
+                                </div>
                             </div>
                         ) : history.length === 0 ? (
-                            <div className="h-52 flex flex-col items-center justify-center gap-3">
-                                <span className="material-symbols-outlined text-4xl text-slate-700">bar_chart</span>
-                                <p className="text-slate-500 italic font-bold text-xs">Complete a session to see your progress.</p>
+                            <div className="h-64 flex flex-col items-center justify-center gap-3">
+                                <span className="material-symbols-outlined text-5xl text-slate-700">bar_chart</span>
+                                <p className="text-slate-500 font-bold text-xs">Complete a session to see your progress.</p>
                             </div>
                         ) : (() => {
                             const data = [...history].reverse().slice(-10);
-                            const W = 620, H = 280, padL = 42, padB = 36, padT = 36, padR = 10;
+                            const W = 620, H = 260, padL = 44, padB = 32, padT = 28, padR = 12;
                             const innerW = W - padL - padR;
                             const innerH = H - padB - padT;
                             const barCount = data.length;
-                            const barGap = 8;
+                            const barGap = 10;
                             const barW = (innerW - (barCount - 1) * barGap) / barCount;
 
                             const getColor = (score: number) => {
-                                if (score >= 80) return { bar: '#22c55e', glow: 'rgba(34,197,94,0.3)' };
-                                if (score >= 60) return { bar: '#13a4ec', glow: 'rgba(19,164,236,0.3)' };
-                                if (score >= 40) return { bar: '#f59e0b', glow: 'rgba(245,158,11,0.3)' };
-                                return { bar: '#ef4444', glow: 'rgba(239,68,68,0.3)' };
+                                if (score >= 80) return { top: '#34d399', bot: '#059669', glow: 'rgba(52,211,153,0.25)', text: '#34d399' };
+                                if (score >= 60) return { top: '#38bdf8', bot: '#0284c7', glow: 'rgba(56,189,248,0.25)', text: '#38bdf8' };
+                                if (score >= 40) return { top: '#fbbf24', bot: '#d97706', glow: 'rgba(251,191,36,0.25)', text: '#fbbf24' };
+                                return { top: '#f87171', bot: '#dc2626', glow: 'rgba(248,113,113,0.25)', text: '#f87171' };
                             };
 
                             const points = data.map((h, i) => ({
@@ -303,165 +309,199 @@ export default function Dashboard() {
                                 y: padT + innerH - (h.score / 100) * innerH,
                                 score: h.score,
                                 color: getColor(h.score),
-                                date: h.date,
                                 barH: (h.score / 100) * innerH,
+                                barX: padL + i * (barW + barGap),
                             }));
 
-                            // Smooth line path over bar tops
+                            // Smooth bezier line
                             let lineD = '';
+                            let areaD = '';
                             points.forEach((p, i) => {
-                                if (i === 0) { lineD = `M ${p.x} ${p.y}`; }
-                                else {
+                                if (i === 0) {
+                                    lineD = `M ${p.x} ${p.y}`;
+                                    areaD = `M ${p.x} ${padT + innerH} L ${p.x} ${p.y}`;
+                                } else {
                                     const prev = points[i - 1];
                                     const cpX = (prev.x + p.x) / 2;
                                     lineD += ` C ${cpX} ${prev.y}, ${cpX} ${p.y}, ${p.x} ${p.y}`;
+                                    areaD += ` C ${cpX} ${prev.y}, ${cpX} ${p.y}, ${p.x} ${p.y}`;
                                 }
                             });
+                            if (points.length >= 1) {
+                                areaD += ` L ${points[points.length - 1].x} ${padT + innerH} Z`;
+                            }
 
                             return (
                                 <div className="relative w-full">
                                     <svg
                                         viewBox={`0 0 ${W} ${H}`}
                                         className="w-full"
-                                        style={{ height: '320px' }}
+                                        style={{ height: '300px' }}
                                         preserveAspectRatio="xMidYMid meet"
                                     >
                                         <defs>
-                                            {data.map((h, i) => (
-                                                <linearGradient key={i} id={`barGrad${i}`} x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="0%" stopColor={getColor(h.score).bar} stopOpacity="0.9" />
-                                                    <stop offset="100%" stopColor={getColor(h.score).bar} stopOpacity="0.3" />
-                                                </linearGradient>
-                                            ))}
-                                            <filter id="lineShadow" x="-20%" y="-20%" width="140%" height="140%">
-                                                <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="#13a4ec" floodOpacity="0.5" />
+                                            {data.map((h, i) => {
+                                                const c = getColor(h.score);
+                                                return (
+                                                    <linearGradient key={i} id={`bg${i}`} x1="0" y1="0" x2="0" y2="1">
+                                                        <stop offset="0%" stopColor={c.top} stopOpacity="0.85" />
+                                                        <stop offset="100%" stopColor={c.bot} stopOpacity="0.2" />
+                                                    </linearGradient>
+                                                );
+                                            })}
+                                            <linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.18" />
+                                                <stop offset="100%" stopColor="#38bdf8" stopOpacity="0" />
+                                            </linearGradient>
+                                            <filter id="barGlow" x="-30%" y="-30%" width="160%" height="160%">
+                                                <feGaussianBlur stdDeviation="4" result="b" />
+                                                <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+                                            </filter>
+                                            <filter id="lineGlow">
+                                                <feGaussianBlur stdDeviation="2.5" result="b" />
+                                                <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
                                             </filter>
                                         </defs>
 
-                                        {/* Horizontal Grid Lines & Y Labels */}
+                                        {/* Background subtle grid */}
                                         {[0, 25, 50, 75, 100].map(v => {
                                             const y = padT + innerH - (v / 100) * innerH;
                                             return (
                                                 <g key={v}>
-                                                    <line x1={padL} y1={y} x2={W - padR} y2={y} stroke="#1E2D3D" strokeWidth="1" strokeDasharray={v === 0 ? '0' : '4 4'} />
-                                                    <text x={padL - 6} y={y + 4} fill="#4B6A88" fontSize="9" textAnchor="end" fontWeight="700">{v}%</text>
+                                                    <line
+                                                        x1={padL} y1={y} x2={W - padR} y2={y}
+                                                        stroke={v === 0 ? '#2A3D52' : '#192534'}
+                                                        strokeWidth={v === 0 ? 1.5 : 1}
+                                                        strokeDasharray={v === 0 ? '0' : '5 5'}
+                                                    />
+                                                    <text x={padL - 8} y={y + 4} fill="#3A5470" fontSize="9" textAnchor="end" fontWeight="800" fontFamily="monospace">
+                                                        {v}
+                                                    </text>
                                                 </g>
                                             );
                                         })}
 
+                                        {/* Y-axis label */}
+                                        <text x={10} y={padT + innerH / 2} fill="#3A5470" fontSize="8" textAnchor="middle" fontWeight="700" transform={`rotate(-90, 10, ${padT + innerH / 2})`}>SCORE %</text>
+
+                                        {/* Area fill under trend line */}
+                                        {points.length >= 2 && (
+                                            <motion.path
+                                                d={areaD}
+                                                fill="url(#areaFill)"
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                transition={{ duration: 1.2, delay: 0.9 }}
+                                            />
+                                        )}
+
                                         {/* Bars */}
                                         {points.map((p, i) => (
                                             <g key={i}>
-                                                {/* Bar shadow/glow */}
+                                                {/* Track (background bar) */}
                                                 <rect
-                                                    x={padL + i * (barW + barGap)}
-                                                    y={padT + innerH - p.barH + 2}
-                                                    width={barW}
-                                                    height={p.barH}
-                                                    rx="4"
-                                                    fill={p.color.glow}
-                                                    className="blur-sm"
+                                                    x={p.barX} y={padT}
+                                                    width={barW} height={innerH}
+                                                    rx="7" fill="#0D1822"
+                                                />
+                                                {/* Glow behind bar */}
+                                                <rect
+                                                    x={p.barX + 2} y={padT + innerH - p.barH + 2}
+                                                    width={barW - 4} height={p.barH}
+                                                    rx="6" fill={p.color.glow}
+                                                    style={{ filter: 'blur(6px)' }}
                                                 />
                                                 {/* Main bar */}
                                                 <motion.rect
-                                                    x={padL + i * (barW + barGap)}
-                                                    y={padT + innerH}
-                                                    width={barW}
-                                                    height={0}
-                                                    rx="5"
-                                                    fill={`url(#barGrad${i})`}
-                                                    animate={{
-                                                        y: padT + innerH - p.barH,
-                                                        height: p.barH,
-                                                    }}
-                                                    transition={{ duration: 0.8, delay: i * 0.07, ease: [0.34, 1.56, 0.64, 1] }}
+                                                    x={p.barX + 2} y={padT + innerH}
+                                                    width={barW - 4} height={0}
+                                                    rx="6"
+                                                    fill={`url(#bg${i})`}
+                                                    animate={{ y: padT + innerH - p.barH, height: p.barH }}
+                                                    transition={{ duration: 0.9, delay: i * 0.08, ease: [0.34, 1.56, 0.64, 1] }}
                                                 />
-                                                {/* Score label on top */}
-                                                <motion.text
-                                                    x={p.x}
-                                                    y={p.y - 6}
-                                                    textAnchor="middle"
-                                                    fill={p.color.bar}
-                                                    fontSize="9"
-                                                    fontWeight="800"
-                                                    initial={{ opacity: 0 }}
-                                                    animate={{ opacity: 1 }}
-                                                    transition={{ delay: 0.8 + i * 0.07 }}
+                                                {/* Top highlight cap */}
+                                                <motion.rect
+                                                    x={p.barX + 2} y={padT + innerH}
+                                                    width={barW - 4} height={4}
+                                                    rx="6"
+                                                    fill={p.color.top}
+                                                    opacity={0.9}
+                                                    animate={{ y: padT + innerH - p.barH, opacity: 0.9 }}
+                                                    transition={{ duration: 0.9, delay: i * 0.08, ease: [0.34, 1.56, 0.64, 1] }}
+                                                />
+                                                {/* Score badge above */}
+                                                <motion.g
+                                                    initial={{ opacity: 0, y: 6 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ delay: 0.9 + i * 0.08 }}
                                                 >
-                                                    {p.score}%
-                                                </motion.text>
-                                                {/* X-axis date label */}
-                                                <text
-                                                    x={p.x}
-                                                    y={H - 8}
-                                                    textAnchor="middle"
-                                                    fill="#4B6A88"
-                                                    fontSize="8"
-                                                    fontWeight="700"
-                                                >
+                                                    <rect
+                                                        x={p.x - 14} y={p.y - 18}
+                                                        width={28} height={14}
+                                                        rx="4" fill={p.color.top} opacity={0.15}
+                                                    />
+                                                    <text x={p.x} y={p.y - 8} textAnchor="middle" fill={p.color.top} fontSize="8.5" fontWeight="900">
+                                                        {p.score}%
+                                                    </text>
+                                                </motion.g>
+                                                {/* Date label */}
+                                                <text x={p.x} y={H - 6} textAnchor="middle" fill="#3A5470" fontSize="7.5" fontWeight="700">
                                                     {new Date(data[i].date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                                                 </text>
                                             </g>
                                         ))}
 
-                                        {/* Smooth Trend Line */}
+                                        {/* Trend line glow */}
                                         {points.length >= 2 && (
                                             <motion.path
-                                                d={lineD}
-                                                fill="none"
-                                                stroke="white"
-                                                strokeWidth="1.5"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeDasharray="4 3"
-                                                opacity="0.25"
-                                                initial={{ pathLength: 0, opacity: 0 }}
-                                                animate={{ pathLength: 1, opacity: 0.25 }}
-                                                transition={{ duration: 1.5, delay: 0.5, ease: 'easeInOut' }}
+                                                d={lineD} fill="none"
+                                                stroke="#38bdf8" strokeWidth="4"
+                                                strokeLinecap="round" strokeLinejoin="round"
+                                                opacity={0.2}
+                                                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+                                                transition={{ duration: 1.8, delay: 0.8, ease: 'easeInOut' }}
                                             />
                                         )}
-
-                                        {/* Solid trend line on top */}
+                                        {/* Trend line */}
                                         {points.length >= 2 && (
                                             <motion.path
-                                                d={lineD}
-                                                fill="none"
-                                                stroke="#13a4ec"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                filter="url(#lineShadow)"
+                                                d={lineD} fill="none"
+                                                stroke="#38bdf8" strokeWidth="2"
+                                                strokeLinecap="round" strokeLinejoin="round"
+                                                filter="url(#lineGlow)"
                                                 initial={{ pathLength: 0, opacity: 0 }}
                                                 animate={{ pathLength: 1, opacity: 1 }}
-                                                transition={{ duration: 1.5, delay: 0.8, ease: 'easeInOut' }}
+                                                transition={{ duration: 1.8, delay: 0.8, ease: 'easeInOut' }}
                                             />
                                         )}
-
-                                        {/* Dots on trend line */}
+                                        {/* Trend dots */}
                                         {points.map((p, i) => (
-                                            <motion.circle
-                                                key={i}
-                                                cx={p.x}
-                                                cy={p.y}
-                                                r="3"
-                                                fill="white"
-                                                stroke={p.color.bar}
-                                                strokeWidth="1.5"
-                                                initial={{ scale: 0 }}
-                                                animate={{ scale: 1 }}
-                                                transition={{ delay: 1.5 + i * 0.07, type: 'spring' }}
-                                            />
+                                            <motion.g key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 1.8 + i * 0.07, type: 'spring', stiffness: 300 }}>
+                                                <circle cx={p.x} cy={p.y} r="5" fill="#0D1822" stroke="#38bdf8" strokeWidth="2" />
+                                                <circle cx={p.x} cy={p.y} r="2" fill="#38bdf8" />
+                                            </motion.g>
                                         ))}
                                     </svg>
 
                                     {/* Legend */}
-                                    <div className="flex items-center gap-6 mt-2 pl-10">
-                                        {[{ color: '#22c55e', label: 'Excellent (80+)' }, { color: '#13a4ec', label: 'Good (60–79)' }, { color: '#f59e0b', label: 'Fair (40–59)' }, { color: '#ef4444', label: 'Needs Work (<40)' }].map(l => (
+                                    <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-3 pl-10">
+                                        {[
+                                            { color: '#34d399', label: 'Excellent', range: '80–100' },
+                                            { color: '#38bdf8', label: 'Good', range: '60–79' },
+                                            { color: '#fbbf24', label: 'Fair', range: '40–59' },
+                                            { color: '#f87171', label: 'Needs Work', range: '<40' },
+                                        ].map(l => (
                                             <div key={l.label} className="flex items-center gap-1.5">
-                                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: l.color }} />
-                                                <span className="text-[8px] font-bold text-slate-500 uppercase tracking-wider">{l.label}</span>
+                                                <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: l.color, opacity: 0.85 }} />
+                                                <span className="text-[9px] font-bold text-slate-400">{l.label}</span>
+                                                <span className="text-[8px] font-medium text-slate-600">({l.range})</span>
                                             </div>
                                         ))}
+                                        <div className="flex items-center gap-1.5 ml-2">
+                                            <div className="w-5 h-0.5 bg-sky-400 rounded-full" />
+                                            <span className="text-[9px] font-bold text-slate-400">Trend</span>
+                                        </div>
                                     </div>
                                 </div>
                             );
