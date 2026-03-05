@@ -190,9 +190,9 @@ export default function Dashboard() {
                     initial="hidden"
                     animate="visible"
                     variants={itemVariants}
-                    className="flex justify-between items-center mb-10"
+                    className="flex justify-between items-center mb-10 lg:mb-14"
                 >
-                    <h2 className="text-2xl font-bold text-white tracking-tight">User Dashboard</h2>
+                    <h2 className="text-3xl font-extrabold text-white tracking-tight">Dashboard</h2>
                     <div className="flex items-center gap-6">
                         <div className="flex items-center gap-3 border-l border-[#212E3B] pl-6">
                             <div className="text-right">
@@ -221,13 +221,14 @@ export default function Dashboard() {
                     {/* Historical Performance Card */}
                     <motion.div
                         variants={itemVariants}
-                        whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                        className="bg-[#121820] border border-[#212E3B] rounded-3xl p-10 flex flex-col items-center justify-center relative overflow-hidden group shadow-2xl"
+                        whileHover={{ y: -2, transition: { duration: 0.3, ease: "easeOut" } }}
+                        className="bg-white/[0.02] border border-white/5 backdrop-blur-2xl rounded-3xl p-10 flex flex-col items-center justify-center relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.4)]"
                     >
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-[#13a4ec]/5 rounded-full blur-3xl group-hover:bg-[#13a4ec]/10 transition-all"></div>
-                        <h3 className="text-lg font-bold text-white mb-10 self-start">Overall Performance</h3>
+                        {/* Soft background glow */}
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#13a4ec]/5 rounded-full blur-[100px] group-hover:bg-[#13a4ec]/10 transition-all duration-700"></div>
+                        <h3 className="text-lg font-bold text-white tracking-tight mb-10 self-start">Overall Performance</h3>
 
-                        <div className="grid grid-cols-2 gap-8 w-full mb-10">
+                        <div className="grid grid-cols-2 gap-8 w-full mb-10 relative z-10">
                             {/* Latest Score */}
                             <div className="flex flex-col items-center justify-center relative">
                                 <motion.div
@@ -280,7 +281,7 @@ export default function Dashboard() {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 w-full gap-8 border-t border-[#212E3B]/50 pt-8">
+                        <div className="grid grid-cols-2 w-full gap-8 border-t border-white/5 pt-8 relative z-10">
                             <div>
                                 <p className="text-[10px] font-bold text-[#4B6A88] uppercase tracking-widest mb-1">Total Sessions</p>
                                 <p className="text-xl font-bold text-[#45EBA5]">{history.length}</p>
@@ -300,25 +301,24 @@ export default function Dashboard() {
                                 key={stat.name}
                                 variants={itemVariants}
                                 whileHover={{
-                                    y: -10,
-                                    scale: 1.02,
-                                    borderColor: "rgba(19, 164, 236, 0.4)",
-                                    boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(19, 164, 236, 0.05)"
+                                    y: -4,
+                                    scale: 1.01,
+                                    borderColor: "rgba(255, 255, 255, 0.1)",
+                                    boxShadow: "0 20px 40px -5px rgba(0, 0, 0, 0.3)"
                                 }}
-                                className="bg-[#121820] border border-[#212E3B] rounded-[24px] p-6 flex flex-col justify-between group cursor-default transition-all shadow-xl relative overflow-hidden"
+                                className="bg-white/[0.02] border border-white/5 backdrop-blur-xl rounded-3xl p-6 flex flex-col justify-between group cursor-default transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.2)] relative overflow-hidden"
                             >
-                                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-white/[0.02] to-transparent rounded-full -mr-12 -mt-12" />
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/[0.03] to-transparent rounded-full -mr-16 -mt-16" />
 
                                 {/* Communication Visual Watermark */}
-                                <span className="material-symbols-outlined absolute -bottom-4 -right-2 text-[100px] opacity-[0.03] rotate-[-15deg] group-hover:scale-110 group-hover:rotate-0 transition-transform duration-500 blur-[1px]">
+                                <span className="material-symbols-outlined absolute -bottom-6 -right-4 text-[120px] opacity-[0.02] rotate-[-15deg] group-hover:scale-105 group-hover:rotate-0 group-hover:opacity-[0.04] transition-all duration-700 blur-[2px]">
                                     {stat.bgIcon}
                                 </span>
 
-                                <div className="flex justify-between items-start mb-4 relative z-10">
+                                <div className="flex justify-between items-start mb-4 relative z-10 gap-4">
                                     <motion.div
-                                        whileHover={{ rotate: 15, scale: 1.1 }}
-                                        className={`p-2.5 rounded-xl bg-white/5 text-slate-400 group-hover:bg-[${stat.color}]/10 transition-all`}
-                                        style={{ color: stat.color }}
+                                        whileHover={{ rotate: 10, scale: 1.05 }}
+                                        className="p-3 rounded-2xl bg-white/[0.03] text-slate-400 group-hover:bg-white/[0.06] transition-all border border-white/5"
                                     >
                                         <span className="material-symbols-outlined text-[20px]">{stat.icon}</span>
                                     </motion.div>
@@ -343,7 +343,7 @@ export default function Dashboard() {
                             </motion.div>
                         ))}
                     </div>
-                </motion.div>
+                </motion.div >
 
                 {/* Score Progression & Insights Section */}
                 <motion.div
@@ -355,11 +355,11 @@ export default function Dashboard() {
                 >
                     <motion.div
                         variants={itemVariants}
-                        className="bg-[#121820] border border-[#212E3B] rounded-[32px] p-8 shadow-2xl overflow-hidden"
+                        className="bg-white/[0.02] border border-white/5 backdrop-blur-2xl rounded-[32px] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.4)] overflow-hidden relative"
                     >
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[#13a4ec]/[0.015] rounded-full blur-[120px] pointer-events-none"></div>
                         {/* Card Header */}
-                        {/* Card Header */}
-                        <div className="flex items-center justify-between mb-8">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 relative z-10">
                             <div>
                                 <h3 className="text-xl font-bold text-white tracking-tight">Performance Analytics</h3>
                                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.1em] mt-1 relative inline-flex items-center gap-1.5">
@@ -532,21 +532,24 @@ export default function Dashboard() {
                                     </svg>
 
                                     {/* Professional Legend */}
-                                    <div className="flex items-center gap-8 mt-4 px-10 border-t border-[#161F29] pt-6">
-                                        <div className="flex items-center gap-3">
-                                            <div className="flex -space-x-1.5">
-                                                {['#34d399', '#38bdf8', '#fbbf24', '#f87171'].map(c => (
-                                                    <div key={c} className="w-2.5 h-2.5 rounded-full border-2 border-[#121820]" style={{ backgroundColor: c }} />
-                                                ))}
+                                    <div className="flex items-center justify-between mt-4 px-6 sm:px-10 border-t border-white/5 pt-6 relative z-10 flex-wrap gap-4">
+                                        <div className="flex items-center gap-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex -space-x-1.5">
+                                                    {['#34d399', '#38bdf8', '#fbbf24', '#f87171'].map(c => (
+                                                        <div key={c} className="w-2.5 h-2.5 rounded-full border-2 border-[#0B0F15]" style={{ backgroundColor: c }} />
+                                                    ))}
+                                                </div>
+                                                <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest hidden sm:inline-block">Skill Tiers</span>
                                             </div>
-                                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Skill Tiers</span>
+                                            <div className="w-px h-4 bg-white/10 hidden sm:block"></div>
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-6 h-0.5 rounded-full bg-gradient-to-r from-transparent via-[#13a4ec] to-transparent" />
+                                                <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest hidden sm:inline-block">Trajectory</span>
+                                            </div>
                                         </div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-6 h-0.5 rounded-full bg-gradient-to-r from-transparent via-[#13a4ec] to-transparent" />
-                                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Growth Trajectory</span>
-                                        </div>
-                                        <div className="ml-auto flex items-center gap-2 px-3 py-1 bg-white/5 rounded-lg border border-white/5">
-                                            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em]">Efficiency Range</span>
+                                        <div className="flex items-center gap-2 px-3 py-1 bg-white/[0.03] rounded-lg border border-white/5">
+                                            <span className="text-[8px] font-bold text-slate-400/80 uppercase tracking-[0.2em] hidden sm:inline-block">Efficiency Range</span>
                                             <span className="text-[10px] font-black text-white">40-100%</span>
                                         </div>
                                     </div>
@@ -560,20 +563,21 @@ export default function Dashboard() {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.5 }}
-                            className="bg-[#121820] border border-[#212E3B] p-8 rounded-[32px] flex flex-col justify-center border-l-4 border-l-[#A87FF3] shadow-xl"
+                            className="bg-white/[0.02] border border-white/5 p-8 rounded-[32px] flex flex-col justify-center border-l-2 border-l-[#A87FF3]/50 shadow-[0_8px_30px_rgb(0,0,0,0.2)] backdrop-blur-md relative overflow-hidden"
                         >
-                            <h4 className="text-[11px] font-black text-white uppercase tracking-widest mb-4 flex items-center gap-2">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-[#A87FF3]/5 rounded-bl-full blur-2xl"></div>
+                            <h4 className="text-[11px] font-black text-white uppercase tracking-widest mb-4 flex items-center gap-2 relative z-10">
                                 <span className="material-symbols-outlined text-sm text-[#A87FF3]">psychology</span>
                                 Focus Area
                             </h4>
-                            <ul className="space-y-4">
+                            <ul className="space-y-4 relative z-10">
                                 {[
                                     { tip: 'Improve pitch variation.', icon: 'equalizer' },
                                     { tip: 'Reduce fillers in transitions.', icon: 'timer_off' },
                                     { tip: 'Expand descriptive vocabulary.', icon: 'auto_stories' }
                                 ].map((item, i) => (
-                                    <li key={i} className="flex items-center gap-3 text-[10px] text-slate-400 font-bold hover:text-white transition-colors cursor-default">
-                                        <div className="h-1 w-1 rounded-full bg-[#A87FF3]" />
+                                    <li key={i} className="flex items-center gap-3 text-[11px] text-slate-400 font-medium hover:text-white transition-colors cursor-default">
+                                        <div className="h-1 w-1 rounded-full bg-[#A87FF3]/60" />
                                         {item.tip}
                                     </li>
                                 ))}
@@ -584,7 +588,7 @@ export default function Dashboard() {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.6 }}
-                            className="bg-gradient-to-br from-[#13a4ec] to-[#13a4ec]/80 p-8 rounded-[32px] text-white flex flex-col justify-between shadow-lg relative overflow-hidden group"
+                            className="bg-gradient-to-br from-[#13a4ec] to-[#0ea5e9] p-8 rounded-[32px] text-white flex flex-col justify-between shadow-[0_8px_30px_rgba(19,164,236,0.3)] relative overflow-hidden group"
                         >
                             <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-3xl"></div>
 
@@ -616,26 +620,27 @@ export default function Dashboard() {
                 >
                     <motion.div
                         variants={itemVariants}
-                        whileHover={{ scale: 1.01 }}
-                        className="bg-[#121820] border border-[#212E3B] rounded-[32px] p-8 shadow-xl"
+                        whileHover={{ y: -2, transition: { duration: 0.3 } }}
+                        className="bg-white/[0.02] border border-white/5 backdrop-blur-2xl rounded-[32px] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.4)] relative overflow-hidden group"
                     >
-                        <h4 className="text-md font-bold text-white mb-6 flex items-center gap-3">
-                            <span className="material-symbols-outlined text-emerald-500">auto_graph</span>
+                        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-64 h-64 bg-emerald-500/[0.02] rounded-full blur-[100px] pointer-events-none group-hover:bg-emerald-500/[0.04] transition-all duration-700"></div>
+                        <h4 className="text-xl font-bold text-white tracking-tight mb-8 flex items-center gap-3 relative z-10">
+                            <span className="material-symbols-outlined text-emerald-500 p-2 bg-emerald-500/10 rounded-xl border border-emerald-500/20">auto_graph</span>
                             Development Insights
                         </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="flex items-start gap-4 p-5 rounded-2xl bg-white/[0.02] border border-white/5 group hover:border-emerald-500/20 transition-all">
-                                <span className="material-symbols-outlined text-emerald-500 text-2xl">trending_up</span>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+                            <div className="flex items-start gap-5 p-6 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-emerald-500/30 hover:bg-white/[0.04] transition-all duration-300">
+                                <span className="material-symbols-outlined text-emerald-500 text-2xl mt-1">trending_up</span>
                                 <div>
-                                    <p className="text-sm font-bold text-white mb-1">Growth Streak</p>
-                                    <p className="text-[10px] text-slate-500 leading-relaxed">Your scores have improved by 8% in the last 3 sessions. Keep the momentum going!</p>
+                                    <p className="text-base font-bold text-white mb-2 tracking-tight">Growth Streak</p>
+                                    <p className="text-xs text-slate-400 leading-relaxed font-medium">Your scores have improved by 8% in the last 3 sessions. Keep the momentum going!</p>
                                 </div>
                             </div>
-                            <div className="flex items-start gap-4 p-5 rounded-2xl bg-white/[0.02] border border-white/5 group hover:border-[#13a4ec]/20 transition-all">
-                                <span className="material-symbols-outlined text-[#13a4ec] text-2xl">speed</span>
+                            <div className="flex items-start gap-5 p-6 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-[#13a4ec]/30 hover:bg-white/[0.04] transition-all duration-300">
+                                <span className="material-symbols-outlined text-[#13a4ec] text-2xl mt-1">speed</span>
                                 <div>
-                                    <p className="text-sm font-bold text-white mb-1">Pacing Mastery</p>
-                                    <p className="text-[10px] text-slate-500 leading-relaxed">You've successfully hit the 140 WPM "Ideal Zone" in 80% of your attempts.</p>
+                                    <p className="text-base font-bold text-white mb-2 tracking-tight">Pacing Mastery</p>
+                                    <p className="text-xs text-slate-400 leading-relaxed font-medium">You've successfully hit the 140 WPM "Ideal Zone" in 80% of your attempts.</p>
                                 </div>
                             </div>
                         </div>
@@ -648,35 +653,47 @@ export default function Dashboard() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 }}
-                    className="bg-[#121820] border border-[#212E3B] rounded-3xl overflow-hidden shadow-2xl mb-20"
+                    className="bg-white/[0.02] border border-white/5 backdrop-blur-2xl rounded-[32px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.4)] mb-20"
                 >
-                    <div className="p-8 border-b border-[#212E3B] flex justify-between items-center">
-                        <h3 className="text-lg font-bold text-white">Session History</h3>
-                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Real-time Backend Sync</span>
+                    <div className="p-8 border-b border-white/5 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                        <h3 className="text-xl font-bold text-white tracking-tight">Session History</h3>
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-full w-fit">
+                            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Real-time Sync</span>
+                        </div>
                     </div>
 
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
-                                <tr className="text-left border-b border-[#212E3B]">
-                                    <th className="px-8 py-5 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Date Reported</th>
-                                    <th className="px-8 py-5 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Topic</th>
-                                    <th className="px-8 py-5 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Overall Score</th>
-                                    <th className="px-8 py-5 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Status</th>
-                                    <th className="px-8 py-5 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest text-right">Action</th>
+                                <tr className="text-left border-b border-white/5 bg-white/[0.01]">
+                                    <th className="px-8 py-5 text-[10px] font-black text-[#8B9BB4] uppercase tracking-widest whitespace-nowrap">Date Reported</th>
+                                    <th className="px-8 py-5 text-[10px] font-black text-[#8B9BB4] uppercase tracking-widest whitespace-nowrap">Topic</th>
+                                    <th className="px-8 py-5 text-[10px] font-black text-[#8B9BB4] uppercase tracking-widest whitespace-nowrap">Overall Score</th>
+                                    <th className="px-8 py-5 text-[10px] font-black text-[#8B9BB4] uppercase tracking-widest whitespace-nowrap">Status</th>
+                                    <th className="px-8 py-5 text-[10px] font-black text-[#8B9BB4] uppercase tracking-widest text-right whitespace-nowrap">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {loading ? (
                                     <tr>
-                                        <td colSpan={5} className="px-8 py-20 text-center text-slate-500 font-bold italic">
-                                            Syncing with SpeakClear Cloud...
+                                        <td colSpan={5} className="px-8 py-32 text-center text-slate-400 font-medium">
+                                            <div className="flex flex-col items-center justify-center gap-4">
+                                                <AudioWave color="#4B6A88" />
+                                                <span className="text-xs uppercase tracking-widest">Syncing with SpeakClear Cloud...</span>
+                                            </div>
                                         </td>
                                     </tr>
                                 ) : history.length === 0 ? (
                                     <tr>
-                                        <td colSpan={5} className="px-8 py-20 text-center text-slate-500 font-bold italic">
-                                            No sessions recorded yet. Start your first assessment to see results here!
+                                        <td colSpan={5} className="px-8 py-32 text-center text-slate-400">
+                                            <div className="flex flex-col items-center justify-center gap-4">
+                                                <span className="material-symbols-outlined text-4xl opacity-50">data_usage</span>
+                                                <div className="space-y-1">
+                                                    <p className="text-sm font-bold text-white">No sessions recorded yet.</p>
+                                                    <p className="text-xs font-medium">Start your first assessment to see results here!</p>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 ) : (
@@ -686,9 +703,9 @@ export default function Dashboard() {
                                             initial={{ opacity: 0, x: -10 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: 0.6 + (idx * 0.05) }}
-                                            className="border-b border-[#212E3B]/50 hover:bg-[#13a4ec]/5 transition-colors group"
+                                            className="border-b border-white/5 hover:bg-white/[0.02] transition-colors duration-300 group"
                                         >
-                                            <td className="px-8 py-6">
+                                            <td className="px-8 py-6 whitespace-nowrap">
                                                 <p className="text-sm font-bold text-white mb-1">{new Date(attempt.date).toLocaleDateString()}</p>
                                                 <p className="text-[10px] font-medium text-[#4B6A88]">{new Date(attempt.date).toLocaleTimeString()}</p>
                                             </td>
@@ -704,22 +721,22 @@ export default function Dashboard() {
                                                 </div>
                                             </td>
                                             <td className="px-8 py-6">
-                                                <span className="px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded text-[9px] font-black uppercase tracking-wider border border-emerald-500/20">
+                                                <span className="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 rounded-lg text-[9px] font-black uppercase tracking-wider border border-emerald-500/20 shadow-sm">
                                                     Completed
                                                 </span>
                                             </td>
                                             <td className="px-8 py-6 text-right">
-                                                <div className="flex items-center justify-end gap-3">
+                                                <div className="flex items-center justify-end gap-2">
                                                     <button
                                                         onClick={() => handleViewDetails(attempt)}
-                                                        className="text-[#13a4ec] hover:text-white transition-colors flex items-center gap-2 text-[10px] font-black uppercase tracking-widest bg-white/5 px-3 py-2 rounded-lg"
+                                                        className="text-[#13a4ec] hover:text-white transition-all flex items-center gap-2 text-[10px] font-black uppercase tracking-widest bg-white/[0.03] border border-white/5 hover:bg-[#13a4ec] hover:border-[#13a4ec] px-4 py-2.5 rounded-xl shadow-sm hover:shadow-[0_4px_14px_rgba(19,164,236,0.4)]"
                                                     >
-                                                        <span className="material-symbols-outlined text-[16px]">open_in_new</span>
-                                                        View
+                                                        <span className="material-symbols-outlined text-[16px]">insert_chart</span>
+                                                        View Data
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(attempt.id)}
-                                                        className="text-slate-500 hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-red-500/10"
+                                                        className="text-slate-400 hover:text-red-400 transition-all p-2.5 rounded-xl hover:bg-red-500/10 border border-transparent hover:border-red-500/20"
                                                         title="Delete Session"
                                                     >
                                                         <span className="material-symbols-outlined text-[18px]">delete</span>
@@ -733,7 +750,7 @@ export default function Dashboard() {
                         </table>
                     </div>
                 </motion.section>
-            </main >
-        </div >
+            </main>
+        </div>
     );
 }
