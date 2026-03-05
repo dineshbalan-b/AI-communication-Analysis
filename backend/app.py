@@ -111,14 +111,27 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
         transcription, audio_metrics = await asyncio.gather(transcription_task, metrics_task)
         
         transcript = transcription.text.strip()
+        
+        # Check for empty transcription or minimal content (e.g., just noise or 1-2 words)
+        if not transcript or len(transcript) < 5:
+            text_metrics = {"wpm": 0, "filler_count": 0}
+            llm_scores = {
+                "grammar": 0,
+                "vocabulary": 0,
+                "clarity": 0,
+                "confidence": 0,
+                "final_feedback": "No significant speech detected in the recording. Please ensure your microphone is working and you are speaking clearly.",
+                "improvements": "Try recording again, making sure to speak into the microphone and address the assigned topic."
+            }
+            hybrid_score = 0
+        else:
+            # Text Metrics and LLM Evaluation
+            text_metrics = analyze_text(transcript, audio_metrics["duration"])
+            rule_score = compute_communication_score(audio_metrics, text_metrics)
 
-        # Text Metrics and LLM Evaluation
-        text_metrics = analyze_text(transcript, audio_metrics["duration"])
-        rule_score = compute_communication_score(audio_metrics, text_metrics)
-
-        # LLM Eval (This is still I/O bound, we could potentially parallelize more but it depends on metrics)
-        llm_scores = evaluate_with_llm(topic, transcript, audio_metrics, text_metrics)
-        hybrid_score = compute_hybrid_score(rule_score, llm_scores)
+            # LLM Eval (This is still I/O bound, we could potentially parallelize more but it depends on metrics)
+            llm_scores = evaluate_with_llm(topic, transcript, audio_metrics, text_metrics)
+            hybrid_score = compute_hybrid_score(rule_score, llm_scores)
 
         # Save to DB
         save_evaluation(
