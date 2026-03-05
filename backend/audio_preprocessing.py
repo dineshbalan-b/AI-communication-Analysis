@@ -2,7 +2,7 @@ import librosa
 import numpy as np
 import soundfile as sf
 import noisereduce as nr
-from moviepy.editor import VideoFileClip
+# from moviepy.editor import VideoFileClip
 from pydub import AudioSegment
 from pydub.effects import compress_dynamic_range
 import os
@@ -13,6 +13,7 @@ import subprocess
 # Extract Audio from Video
 # --------------------------------
 def extract_audio_from_video(video_path, output_audio_path="extracted_audio.wav"):
+    from moviepy.editor import VideoFileClip
     video = VideoFileClip(video_path)
     video.audio.write_audiofile(output_audio_path, verbose=False, logger=None)
     return output_audio_path

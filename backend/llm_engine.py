@@ -136,13 +136,24 @@ Improvement suggestions:
 # Generate Dynamic Topics
 # -------------------------------
 
+_TOPIC_CACHE = []
+_LAST_FETCH_TIME = 0
+
 def generate_topics():
     """
     Generates a list of 6 simple and everyday communication practice topics.
+    Uses caching to avoid hitting the API on every request.
     """
+    global _TOPIC_CACHE, _LAST_FETCH_TIME
+    import time
+
+    current_time = time.time()
+    # Cache for 1 hour (3600 seconds)
+    if _TOPIC_CACHE and (current_time - _LAST_FETCH_TIME < 3600):
+        return _TOPIC_CACHE
+
     try:
-        import time
-        seed = time.time()
+        seed = current_time
         prompt = f"""
         Generate 6 simple and everyday communication practice topics. 
         Each topic should be easy to talk about for 1-2 minutes.
@@ -165,13 +176,19 @@ def generate_topics():
         
         # Extract list regardless of key name used by AI
         if isinstance(data, list):
-            return data[:6]
-        if isinstance(data, dict):
+            _TOPIC_CACHE = data[:6]
+        elif isinstance(data, dict):
             if "topics" in data:
-                return data["topics"][:6]
-            for val in data.values():
-                if isinstance(val, list):
-                    return val[:6]
+                _TOPIC_CACHE = data["topics"][:6]
+            else:
+                for val in data.values():
+                    if isinstance(val, list):
+                        _TOPIC_CACHE = val[:6]
+                        break
+        
+        if _TOPIC_CACHE:
+            _LAST_FETCH_TIME = current_time
+            return _TOPIC_CACHE
         
         return ["My Favorite Hobby", "A Memorable Trip", "The Best Meal I Had", "My Role Model", "Future Goals", "A Productive Day"]
         

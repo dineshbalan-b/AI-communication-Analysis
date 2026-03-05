@@ -1,6 +1,7 @@
 import os
 import random
 import tempfile
+import asyncio
 from pathlib import Path
 
 from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File, Form, Request
@@ -95,20 +96,33 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
         # Process Audio
         processed_path = preprocess_audio(temp_input_path)
 
-        # Transcribe
-        with open(processed_path, "rb") as audio_data:
-            transcription = client.audio.transcriptions.create(
-                model="whisper-1",
-                file=audio_data
-            )
+        # Run Transcription and Audio Metrics concurrently to save time
+        async def get_transcription():
+            with open(processed_path, "rb") as audio_data:
+                return client.audio.transcriptions.create(
+                    model="whisper-1",
+                    file=audio_data
+                )
+
+        async def get_audio_metrics():
+            return analyze_audio(processed_path)
+
+        # Execute both tasks in parallel
+        transcription_task = asyncio.to_thread(lambda: client.audio.transcriptions.create(
+            model="whisper-1",
+            file=open(processed_path, "rb")
+        ))
+        metrics_task = asyncio.to_thread(analyze_audio, processed_path)
+        
+        transcription, audio_metrics = await asyncio.gather(transcription_task, metrics_task)
+        
         transcript = transcription.text.strip()
 
-        # Metrics
-        audio_metrics = analyze_audio(processed_path)
+        # Text Metrics and LLM Evaluation
         text_metrics = analyze_text(transcript, audio_metrics["duration"])
         rule_score = compute_communication_score(audio_metrics, text_metrics)
 
-        # LLM Eval
+        # LLM Eval (This is still I/O bound, we could potentially parallelize more but it depends on metrics)
         llm_scores = evaluate_with_llm(topic, transcript, audio_metrics, text_metrics)
         hybrid_score = compute_hybrid_score(rule_score, llm_scores)
 
