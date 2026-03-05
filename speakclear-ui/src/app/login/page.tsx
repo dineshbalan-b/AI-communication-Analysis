@@ -40,7 +40,7 @@ export default function Login() {
                 setErrorMsg(data.detail || "An error occurred.");
             } else {
                 localStorage.setItem("username", username);
-                router.push("/assessment");
+                router.push("/dashboard");
             }
         } catch (err) {
             setErrorMsg("Network error. Make sure FastAPI server is running on port 8000.");
