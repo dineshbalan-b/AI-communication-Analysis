@@ -293,7 +293,7 @@ export default function Dashboard() {
                                         <p className="text-slate-500 italic font-bold text-xs">No progression data available yet.</p>
                                     </div>
                                 ) : (
-                                    <svg className="w-full h-full overflow-visible" preserveAspectRatio="none">
+                                    <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible" preserveAspectRatio="none">
                                         <defs>
                                             <linearGradient id="trendGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                                                 <stop offset="0%" stopColor="#13a4ec" stopOpacity="0.3" />
@@ -309,8 +309,8 @@ export default function Dashboard() {
                                         </defs>
 
                                         {/* Axis Lines */}
-                                        <line x1="0" y1="100%" x2="100%" y2="100%" stroke="#212E3B" strokeWidth="1" />
-                                        <line x1="0" y1="0" x2="0" y2="100%" stroke="#212E3B" strokeWidth="1" />
+                                        <line x1="0" y1="100" x2="100" y2="100" stroke="#212E3B" strokeWidth="0.5" />
+                                        <line x1="0" y1="0" x2="0" y2="100" stroke="#212E3B" strokeWidth="0.5" />
 
                                         {/* Smooth Path Calculation */}
                                         {(() => {
@@ -324,15 +324,15 @@ export default function Dashboard() {
                                                 return (
                                                     <g className="group/point">
                                                         <motion.circle
-                                                            cx="50%"
-                                                            cy={p.y + "%"}
-                                                            r="6"
+                                                            cx={50}
+                                                            cy={p.y}
+                                                            r="2"
                                                             fill="#13a4ec"
                                                             initial={{ scale: 0 }}
                                                             animate={{ scale: 1 }}
                                                             filter="url(#glow)"
                                                         />
-                                                        <foreignObject x="50%" y={p.y + "%"} width="1" height="1" className="overflow-visible pointer-events-none">
+                                                        <foreignObject x={50} y={p.y} width="1" height="1" className="overflow-visible pointer-events-none">
                                                             <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-[#1B2939] border border-[#13a4ec]/30 py-1.5 px-3 rounded-lg opacity-100 transition-all shadow-[0_0_20px_rgba(0,0,0,0.5)] z-50">
                                                                 <p className="text-[10px] font-black text-white whitespace-nowrap">{data[0].score}%</p>
                                                                 <p className="text-[7px] font-bold text-slate-500 uppercase tracking-tighter whitespace-nowrap">{new Date(data[0].date).toLocaleDateString()}</p>
@@ -382,7 +382,7 @@ export default function Dashboard() {
                                                         d={lineD}
                                                         fill="none"
                                                         stroke="#13a4ec"
-                                                        strokeWidth="3"
+                                                        strokeWidth="1"
                                                         strokeLinecap="round"
                                                         initial={{ pathLength: 0 }}
                                                         animate={{ pathLength: 1 }}
@@ -392,18 +392,18 @@ export default function Dashboard() {
                                                     {points.map((p, i) => (
                                                         <g key={i} className="group/point">
                                                             <motion.circle
-                                                                cx={p.x + "%"}
-                                                                cy={p.y + "%"}
-                                                                r="4"
+                                                                cx={p.x}
+                                                                cy={p.y}
+                                                                r="1.2"
                                                                 fill="#0B0F15"
                                                                 stroke="#13a4ec"
-                                                                strokeWidth="2"
+                                                                strokeWidth="0.4"
                                                                 initial={{ scale: 0 }}
                                                                 animate={{ scale: 1 }}
                                                                 transition={{ delay: 1.5 + (i * 0.1) }}
                                                                 className="cursor-pointer transition-all hover:r-6"
                                                             />
-                                                            <foreignObject x={p.x + "%"} y={p.y + "%"} width="1" height="1" className="overflow-visible pointer-events-none">
+                                                            <foreignObject x={p.x} y={p.y} width="1" height="1" className="overflow-visible pointer-events-none">
                                                                 <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-[#1B2939] border border-[#13a4ec]/30 py-1.5 px-3 rounded-lg opacity-0 group-hover/point:opacity-100 transition-all scale-75 group-hover/point:scale-100 shadow-[0_0_20px_rgba(0,0,0,0.5)] z-50">
                                                                     <p className="text-[10px] font-black text-white whitespace-nowrap">{data[i].score}%</p>
                                                                     <p className="text-[7px] font-bold text-slate-500 uppercase tracking-tighter whitespace-nowrap">{new Date(data[i].date).toLocaleDateString()}</p>
