@@ -74,13 +74,15 @@ export default function Sidebar({ username }: SidebarProps) {
                                 >
                                     <Link
                                         href={item.path}
-                                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group ${isActive
-                                            ? 'bg-[#13a4ec] text-white shadow-[0_4px_20px_rgb(19,164,236,0.3)] font-bold'
-                                            : 'text-[#8B9BB4] hover:text-white hover:bg-white/5 hover:translate-x-1'
+                                        className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl transition-all duration-300 group ${isActive
+                                            ? 'bg-gradient-to-r from-[#13a4ec] to-[#13a4ec]/80 text-white shadow-[0_10px_20px_rgba(19,164,236,0.2)] font-black border border-[#13a4ec]/20'
+                                            : 'text-[#5C6B89] hover:text-white hover:bg-white/[0.03] hover:translate-x-1 border border-transparent hover:border-white/5'
                                             }`}
                                     >
-                                        <span className={`material-symbols-outlined text-[22px] transition-transform duration-300 ${!isActive && 'group-hover:scale-110 group-hover:text-[#13a4ec]'}`}>{item.icon}</span>
-                                        <span className="text-sm">{item.name}</span>
+                                        <div className={`p-1.5 rounded-lg transition-all duration-300 ${isActive ? 'bg-white/20' : 'bg-transparent group-hover:bg-white/5'}`}>
+                                            <span className={`material-symbols-outlined text-[20px] transition-transform duration-300 ${!isActive && 'group-hover:scale-110 group-hover:text-[#13a4ec]'}`}>{item.icon}</span>
+                                        </div>
+                                        <span className="text-[13px] tracking-tight">{item.name}</span>
                                     </Link>
                                 </motion.div>
                             );

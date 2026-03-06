@@ -270,66 +270,75 @@ export default function Dashboard() {
                     initial="hidden"
                     animate="visible"
                     variants={containerVariants}
-                    className="grid grid-cols-1 xl:grid-cols-[420px_1fr] gap-8 mb-10"
+                    className="grid grid-cols-1 xl:grid-cols-[420px_1fr] gap-8 mb-10 items-start"
                 >
                     {/* Historical Performance Card */}
                     <motion.div
                         variants={itemVariants}
-                        whileHover={{ y: -2, transition: { duration: 0.3, ease: "easeOut" } }}
-                        className="bg-white/[0.02] border border-white/5 backdrop-blur-2xl rounded-3xl p-10 flex flex-col items-center justify-center relative overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.4)]"
+                        whileHover={{ y: -5, transition: { duration: 0.3, ease: "easeOut" } }}
+                        className="bg-[#121820]/40 border border-white/5 backdrop-blur-3xl rounded-[32px] p-10 flex flex-col items-center justify-center relative overflow-hidden group shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
                     >
                         {/* Soft background glow */}
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#13a4ec]/5 rounded-full blur-[100px] group-hover:bg-[#13a4ec]/10 transition-all duration-700"></div>
-                        <h3 className="text-lg font-bold text-white tracking-tight mb-10 self-start">Overall Performance</h3>
+                        <div className="absolute top-0 left-0 w-64 h-64 bg-[#13a4ec]/5 rounded-full blur-[120px] group-hover:bg-[#13a4ec]/10 transition-all duration-1000 -ml-32 -mt-32"></div>
+                        <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#A87FF3]/5 rounded-full blur-[120px] group-hover:bg-[#A87FF3]/10 transition-all duration-1000 -mr-32 -mb-32"></div>
 
-                        <div className="grid grid-cols-2 gap-8 w-full mb-10 relative z-10">
+                        <div className="w-full flex justify-between items-center mb-10 relative z-10">
+                            <h3 className="text-xl font-black text-white tracking-tight uppercase tracking-widest text-[11px] opacity-60">Overall Performance</h3>
+                            <span className="material-symbols-outlined text-[#13a4ec] text-sm font-black opacity-40">insights</span>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-12 w-full mb-12 relative z-10">
                             {/* Latest Score */}
-                            <div className="flex flex-col items-center justify-center relative">
+                            <div className="flex flex-col items-center justify-center relative group/score">
                                 <motion.div
-                                    animate={{ scale: [1, 1.4, 1], opacity: [0.1, 0.3, 0.1] }}
-                                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                                    className="absolute inset-0 border border-[#13a4ec]/20 rounded-full"
+                                    animate={{ scale: [1, 1.2, 1], opacity: [0.05, 0.15, 0.05] }}
+                                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                                    className="absolute inset-0 border border-[#13a4ec]/10 rounded-full"
                                 />
-                                <span className="text-[10px] font-bold text-[#4B6A88] uppercase tracking-widest mb-4">Latest Score</span>
-                                <div className="relative w-28 h-28 flex items-center justify-center">
-                                    <svg className="w-full h-full -rotate-90 relative z-10">
-                                        <circle cx="56" cy="56" r="48" stroke="rgba(255,255,255,0.05)" strokeWidth="6" fill="none" />
+                                <span className="text-[10px] font-black text-[#5C6B89] uppercase tracking-[0.2em] mb-6">Latest Attempt</span>
+                                <div className="relative w-32 h-32 flex items-center justify-center">
+                                    <svg className="w-full h-full -rotate-90 relative z-10 p-1">
+                                        <circle cx="60" cy="60" r="54" stroke="rgba(255,255,255,0.03)" strokeWidth="4" fill="none" />
                                         <motion.circle
-                                            cx="56" cy="56" r="48"
-                                            stroke="#13a4ec" strokeWidth="6" fill="none"
-                                            strokeDasharray="301"
-                                            initial={{ strokeDashoffset: 301 }}
-                                            animate={{ strokeDashoffset: 301 - (301 * (latestScore / 100)) }}
-                                            transition={{ duration: 2, ease: "easeOut" }}
+                                            cx="60" cy="60" r="54"
+                                            stroke="#13a4ec" strokeWidth="4" fill="none"
+                                            strokeDasharray="339"
+                                            initial={{ strokeDashoffset: 339 }}
+                                            animate={{ strokeDashoffset: 339 - (339 * (latestScore / 100)) }}
+                                            transition={{ duration: 2.5, ease: [0.34, 1.56, 0.64, 1] }}
                                             strokeLinecap="round"
+                                            style={{ filter: "drop-shadow(0 0 8px rgba(19,164,236,0.4))" }}
                                         />
                                     </svg>
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <span className="text-xl font-black text-white">{latestScore || "--"}%</span>
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                        <span className="text-3xl font-black text-white group-hover/score:scale-110 transition-transform duration-500 tabular-nums">{latestScore || "0"}</span>
+                                        <span className="text-[10px] font-bold text-[#4B6A88] uppercase">Percent</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Overall Average */}
-                            <div className="flex flex-col items-center justify-center">
-                                <span className="text-[10px] font-bold text-[#4B6A88] uppercase tracking-widest mb-4">Overall Avg</span>
-                                <div className="relative w-28 h-28 flex items-center justify-center">
-                                    <svg className="w-full h-full -rotate-90">
-                                        <circle cx="56" cy="56" r="48" stroke="rgba(255,255,255,0.05)" strokeWidth="6" fill="none" />
+                            <div className="flex flex-col items-center justify-center relative group/avg">
+                                <span className="text-[10px] font-black text-[#5C6B89] uppercase tracking-[0.2em] mb-6">Growth Average</span>
+                                <div className="relative w-32 h-32 flex items-center justify-center">
+                                    <svg className="w-full h-full -rotate-90 p-1">
+                                        <circle cx="60" cy="60" r="54" stroke="rgba(255,255,255,0.03)" strokeWidth="4" fill="none" />
                                         <motion.circle
-                                            cx="56" cy="56" r="48"
-                                            stroke="#A87FF3" strokeWidth="6" fill="none"
-                                            strokeDasharray="301"
-                                            initial={{ strokeDashoffset: 301 }}
-                                            animate={{ strokeDashoffset: 301 - (301 * (history.length > 0 ? (history.reduce((acc, curr) => acc + curr.score, 0) / history.length) : 0) / 100) }}
-                                            transition={{ duration: 2, ease: "easeOut", delay: 0.2 }}
+                                            cx="60" cy="60" r="54"
+                                            stroke="#A87FF3" strokeWidth="4" fill="none"
+                                            strokeDasharray="339"
+                                            initial={{ strokeDashoffset: 339 }}
+                                            animate={{ strokeDashoffset: 339 - (339 * (history.length > 0 ? (history.reduce((acc, curr) => acc + curr.score, 0) / history.length) : 0) / 100) }}
+                                            transition={{ duration: 2.5, ease: [0.34, 1.56, 0.64, 1], delay: 0.3 }}
                                             strokeLinecap="round"
+                                            style={{ filter: "drop-shadow(0 0 8px rgba(168,127,243,0.4))" }}
                                         />
                                     </svg>
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <span className="text-xl font-black text-white">
-                                            {history.length > 0 ? Math.round(history.reduce((acc, curr) => acc + curr.score, 0) / history.length) : "--"}%
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                        <span className="text-3xl font-black text-white group-hover/avg:scale-110 transition-transform duration-500 tabular-nums">
+                                            {history.length > 0 ? Math.round(history.reduce((acc, curr) => acc + curr.score, 0) / history.length) : "0"}
                                         </span>
+                                        <span className="text-[10px] font-bold text-[#4B6A88] uppercase">Total Avg</span>
                                     </div>
                                 </div>
                             </div>
@@ -353,50 +362,66 @@ export default function Dashboard() {
                         initial="hidden"
                         animate="visible"
                         variants={containerVariants}
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                        className="grid grid-cols-1 md:grid-cols-2 gap-6"
                     >
                         {stats.map((stat, idx) => (
                             <motion.div
                                 key={stat.name}
                                 variants={itemVariants}
                                 whileHover={{
-                                    y: -5,
-                                    transition: { duration: 0.2 }
+                                    y: -8,
+                                    transition: { duration: 0.3, ease: "easeOut" }
                                 }}
-                                className="bg-white/[0.02] border border-white/5 backdrop-blur-xl rounded-3xl p-6 flex flex-col justify-between group cursor-default transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.2)] relative overflow-hidden"
+                                className="bg-[#121820]/40 border border-white/5 backdrop-blur-3xl rounded-[32px] p-8 group cursor-default transition-all duration-500 shadow-[0_20px_40px_rgba(0,0,0,0.3)] relative overflow-hidden flex flex-col gap-6"
                             >
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/[0.03] to-transparent rounded-full -mr-16 -mt-16" />
+                                {/* Decorative elements */}
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/[0.05] to-transparent rounded-full -mr-16 -mt-16 blur-xl" />
+                                <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-white/[0.02] rounded-full blur-2xl group-hover:bg-white/[0.04] transition-all duration-700" />
 
-                                {/* Communication Visual Watermark */}
-                                <span className="material-symbols-outlined absolute -bottom-6 -right-4 text-[120px] opacity-[0.02] rotate-[-15deg] group-hover:scale-105 group-hover:rotate-0 group-hover:opacity-[0.04] transition-all duration-700 blur-[2px]">
-                                    {stat.bgIcon}
-                                </span>
-
-                                <div className="flex justify-between items-start mb-4 relative z-10 gap-4">
-                                    <motion.div
-                                        whileHover={{ rotate: 10, scale: 1.05 }}
-                                        className="p-3 rounded-2xl bg-white/[0.03] text-slate-400 group-hover:bg-white/[0.06] transition-all border border-white/5"
-                                    >
-                                        <span className="material-symbols-outlined text-[20px]">{stat.icon}</span>
-                                    </motion.div>
+                                <div className="flex justify-between items-center relative z-10">
+                                    <div className="flex items-center gap-4">
+                                        <div
+                                            className="p-3.5 rounded-2xl bg-white/[0.03] text-slate-400 group-hover:text-white transition-all border border-white/5 shadow-inner"
+                                            style={{ boxShadow: `inset 0 0 10px ${stat.color}10` }}
+                                        >
+                                            <span className="material-symbols-outlined text-[24px]">{stat.icon}</span>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-[10px] font-black text-[#5C6B89] uppercase tracking-[0.2em] mb-0.5">{stat.name}</h4>
+                                            <p className="text-[10px] font-bold text-slate-500 italic opacity-80 group-hover:opacity-100 transition-opacity">Insight Label</p>
+                                        </div>
+                                    </div>
                                     <div className="text-right">
-                                        <span className={`text-xl font-black text-white group-hover:text-[#13a4ec] transition-colors`}>{stat.score}<span className="text-[10px] text-[#4B6A88] ml-1 font-bold">/100</span></span>
-                                        <h4 className="text-[9px] font-black text-white uppercase tracking-widest mt-1 opacity-60">{stat.name}</h4>
+                                        <div className="flex items-baseline justify-end">
+                                            <span className="text-3xl font-black text-white tabular-nums tracking-tight group-hover:scale-105 transition-transform duration-500">{stat.score}</span>
+                                            <span className="text-[12px] text-[#4B6A88] ml-1 font-bold">/100</span>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="space-y-4 relative z-10">
-                                    <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                                <div className="space-y-5 relative z-10">
+                                    <div className="h-2 w-full bg-white/[0.03] rounded-full overflow-hidden p-[2px] border border-white/5">
                                         <motion.div
                                             initial={{ width: 0 }}
                                             animate={{ width: `${stat.score}%` }}
                                             transition={{ duration: 1.5, delay: 0.5 + (idx * 0.1), ease: [0.34, 1.56, 0.64, 1] }}
-                                            style={{ backgroundColor: stat.color }}
-                                            className="h-full rounded-full shadow-[0_0_10px_rgba(0,0,0,0.5)]"
+                                            style={{
+                                                background: `linear-gradient(90deg, ${stat.color}88, ${stat.color})`,
+                                                boxShadow: `0 0 15px ${stat.color}66`
+                                            }}
+                                            className="h-full rounded-full"
                                         />
                                     </div>
-                                    <p className="text-[10px] text-[#8B9BB4] font-medium leading-relaxed group-hover:text-slate-300 transition-colors">{stat.feedback}</p>
+                                    <div className="flex items-start gap-3">
+                                        <span className="material-symbols-outlined text-slate-500 text-[14px] mt-0.5">info</span>
+                                        <p className="text-[11px] text-[#8B9BB4] font-semibold leading-relaxed group-hover:text-slate-200 transition-colors">
+                                            {stat.feedback}
+                                        </p>
+                                    </div>
                                 </div>
+
+                                {/* Hover Glow */}
+                                <div className="absolute inset-0 border border-white/0 group-hover:border-white/5 rounded-[32px] transition-all duration-500" />
                             </motion.div>
                         ))}
                     </motion.div>
@@ -681,19 +706,23 @@ export default function Dashboard() {
                             <span className="material-symbols-outlined text-emerald-500 p-2 bg-emerald-500/10 rounded-xl border border-emerald-500/20">auto_graph</span>
                             Development Insights
                         </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
-                            <div className="flex items-start gap-5 p-6 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-emerald-500/30 hover:bg-white/[0.04] transition-all duration-300">
-                                <span className="material-symbols-outlined text-emerald-500 text-2xl mt-1">trending_up</span>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                            <div className="flex items-start gap-6 p-8 rounded-[32px] bg-[#121820]/40 border border-white/5 hover:border-emerald-500/40 hover:bg-[#121820]/60 transition-all duration-500 group/ins shadow-lg">
+                                <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-500 group-hover/ins:scale-110 transition-transform border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+                                    <span className="material-symbols-outlined text-2xl">trending_up</span>
+                                </div>
                                 <div>
-                                    <p className="text-base font-bold text-white mb-2 tracking-tight">Growth Streak</p>
-                                    <p className="text-xs text-slate-400 leading-relaxed font-medium">Your scores have improved by 8% in the last 3 sessions. Keep the momentum going!</p>
+                                    <p className="text-lg font-black text-white mb-2 tracking-tight">Growth Momentum</p>
+                                    <p className="text-[11px] text-[#8B9BB4] leading-relaxed font-semibold">Your performance scores have increased by 8% in the last 3 sessions. Solid progress towards mastery.</p>
                                 </div>
                             </div>
-                            <div className="flex items-start gap-5 p-6 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-[#13a4ec]/30 hover:bg-white/[0.04] transition-all duration-300">
-                                <span className="material-symbols-outlined text-[#13a4ec] text-2xl mt-1">speed</span>
+                            <div className="flex items-start gap-6 p-8 rounded-[32px] bg-[#121820]/40 border border-white/5 hover:border-[#13a4ec]/40 hover:bg-[#121820]/60 transition-all duration-500 group/ins shadow-lg">
+                                <div className="p-4 rounded-2xl bg-[#13a4ec]/10 text-[#13a4ec] group-hover/ins:scale-110 transition-transform border border-[#13a4ec]/20 shadow-[0_0_15px_rgba(19,164,236,0.1)]">
+                                    <span className="material-symbols-outlined text-2xl">speed</span>
+                                </div>
                                 <div>
-                                    <p className="text-base font-bold text-white mb-2 tracking-tight">Pacing Mastery</p>
-                                    <p className="text-xs text-slate-400 leading-relaxed font-medium">You've successfully hit the 140 WPM "Ideal Zone" in 80% of your attempts.</p>
+                                    <p className="text-lg font-black text-white mb-2 tracking-tight">Pacing Precision</p>
+                                    <p className="text-[11px] text-[#8B9BB4] leading-relaxed font-semibold">Maintained an optimal 144 WPM cadence in 85% of your recorded assessments. Excellent consistency.</p>
                                 </div>
                             </div>
                         </div>
@@ -703,13 +732,14 @@ export default function Dashboard() {
 
                 <motion.section
                     initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                    className="bg-white/[0.02] border border-white/5 backdrop-blur-2xl rounded-[32px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.4)] mb-20"
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2 }}
+                    className="bg-[#121820]/40 border border-white/5 backdrop-blur-3xl rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.4)] mb-20"
                 >
-                    <div className="p-8 border-b border-white/5 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                    <div className="p-10 border-b border-white/5 flex flex-col sm:flex-row justify-between sm:items-center gap-6 bg-gradient-to-r from-white/[0.01] to-transparent">
                         <div className="flex items-center gap-6">
-                            <h3 className="text-xl font-bold text-white tracking-tight">Session History</h3>
+                            <h3 className="text-xl font-black text-white tracking-tight uppercase tracking-widest text-[13px] opacity-80">Assessment History</h3>
                             {selectedIds.length > 0 && (
                                 <motion.button
                                     initial={{ opacity: 0, x: -10 }}
@@ -791,11 +821,11 @@ export default function Dashboard() {
                                     history.map((attempt, idx) => (
                                         <motion.tr
                                             key={attempt.id || idx}
-                                            initial={{ opacity: 0, x: -20 }}
-                                            whileInView={{ opacity: 1, x: 0 }}
+                                            initial={{ opacity: 0, y: 10 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
                                             viewport={{ once: true }}
                                             transition={{ delay: idx * 0.05, duration: 0.5, ease: "easeOut" }}
-                                            className={`border-b border-white/5 hover:bg-white/[0.02] transition-colors duration-300 group ${selectedIds.includes(attempt.id) ? 'bg-[#13a4ec]/5' : ''
+                                            className={`border-b border-white/[0.03] hover:bg-white/[0.03] transition-all duration-300 group ${selectedIds.includes(attempt.id) ? 'bg-[#13a4ec]/5' : ''
                                                 }`}
                                         >
                                             <td className="px-8 py-6">
@@ -820,15 +850,29 @@ export default function Dashboard() {
                                             </td>
                                             <td className="px-8 py-6">
                                                 <div className="flex items-center gap-3">
-                                                    <span className="text-lg font-black text-white">{attempt.score}</span>
-                                                    <div className="w-20 h-1 bg-white/5 rounded-full overflow-hidden">
-                                                        <div className="h-full bg-[#13a4ec] rounded-full" style={{ width: `${attempt.score}%` }} />
+                                                    <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-xl font-black text-white shadow-inner group-hover:scale-110 transition-transform duration-500 tabular-nums">
+                                                        {attempt.score}
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <div className="h-1.5 w-24 bg-white/5 rounded-full overflow-hidden">
+                                                            <div
+                                                                className="h-full rounded-full"
+                                                                style={{
+                                                                    width: `${attempt.score}%`,
+                                                                    backgroundColor: attempt.score >= 80 ? '#45EBA5' : attempt.score >= 60 ? '#13a4ec' : '#FF5F56',
+                                                                    boxShadow: `0 0 10px ${attempt.score >= 80 ? '#45EBA544' : attempt.score >= 60 ? '#13a4ec44' : '#FF5F5644'}`
+                                                                }}
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-8 py-6">
-                                                <span className="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 rounded-lg text-[9px] font-black uppercase tracking-wider border border-emerald-500/20 shadow-sm">
-                                                    Completed
+                                                <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${attempt.score >= 80 ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
+                                                        attempt.score >= 60 ? 'bg-[#13a4ec]/10 text-[#13a4ec] border-[#13a4ec]/20' :
+                                                            'bg-red-500/10 text-red-500 border-red-500/20'
+                                                    }`}>
+                                                    {attempt.score >= 80 ? 'Mastery' : attempt.score >= 60 ? 'Competent' : 'Developing'}
                                                 </span>
                                             </td>
                                             <td className="px-8 py-6 text-right">
