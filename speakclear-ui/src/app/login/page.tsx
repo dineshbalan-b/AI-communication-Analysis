@@ -36,7 +36,7 @@ export default function Login() {
         setErrorMsg("");
         setIsLoading(true);
 
-        const endpoint = mode === "login" ? "http://127.0.0.1:8001/api/login" : "http://127.0.0.1:8001/api/register";
+        const endpoint = mode === "login" ? "http://127.0.0.1:8010/api/login" : "http://127.0.0.1:8010/api/register";
         const formData = new FormData();
         formData.append("username", username);
         formData.append("password", password);
@@ -55,7 +55,7 @@ export default function Login() {
                 router.push("/dashboard");
             }
         } catch (err) {
-            setErrorMsg("Network error. Make sure FastAPI server is running on port 8000.");
+            setErrorMsg("Network error. Make sure FastAPI server is running on port 8010.");
         } finally {
             setIsLoading(false);
         }

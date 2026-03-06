@@ -51,7 +51,7 @@ app = FastAPI(title="SpeakClear AI API")
 # Configure CORS to allow the React/Next.js frontend to communicate securely
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8000", "http://127.0.0.1:8000", "http://localhost:8001", "http://127.0.0.1:8001"],
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8000", "http://127.0.0.1:8000", "http://localhost:8001", "http://127.0.0.1:8001", "http://localhost:8010", "http://127.0.0.1:8010"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -118,6 +118,17 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
         if not transcript or len(transcript) < 5:
             save_to_db = False
             no_speech = True
+            # Zero out all metrics for empty recording
+            audio_metrics = {
+                "duration": audio_metrics.get("duration", 0),
+                "speech_ratio": 0,
+                "total_pause_time": 0,
+                "avg_pause": 0,
+                "max_pause": 0,
+                "pause_count": 0,
+                "pitch_variance": 0,
+                "energy_variance": 0
+            }
             text_metrics = {"wpm": 0, "filler_count": 0}
             llm_scores = {
                 "grammar": 0,
