@@ -19,6 +19,41 @@ client = OpenAI(
 )
 
 # -------------------------------
+# Language Detection
+# -------------------------------
+
+def is_english(transcript):
+    """
+    Detects if the primarily used language in the transcript is English.
+    Returns True if English, False otherwise.
+    """
+    if not transcript or len(transcript.strip()) < 3:
+        return True # Default to True for very short snippets to let VAD/Short content logic handle it
+
+    prompt = f"""
+    Analyze the following text and determine if it is primarily written or spoken in English.
+    
+    Text: "{transcript}"
+    
+    If the text is in English (even with minor errors), return strictly the word "ENGLISH".
+    If the text is in any other language (e.g., Spanish, French, Hindi, etc.), return strictly "NON_ENGLISH".
+    """
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4.1-nano",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0,
+            max_tokens=10
+        )
+        
+        result = response.choices[0].message.content.strip().upper()
+        return "ENGLISH" == result or "ENGLISH." == result
+    except Exception as e:
+        print(f"Error in language detection: {e}")
+        return True # Fallback to True to avoid blocking users on API failure
+
+# -------------------------------
 # LLM Evaluation
 # -------------------------------
 

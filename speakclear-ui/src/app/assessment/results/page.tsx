@@ -135,6 +135,51 @@ export default function ResultsPage() {
                                 </div>
                             </div>
                         </motion.div>
+                    ) : results?.language_rejected ? (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="bg-[#121820]/60 border border-white/5 rounded-[40px] p-16 md:p-24 text-center relative overflow-hidden backdrop-blur-3xl shadow-2xl"
+                        >
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-[#13a4ec]/10 rounded-bl-full blur-[80px] pointer-events-none" />
+                            <div className="absolute bottom-0 left-0 w-64 h-64 bg-red-500/5 rounded-tr-full blur-[80px] pointer-events-none" />
+
+                            <div className="relative z-10 flex flex-col items-center">
+                                <div className="w-24 h-24 bg-[#13a4ec]/10 text-[#13a4ec] rounded-3xl flex items-center justify-center mb-10 border border-[#13a4ec]/20 shadow-[0_0_30px_rgba(19,164,236,0.2)]">
+                                    <span className="material-symbols-outlined text-5xl">language</span>
+                                </div>
+
+                                <h2 className="text-3xl md:text-4xl font-black text-white mb-6 tracking-tight italic">Language Conflict</h2>
+
+                                <p className="text-slate-400 font-medium text-lg max-w-xl mx-auto mb-12 leading-relaxed italic">
+                                    "{results.error_message || "Only English communication is supported. Please speak in English."}"
+                                </p>
+
+                                <div className="bg-white/[0.03] border border-white/5 p-8 rounded-3xl text-left max-w-lg w-full mb-12 backdrop-blur-sm">
+                                    <h4 className="text-[10px] font-black text-[#13a4ec] uppercase tracking-[0.2em] mb-4">Why this happened?</h4>
+                                    <p className="text-sm text-slate-300 leading-relaxed">
+                                        Our AI analysis engine is currently optimized exclusively for English. To provide you with accurate communication metrics, vocabulary insights, and grammar scores, please ensure your response is in English.
+                                    </p>
+                                </div>
+
+                                <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center">
+                                    <button
+                                        onClick={() => router.push('/assessment')}
+                                        className="w-full sm:w-auto px-10 py-5 bg-[#13a4ec] hover:bg-[#108CCC] text-white rounded-2xl flex items-center justify-center gap-3 text-[11px] font-black uppercase tracking-widest transition-all shadow-xl shadow-[#13a4ec]/20 active:scale-95"
+                                    >
+                                        <span className="material-symbols-outlined text-xl">refresh</span>
+                                        New English Session
+                                    </button>
+                                    <button
+                                        onClick={() => router.push('/dashboard')}
+                                        className="w-full sm:w-auto px-10 py-5 bg-white/5 hover:bg-white/10 text-white rounded-2xl flex items-center justify-center gap-3 text-[11px] font-black uppercase tracking-widest border border-white/5 transition-all"
+                                    >
+                                        <span className="material-symbols-outlined text-xl">dashboard</span>
+                                        Dashboard
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
                     ) : (
                         <>
                             {/* Stats Grid */}

@@ -24,7 +24,8 @@ from llm_engine import (
     evaluate_with_llm,
     compute_hybrid_score,
     generate_spoken_feedback,
-    generate_topics
+    generate_topics,
+    is_english
 )
 
 # -------------------------------
@@ -115,12 +116,14 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
         transcript = transcription.text.strip()
         save_to_db = True
         no_speech = False
+        language_rejected = False
+        error_message = ""
         
-        # Check for empty transcription or minimal content (e.g., just noise or 1-2 words)
+        # Check for empty transcription or minimal content
         if not transcript or len(transcript) < 5:
             save_to_db = False
             no_speech = True
-            # Zero out all metrics for empty recording
+            # Zero out all metrics...
             audio_metrics = {
                 "duration": audio_metrics.get("duration", 0),
                 "speech_ratio": 0,
@@ -133,20 +136,35 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
             }
             text_metrics = {"wpm": 0, "filler_count": 0}
             llm_scores = {
-                "grammar": 0,
-                "vocabulary": 0,
-                "clarity": 0,
-                "confidence": 0,
-                "final_feedback": "No significant speech detected in the recording. Please ensure your microphone is working and you are speaking clearly.",
-                "improvements": "Try recording again, making sure to speak into the microphone and address the assigned topic."
+                "grammar": 0, "vocabulary": 0, "clarity": 0, "confidence": 0,
+                "final_feedback": "No significant speech detected.",
+                "improvements": "Try recording again speaking clearly."
+            }
+            hybrid_score = 0
+        
+        # Language detection (New requirement)
+        elif not is_english(transcript):
+            save_to_db = False
+            language_rejected = True
+            error_message = "Only English communication is supported. Please speak in English."
+            
+            # Populate defaults for the UI to handle gracefully
+            audio_metrics = {
+                "duration": audio_metrics.get("duration", 0),
+                "speech_ratio": audio_metrics.get("speech_ratio", 0),
+                "total_pause_time": 0, "avg_pause": 0, "max_pause": 0, "pause_count": 0, "pitch_variance": 0, "energy_variance": 0
+            }
+            text_metrics = {"wpm": 0, "filler_count": 0}
+            llm_scores = {
+                "grammar": 0, "vocabulary": 0, "clarity": 0, "confidence": 0,
+                "final_feedback": error_message,
+                "improvements": "Please record your response in English to receive a detailed analysis."
             }
             hybrid_score = 0
         else:
-            # Text Metrics and LLM Evaluation
+            # Normal Processing Pipeline
             text_metrics = analyze_text(transcript, audio_metrics["duration"])
             rule_score = compute_communication_score(audio_metrics, text_metrics)
-
-            # LLM Eval (This is still I/O bound, we could potentially parallelize more but it depends on metrics)
             llm_scores = evaluate_with_llm(topic, transcript, audio_metrics, text_metrics)
             hybrid_score = compute_hybrid_score(rule_score, llm_scores)
 
@@ -172,6 +190,8 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
         return {
             "status": "success",
             "no_speech": no_speech,
+            "language_rejected": language_rejected,
+            "error_message": error_message,
             "transcript": transcript,
             "metrics": {
                 "wpm": round(text_metrics["wpm"], 2),
