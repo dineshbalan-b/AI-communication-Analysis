@@ -36,6 +36,7 @@ export default function Dashboard() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+    const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -94,8 +95,10 @@ export default function Dashboard() {
 
     const handleBulkDelete = async () => {
         if (selectedIds.length === 0) return;
-        if (!confirm(`Are you sure you want to delete ${selectedIds.length} sessions?`)) return;
+        setShowBulkDeleteModal(true);
+    };
 
+    const confirmBulkDelete = async () => {
         setIsBulkDeleting(true);
         try {
             const resp = await fetch(`http://127.0.0.1:8010/api/sessions/bulk-delete`, {
@@ -112,6 +115,7 @@ export default function Dashboard() {
             console.error("Failed to bulk delete sessions:", err);
         } finally {
             setIsBulkDeleting(false);
+            setShowBulkDeleteModal(false);
         }
     };
 
@@ -744,8 +748,8 @@ export default function Dashboard() {
                                         <div
                                             onClick={toggleSelectAll}
                                             className={`w-4 h-4 rounded border transition-all cursor-pointer flex items-center justify-center ${selectedIds.length > 0
-                                                    ? 'bg-[#13a4ec] border-[#13a4ec]'
-                                                    : 'border-[#212E3B] hover:border-slate-500'
+                                                ? 'bg-[#13a4ec] border-[#13a4ec]'
+                                                : 'border-[#212E3B] hover:border-slate-500'
                                                 }`}
                                         >
                                             {selectedIds.length > 0 && (
@@ -798,8 +802,8 @@ export default function Dashboard() {
                                                 <div
                                                     onClick={() => toggleSelect(attempt.id)}
                                                     className={`w-4 h-4 rounded border transition-all cursor-pointer flex items-center justify-center ${selectedIds.includes(attempt.id)
-                                                            ? 'bg-[#13a4ec] border-[#13a4ec]'
-                                                            : 'border-[#212E3B] group-hover:border-slate-500'
+                                                        ? 'bg-[#13a4ec] border-[#13a4ec]'
+                                                        : 'border-[#212E3B] group-hover:border-slate-500'
                                                         }`}
                                                 >
                                                     {selectedIds.includes(attempt.id) && (
@@ -909,6 +913,59 @@ export default function Dashboard() {
                             </div>
                         </motion.div>
                     </motion.div>
+                )}
+                {/* Bulk Delete Confirmation Modal */}
+                {showBulkDeleteModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B0F15]/80 backdrop-blur-sm">
+                        <motion.div
+                            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            className="bg-[#121820] border border-white/5 p-8 rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.6)] max-w-md w-full relative overflow-hidden"
+                        >
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-bl-full blur-[40px] pointer-events-none" />
+
+                            <div className="flex items-center gap-4 mb-6 relative z-10">
+                                <div className="p-3 bg-red-500/10 text-red-500 rounded-2xl border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+                                    <span className="material-symbols-outlined text-2xl">warning</span>
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold text-white tracking-tight">Bulk Delete</h3>
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#8B9BB4] mt-1">Irreversible Action</p>
+                                </div>
+                            </div>
+
+                            <p className="text-sm text-slate-400 font-medium leading-relaxed mb-8 relative z-10">
+                                Are you sure you want to <span className="text-white font-bold">permanently delete {selectedIds.length} selected sessions</span>? All associated audio, transcripts, and analysis data will be lost.
+                            </p>
+
+                            <div className="flex items-center justify-end gap-3 relative z-10">
+                                <button
+                                    onClick={() => setShowBulkDeleteModal(false)}
+                                    disabled={isBulkDeleting}
+                                    className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-slate-300 bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] hover:text-white transition-all disabled:opacity-50"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={confirmBulkDelete}
+                                    disabled={isBulkDeleting}
+                                    className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-white bg-red-500 hover:bg-red-400 border border-red-500/50 shadow-[0_4px_20px_rgba(239,68,68,0.3)] transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group/btn"
+                                >
+                                    {isBulkDeleting ? (
+                                        <>
+                                            <span className="material-symbols-outlined text-[16px] animate-spin">progress_activity</span>
+                                            Deleting...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span className="material-symbols-outlined text-[16px] group-hover/btn:scale-110 transition-transform">delete_forever</span>
+                                            Delete {selectedIds.length} Sessions
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
                 )}
             </main>
         </div>

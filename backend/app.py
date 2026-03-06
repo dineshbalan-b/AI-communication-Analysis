@@ -2,6 +2,8 @@ import os
 import random
 import tempfile
 import asyncio
+from typing import List
+from pydantic import BaseModel
 from pathlib import Path
 
 from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File, Form, Request
