@@ -2,13 +2,15 @@ import os
 import random
 import tempfile
 import asyncio
+import logging
+import traceback
 from typing import List
-from pydantic import BaseModel
 from pathlib import Path
 
 from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -31,6 +33,17 @@ from llm_engine import (
 # -------------------------------
 # Setup & Config
 # -------------------------------
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler("backend.log")
+    ]
+)
+logger = logging.getLogger("speakclear")
+
 env_path = Path(__file__).parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
@@ -54,7 +67,12 @@ app = FastAPI(title="SpeakClear AI API")
 # Configure CORS to allow the React/Next.js frontend to communicate securely
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8000", "http://127.0.0.1:8000", "http://localhost:8001", "http://127.0.0.1:8001", "http://localhost:8010", "http://127.0.0.1:8010"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:8010",
+        "http://127.0.0.1:8010"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -203,9 +221,8 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
         }
 
     except Exception as e:
-        import traceback
-        with open("error_log.txt", "w") as f:
-            traceback.print_exc(file=f)
+        logger.error(f"Error during audio upload/processing: {str(e)}")
+        logger.error(traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         # Clean temp input

@@ -43,3 +43,12 @@ generate_templates.py
 stitch_ai_analysis_in_progress/
 temp_audio/
 uploads/
+
+# Logs and Artifacts
+error_log.txt
+backend.log
+processed_audio.wav
+*.db
+
+
+API_test/

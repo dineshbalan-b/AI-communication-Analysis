@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "D:\NAVIGATE_LABS\3_Voice_Ai\3_Capstone\AI-communication-Analysis-main\backend\app.py", line 145, in upload_audio
-    os.remove(processed_path)
-    ~~~~~~~~~^^^^^^^^^^^^^^^^
-PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'processed_audio.wav'
