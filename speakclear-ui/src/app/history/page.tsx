@@ -16,6 +16,29 @@ export default function HistoryPage() {
     const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
     const router = useRouter();
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                type: 'spring',
+                stiffness: 100,
+                damping: 20
+            }
+        }
+    };
+
     useEffect(() => {
         const un = localStorage.getItem("username");
         if (!un) {
@@ -226,9 +249,10 @@ export default function HistoryPage() {
                                     history.map((attempt, idx) => (
                                         <motion.tr
                                             key={attempt.id || idx}
-                                            initial={{ opacity: 0, x: -10 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: 0.2 + (idx * 0.05) }}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            whileInView={{ opacity: 1, x: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ delay: idx * 0.05, duration: 0.5, ease: "easeOut" }}
                                             className={`hover:bg-[#13a4ec]/5 transition-all group border-b border-[#212E3B]/50 ${selectedIds.includes(attempt.id) ? 'bg-[#13a4ec]/10' : ''
                                                 }`}
                                         >

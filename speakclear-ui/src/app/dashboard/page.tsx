@@ -349,16 +349,19 @@ export default function Dashboard() {
 
 
                     {/* Metric Cards Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <motion.div
+                        initial="hidden"
+                        animate="visible"
+                        variants={containerVariants}
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                    >
                         {stats.map((stat, idx) => (
                             <motion.div
                                 key={stat.name}
                                 variants={itemVariants}
                                 whileHover={{
-                                    y: -4,
-                                    scale: 1.01,
-                                    borderColor: "rgba(255, 255, 255, 0.1)",
-                                    boxShadow: "0 20px 40px -5px rgba(0, 0, 0, 0.3)"
+                                    y: -5,
+                                    transition: { duration: 0.2 }
                                 }}
                                 className="bg-white/[0.02] border border-white/5 backdrop-blur-xl rounded-3xl p-6 flex flex-col justify-between group cursor-default transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.2)] relative overflow-hidden"
                             >
@@ -396,14 +399,14 @@ export default function Dashboard() {
                                 </div>
                             </motion.div>
                         ))}
-                    </div>
+                    </motion.div>
                 </motion.div >
 
                 {/* Score Progression & Insights Section */}
                 <motion.div
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }}
+                    viewport={{ once: true, margin: "-50px" }}
                     variants={containerVariants}
                     className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8 mb-10"
                 >
@@ -614,9 +617,7 @@ export default function Dashboard() {
 
                     <div className="flex flex-col gap-6">
                         <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.5 }}
+                            variants={itemVariants}
                             className="bg-white/[0.02] border border-white/5 p-8 rounded-[32px] flex flex-col justify-center border-l-2 border-l-[#A87FF3]/50 shadow-[0_8px_30px_rgb(0,0,0,0.2)] backdrop-blur-md relative overflow-hidden"
                         >
                             <div className="absolute top-0 right-0 w-32 h-32 bg-[#A87FF3]/5 rounded-bl-full blur-2xl"></div>
@@ -639,9 +640,7 @@ export default function Dashboard() {
                         </motion.div>
 
                         <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.6 }}
+                            variants={itemVariants}
                             className="bg-gradient-to-br from-[#13a4ec] to-[#0ea5e9] p-8 rounded-[32px] text-white flex flex-col justify-between shadow-[0_8px_30px_rgba(19,164,236,0.3)] relative overflow-hidden group"
                         >
                             <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-3xl"></div>
@@ -668,7 +667,7 @@ export default function Dashboard() {
                 <motion.div
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }}
+                    viewport={{ once: true, margin: "-50px" }}
                     variants={containerVariants}
                     className="grid grid-cols-1 mb-20"
                 >
@@ -792,9 +791,10 @@ export default function Dashboard() {
                                     history.map((attempt, idx) => (
                                         <motion.tr
                                             key={attempt.id || idx}
-                                            initial={{ opacity: 0, x: -10 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: 0.6 + (idx * 0.05) }}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            whileInView={{ opacity: 1, x: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ delay: idx * 0.05, duration: 0.5, ease: "easeOut" }}
                                             className={`border-b border-white/5 hover:bg-white/[0.02] transition-colors duration-300 group ${selectedIds.includes(attempt.id) ? 'bg-[#13a4ec]/5' : ''
                                                 }`}
                                         >
