@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 from auth import create_user, verify_user, init_user_db
-from database import init_evaluation_db, save_evaluation, get_user_progress, delete_evaluation
+from database import init_evaluation_db, save_evaluation, get_user_progress, delete_evaluation, bulk_delete_evaluations
 from audio_preprocessing import preprocess_audio
 from communication_analysis import (
     analyze_audio,
@@ -219,6 +219,18 @@ async def delete_session(session_id: int):
     if delete_evaluation(session_id):
         return {"status": "success", "message": "Session deleted"}
     raise HTTPException(status_code=400, detail="Failed to delete session")
+
+class BulkDeleteRequest(BaseModel):
+    ids: List[int]
+
+@app.post("/api/sessions/bulk-delete")
+async def bulk_delete(request: BulkDeleteRequest):
+    if not request.ids:
+        raise HTTPException(status_code=400, detail="No session IDs provided")
+    
+    if bulk_delete_evaluations(request.ids):
+        return {"status": "success", "message": f"{len(request.ids)} sessions deleted"}
+    raise HTTPException(status_code=500, detail="Failed to delete sessions")
 
 @app.get("/api/topics")
 async def get_topics(force: bool = False):

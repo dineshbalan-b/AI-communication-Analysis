@@ -34,6 +34,8 @@ export default function Dashboard() {
     const [highestScore, setHighestScore] = useState(0);
     const [sessionToDelete, setSessionToDelete] = useState<number | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [selectedIds, setSelectedIds] = useState<number[]>([]);
+    const [isBulkDeleting, setIsBulkDeleting] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -79,8 +81,8 @@ export default function Dashboard() {
             });
             const data = await resp.json();
             if (data.status === "success") {
-                // Refresh history
                 fetchHistory(username);
+                setSelectedIds(prev => prev.filter(id => id !== sessionToDelete));
             }
         } catch (err) {
             console.error("Failed to delete session:", err);
@@ -89,6 +91,44 @@ export default function Dashboard() {
             setSessionToDelete(null);
         }
     };
+
+    const handleBulkDelete = async () => {
+        if (selectedIds.length === 0) return;
+        if (!confirm(`Are you sure you want to delete ${selectedIds.length} sessions?`)) return;
+
+        setIsBulkDeleting(true);
+        try {
+            const resp = await fetch(`http://127.0.0.1:8010/api/sessions/bulk-delete`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ids: selectedIds })
+            });
+            const data = await resp.json();
+            if (data.status === "success") {
+                fetchHistory(username);
+                setSelectedIds([]);
+            }
+        } catch (err) {
+            console.error("Failed to bulk delete sessions:", err);
+        } finally {
+            setIsBulkDeleting(false);
+        }
+    };
+
+    const toggleSelect = (id: number) => {
+        setSelectedIds(prev =>
+            prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+        );
+    };
+
+    const toggleSelectAll = () => {
+        if (selectedIds.length === history.length) {
+            setSelectedIds([]);
+        } else {
+            setSelectedIds(history.map(h => h.id));
+        }
+    };
+
     const handleViewDetails = (attempt: any) => {
         const payload = {
             transcript: attempt.transcript || "Transcript not available.",
@@ -658,7 +698,6 @@ export default function Dashboard() {
                 </motion.div>
 
 
-                {/* Recent Attempts Table */}
                 <motion.section
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -666,10 +705,34 @@ export default function Dashboard() {
                     className="bg-white/[0.02] border border-white/5 backdrop-blur-2xl rounded-[32px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.4)] mb-20"
                 >
                     <div className="p-8 border-b border-white/5 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-                        <h3 className="text-xl font-bold text-white tracking-tight">Session History</h3>
-                        <div className="flex items-center gap-2 px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-full w-fit">
-                            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Real-time Sync</span>
+                        <div className="flex items-center gap-6">
+                            <h3 className="text-xl font-bold text-white tracking-tight">Session History</h3>
+                            {selectedIds.length > 0 && (
+                                <motion.button
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    onClick={handleBulkDelete}
+                                    disabled={isBulkDeleting}
+                                    className="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 active:scale-95 disabled:opacity-50"
+                                >
+                                    <span className="material-symbols-outlined text-sm">delete_sweep</span>
+                                    {isBulkDeleting ? 'Deleting...' : `Delete ${selectedIds.length}`}
+                                </motion.button>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-4">
+                            {history.length > 0 && (
+                                <button
+                                    onClick={toggleSelectAll}
+                                    className="text-[9px] font-black uppercase tracking-widest text-[#4B6A88] hover:text-white transition-colors"
+                                >
+                                    {selectedIds.length === history.length ? "Deselect All" : "Select All"}
+                                </button>
+                            )}
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-full w-fit">
+                                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Real-time Sync</span>
+                            </div>
                         </div>
                     </div>
 
@@ -677,7 +740,22 @@ export default function Dashboard() {
                         <table className="w-full">
                             <thead>
                                 <tr className="text-left border-b border-white/5 bg-white/[0.01]">
-                                    <th className="px-8 py-5 text-[10px] font-black text-[#8B9BB4] uppercase tracking-widest whitespace-nowrap">Date Reported</th>
+                                    <th className="px-8 py-5 w-16">
+                                        <div
+                                            onClick={toggleSelectAll}
+                                            className={`w-4 h-4 rounded border transition-all cursor-pointer flex items-center justify-center ${selectedIds.length > 0
+                                                    ? 'bg-[#13a4ec] border-[#13a4ec]'
+                                                    : 'border-[#212E3B] hover:border-slate-500'
+                                                }`}
+                                        >
+                                            {selectedIds.length > 0 && (
+                                                <span className="material-symbols-outlined text-white text-[10px] font-bold">
+                                                    {selectedIds.length === history.length ? 'check' : 'remove'}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </th>
+                                    <th className="px-4 py-5 text-[10px] font-black text-[#8B9BB4] uppercase tracking-widest whitespace-nowrap">Date Reported</th>
                                     <th className="px-8 py-5 text-[10px] font-black text-[#8B9BB4] uppercase tracking-widest whitespace-nowrap">Topic</th>
                                     <th className="px-8 py-5 text-[10px] font-black text-[#8B9BB4] uppercase tracking-widest whitespace-nowrap">Overall Score</th>
                                     <th className="px-8 py-5 text-[10px] font-black text-[#8B9BB4] uppercase tracking-widest whitespace-nowrap">Status</th>
@@ -687,7 +765,7 @@ export default function Dashboard() {
                             <tbody>
                                 {loading ? (
                                     <tr>
-                                        <td colSpan={5} className="px-8 py-32 text-center text-slate-400 font-medium">
+                                        <td colSpan={6} className="px-8 py-32 text-center text-slate-400 font-medium">
                                             <div className="flex flex-col items-center justify-center gap-4">
                                                 <AudioWave color="#4B6A88" />
                                                 <span className="text-xs uppercase tracking-widest">Syncing with SpeakClear Cloud...</span>
@@ -696,7 +774,7 @@ export default function Dashboard() {
                                     </tr>
                                 ) : history.length === 0 ? (
                                     <tr>
-                                        <td colSpan={5} className="px-8 py-32 text-center text-slate-400">
+                                        <td colSpan={6} className="px-8 py-32 text-center text-slate-400">
                                             <div className="flex flex-col items-center justify-center gap-4">
                                                 <span className="material-symbols-outlined text-4xl opacity-50">data_usage</span>
                                                 <div className="space-y-1">
@@ -709,13 +787,27 @@ export default function Dashboard() {
                                 ) : (
                                     history.map((attempt, idx) => (
                                         <motion.tr
-                                            key={idx}
+                                            key={attempt.id || idx}
                                             initial={{ opacity: 0, x: -10 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: 0.6 + (idx * 0.05) }}
-                                            className="border-b border-white/5 hover:bg-white/[0.02] transition-colors duration-300 group"
+                                            className={`border-b border-white/5 hover:bg-white/[0.02] transition-colors duration-300 group ${selectedIds.includes(attempt.id) ? 'bg-[#13a4ec]/5' : ''
+                                                }`}
                                         >
-                                            <td className="px-8 py-6 whitespace-nowrap">
+                                            <td className="px-8 py-6">
+                                                <div
+                                                    onClick={() => toggleSelect(attempt.id)}
+                                                    className={`w-4 h-4 rounded border transition-all cursor-pointer flex items-center justify-center ${selectedIds.includes(attempt.id)
+                                                            ? 'bg-[#13a4ec] border-[#13a4ec]'
+                                                            : 'border-[#212E3B] group-hover:border-slate-500'
+                                                        }`}
+                                                >
+                                                    {selectedIds.includes(attempt.id) && (
+                                                        <span className="material-symbols-outlined text-white text-[10px] font-bold">check</span>
+                                                    )}
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-6 whitespace-nowrap">
                                                 <p className="text-sm font-bold text-white mb-1">{new Date(attempt.date).toLocaleDateString()}</p>
                                                 <p className="text-[10px] font-medium text-[#4B6A88]">{new Date(attempt.date).toLocaleTimeString()}</p>
                                             </td>

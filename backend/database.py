@@ -106,3 +106,19 @@ def delete_evaluation(rowid):
     conn.commit()
     conn.close()
     return True
+
+def bulk_delete_evaluations(rowids):
+    """Delete multiple evaluations by their rowids."""
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    
+    # Use executemany for efficiency or a simple IN clause
+    # For safety with a small number of IDs, IN clause is fine
+    placeholders = ','.join(['?'] * len(rowids))
+    query = f"DELETE FROM evaluations WHERE rowid IN ({placeholders})"
+    
+    c.execute(query, rowids)
+    
+    conn.commit()
+    conn.close()
+    return True
