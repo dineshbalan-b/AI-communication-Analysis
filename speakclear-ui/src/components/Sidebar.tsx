@@ -49,20 +49,19 @@ export default function Sidebar({ username }: SidebarProps) {
                 )}
             </AnimatePresence>
 
-            <aside className={`fixed md:relative w-72 h-full bg-[#0B0F15] md:bg-[#0B0F15] border-r border-[#212E3B]/30 flex flex-col justify-between p-6 shrink-0 transition-transform duration-300 z-50 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
-                <div className="space-y-10">
-                    <div className="flex items-center gap-3">
-
-                        <div className="h-10 w-10 rounded-lg bg-[#13a4ec]/10 flex items-center justify-center text-[#13a4ec] border border-[#13a4ec]/20">
+            <aside className={`fixed md:relative w-72 h-full glass-dark border-r border-white/5 flex flex-col justify-between p-6 shrink-0 transition-transform duration-300 z-50 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+                <div className="space-y-12">
+                    <div className="flex items-center gap-4 px-2">
+                        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#13a4ec] to-[#13a4ec]/20 flex items-center justify-center text-white border border-white/10 shadow-[0_0_20px_rgba(19,164,236,0.3)]">
                             <span className="material-symbols-outlined text-2xl font-bold">graphic_eq</span>
                         </div>
                         <div>
-                            <Link href="/"><h1 className="text-white text-lg font-bold tracking-tight hover:text-[#13a4ec] transition">SpeakClear</h1></Link>
-                            <p className="text-[#13a4ec] text-[10px] font-bold uppercase tracking-widest leading-none mt-1">Verbal Clarity AI</p>
+                            <Link href="/"><h1 className="text-white text-xl font-black tracking-tighter hover:text-[#13a4ec] transition-colors duration-300">SpeakClear</h1></Link>
+                            <p className="text-[#13a4ec] text-[9px] font-black uppercase tracking-[0.2em] leading-none mt-1.5 opacity-80">Verbal Clarity AI</p>
                         </div>
                     </div>
 
-                    <nav className="flex flex-col gap-1">
+                    <nav className="flex flex-col gap-2">
                         {navItems.map((item, idx) => {
                             const isActive = pathname === item.path;
                             return (
@@ -70,19 +69,26 @@ export default function Sidebar({ username }: SidebarProps) {
                                     key={item.name}
                                     initial={{ opacity: 0, x: -10 }}
                                     animate={{ opacity: 1, x: 0 }}
-                                    transition={{ duration: 0.3, delay: idx * 0.05 + 0.1 }}
+                                    transition={{ duration: 0.4, delay: idx * 0.05 + 0.1 }}
                                 >
                                     <Link
                                         href={item.path}
-                                        className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl transition-all duration-300 group ${isActive
-                                            ? 'bg-gradient-to-r from-[#13a4ec] to-[#13a4ec]/80 text-white shadow-[0_10px_20px_rgba(19,164,236,0.2)] font-black border border-[#13a4ec]/20'
-                                            : 'text-[#5C6B89] hover:text-white hover:bg-white/[0.03] hover:translate-x-1 border border-transparent hover:border-white/5'
+                                        className={`flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-500 group relative overflow-hidden ${isActive
+                                            ? 'text-white font-black'
+                                            : 'text-slate-400 hover:text-white'
                                             }`}
                                     >
-                                        <div className={`p-1.5 rounded-lg transition-all duration-300 ${isActive ? 'bg-white/20' : 'bg-transparent group-hover:bg-white/5'}`}>
-                                            <span className={`material-symbols-outlined text-[20px] transition-transform duration-300 ${!isActive && 'group-hover:scale-110 group-hover:text-[#13a4ec]'}`}>{item.icon}</span>
+                                        {isActive && (
+                                            <motion.div
+                                                layoutId="active-nav"
+                                                className="absolute inset-0 bg-gradient-to-r from-[#13a4ec]/20 to-transparent border-l-2 border-[#13a4ec]"
+                                                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                            />
+                                        )}
+                                        <div className={`relative z-10 p-1 rounded-lg transition-transform duration-500 ${!isActive && 'group-hover:scale-110'}`}>
+                                            <span className={`material-symbols-outlined text-[22px] ${isActive ? 'text-[#13a4ec] text-glow' : 'opacity-70 group-hover:opacity-100 group-hover:text-[#13a4ec]'}`}>{item.icon}</span>
                                         </div>
-                                        <span className="text-[13px] tracking-tight">{item.name}</span>
+                                        <span className="relative z-10 text-[13px] tracking-wide uppercase font-bold">{item.name}</span>
                                     </Link>
                                 </motion.div>
                             );
@@ -90,18 +96,33 @@ export default function Sidebar({ username }: SidebarProps) {
                     </nav>
                 </div>
 
-                <div className="space-y-2">
-                    <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-[#8B9BB4] hover:text-white hover:bg-white/5 w-full text-left transition-all group">
-                        <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">help</span>
-                        <span className="text-sm font-bold">Help Center</span>
-                    </button>
-                    <button
-                        onClick={handleLogout}
-                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-[#8B9BB4] hover:text-[#FF5F56] hover:bg-[#FF5F56]/10 w-full text-left transition-all group"
-                    >
-                        <span className="material-symbols-outlined text-[22px] group-hover:translate-x-1 transition-transform">logout</span>
-                        <span className="text-sm font-bold">Logout</span>
-                    </button>
+                <div className="space-y-6">
+                    {/* User Profile Section */}
+                    <div className="px-2 py-6 border-t border-white/5">
+                        <div className="flex items-center gap-4 p-3 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 cursor-pointer group">
+                            <div className="w-10 h-10 rounded-xl bg-[#13a4ec]/10 flex items-center justify-center text-[#13a4ec] font-black border border-[#13a4ec]/20 group-hover:bg-[#13a4ec] group-hover:text-white transition-all duration-500">
+                                {username.charAt(0).toUpperCase()}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="text-xs font-black text-white truncate uppercase tracking-widest">{username}</p>
+                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none mt-1">Premium Member</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-1">
+                        <button className="flex items-center gap-4 px-5 py-3.5 rounded-2xl text-slate-500 hover:text-white hover:bg-white/5 w-full text-left transition-all duration-300 group">
+                            <span className="material-symbols-outlined text-[20px] opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all">help</span>
+                            <span className="text-xs font-black uppercase tracking-widest">Help Center</span>
+                        </button>
+                        <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-4 px-5 py-3.5 rounded-2xl text-slate-500 hover:text-red-400 hover:bg-red-500/5 w-full text-left transition-all duration-300 group"
+                        >
+                            <span className="material-symbols-outlined text-[20px] opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all">logout</span>
+                            <span className="text-xs font-black uppercase tracking-widest">Logout</span>
+                        </button>
+                    </div>
                 </div>
             </aside>
         </>
