@@ -228,7 +228,6 @@ def generate_topics(force_refresh=False):
             response_format={"type": "json_object"}
         )
 
-        import json
         res_text = response.choices[0].message.content
         data = json.loads(res_text)
         

@@ -13,7 +13,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
-from openai import OpenAI
 import time
 import io
 
@@ -28,7 +27,7 @@ from communication_analysis import (
 from llm_engine import (
     evaluate_with_llm,
     compute_hybrid_score,
-    generate_tts_audio, # Changed from generate_spoken_feedback
+    generate_tts_audio,
     generate_topics,
     is_english,
     speech_to_text
@@ -100,7 +99,6 @@ async def register(username: str = Form(...), password: str = Form(...)):
 @app.post("/api/login")
 async def login(username: str = Form(...), password: str = Form(...)):
     if verify_user(username, password):
-        # In a real app, you'd set a session cookie or return a JWT token here.
         return {"status": "success", "username": username}
     raise HTTPException(status_code=401, detail="Invalid credentials")
 

@@ -6,3 +6,21 @@
 # Python Cache
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Runtime Data & Logs
+backend/*.db
+backend/*.log
+backend/uploads/
+processed_audio.wav
+
+# OS & Misc
+.DS_Store
+Thumbs.db
+node_modules/
+.next/
+dist/
+build/
