@@ -182,7 +182,7 @@ def generate_tts_audio(text: str):
     try:
         response = client.audio.speech.create(
             model="gpt-4o-mini-tts",
-            voice="alloy",
+            voice="nova",
             input=text
         )
         return response.read()
