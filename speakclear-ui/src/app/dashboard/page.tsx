@@ -243,14 +243,17 @@ export default function Dashboard() {
         <div className="flex h-screen overflow-hidden bg-[#0B0F15] text-slate-100 font-display">
             <Sidebar username={username} />
 
-            <main className="flex-1 overflow-y-auto pt-24 p-6 md:p-10 relative">
+            <main className="flex-1 overflow-y-auto pt-28 p-6 md:p-12 relative z-10">
                 <motion.header
                     initial="hidden"
                     animate="visible"
                     variants={itemVariants}
-                    className="flex justify-between items-center mb-10 lg:mb-14"
+                    className="flex justify-between items-center mb-12 lg:mb-16"
                 >
-                    <h2 className="text-3xl font-extrabold text-white tracking-tight">Dashboard</h2>
+                    <div>
+                        <h2 className="text-4xl font-black text-white tracking-tighter mb-2 italic">Dashboard</h2>
+                        <p className="text-[10px] font-black text-[#13a4ec] uppercase tracking-[0.3em] opacity-80">Your Performance Overview</p>
+                    </div>
                     <div className="flex items-center gap-6">
                         <div className="flex items-center gap-3 border-l border-[#212E3B] pl-6">
                             <div className="text-right">
@@ -279,8 +282,8 @@ export default function Dashboard() {
                     {/* Historical Performance Card */}
                     <motion.div
                         variants={itemVariants}
-                        whileHover={{ y: -5, transition: { duration: 0.3, ease: "easeOut" } }}
-                        className="bg-[#121820]/40 border border-white/5 backdrop-blur-3xl rounded-[32px] p-10 flex flex-col items-center justify-center relative overflow-hidden group shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
+                        whileHover={{ y: -8, scale: 1.01, transition: { duration: 0.4, ease: "easeOut" } }}
+                        className="glass-dark rounded-[40px] p-10 flex flex-col items-center justify-center relative overflow-hidden group shadow-2xl"
                     >
                         {/* Soft background glow */}
                         <div className="absolute top-0 left-0 w-64 h-64 bg-[#13a4ec]/5 rounded-full blur-[120px] group-hover:bg-[#13a4ec]/10 transition-all duration-1000 -ml-32 -mt-32"></div>
@@ -372,23 +375,23 @@ export default function Dashboard() {
                             <motion.div
                                 key={stat.name}
                                 variants={itemVariants}
-                                whileHover={{
-                                    y: -8,
-                                    transition: { duration: 0.3, ease: "easeOut" }
-                                }}
-                                className="bg-[#121820]/40 border border-white/5 backdrop-blur-3xl rounded-[32px] p-8 group cursor-default transition-all duration-500 shadow-[0_20px_40px_rgba(0,0,0,0.3)] relative overflow-hidden flex flex-col gap-6"
+                                whileHover={{ scale: 1.02, y: -5 }}
+                                className="glass rounded-[32px] p-8 group relative overflow-hidden transition-all duration-500 shadow-xl"
                             >
-                                {/* Decorative elements */}
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/[0.05] to-transparent rounded-full -mr-16 -mt-16 blur-xl" />
-                                <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-white/[0.02] rounded-full blur-2xl group-hover:bg-white/[0.04] transition-all duration-700" />
+                                <div
+                                    className="absolute -right-8 -bottom-8 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700"
+                                    style={{ color: stat.color }}
+                                >
+                                    <span className="material-symbols-outlined text-[120px]">{stat.bgIcon}</span>
+                                </div>
 
-                                <div className="flex justify-between items-center relative z-10">
+                                <div className="flex justify-between items-center relative z-10 mb-8">
                                     <div className="flex items-center gap-4">
                                         <div
                                             className="p-3.5 rounded-2xl bg-white/[0.03] text-slate-400 group-hover:text-white transition-all border border-white/5 shadow-inner"
                                             style={{ boxShadow: `inset 0 0 10px ${stat.color}10` }}
                                         >
-                                            <span className="material-symbols-outlined text-[24px]">{stat.icon}</span>
+                                            <span className="material-symbols-outlined text-[24px]" style={{ color: stat.color }}>{stat.icon}</span>
                                         </div>
                                         <div>
                                             <h4 className="text-[10px] font-black text-[#5C6B89] uppercase tracking-[0.2em] mb-0.5">{stat.name}</h4>
@@ -397,8 +400,8 @@ export default function Dashboard() {
                                     </div>
                                     <div className="text-right">
                                         <div className="flex items-baseline justify-end">
-                                            <span className="text-3xl font-black text-white tabular-nums tracking-tight group-hover:scale-105 transition-transform duration-500">{stat.score}</span>
-                                            <span className="text-[12px] text-[#4B6A88] ml-1 font-bold">/100</span>
+                                            <span className="text-4xl font-black text-white tabular-nums tracking-tighter group-hover:scale-105 transition-transform duration-500">{stat.score}</span>
+                                            <span className="text-[12px] text-slate-500 ml-1 font-bold">/100</span>
                                         </div>
                                     </div>
                                 </div>
@@ -418,18 +421,15 @@ export default function Dashboard() {
                                     </div>
                                     <div className="flex items-start gap-3">
                                         <span className="material-symbols-outlined text-slate-500 text-[14px] mt-0.5">info</span>
-                                        <p className="text-[11px] text-[#8B9BB4] font-semibold leading-relaxed group-hover:text-slate-200 transition-colors">
+                                        <p className="text-[11px] text-slate-400 font-medium leading-relaxed group-hover:text-slate-200 transition-colors">
                                             {stat.feedback}
                                         </p>
                                     </div>
                                 </div>
-
-                                {/* Hover Glow */}
-                                <div className="absolute inset-0 border border-white/0 group-hover:border-white/5 rounded-[32px] transition-all duration-500" />
                             </motion.div>
                         ))}
                     </motion.div>
-                </motion.div >
+                </motion.div>
 
                 {/* Score Progression & Insights Section */}
                 <motion.div
@@ -874,116 +874,120 @@ export default function Dashboard() {
                 </motion.section>
 
                 {/* Delete Confirmation Modal */}
-                {sessionToDelete !== null && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B0F15]/80 backdrop-blur-sm"
-                    >
+                {
+                    sessionToDelete !== null && (
                         <motion.div
-                            initial={{ scale: 0.95, opacity: 0, y: 20 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            className="bg-[#121820] border border-white/5 p-8 rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.6)] max-w-md w-full relative overflow-hidden"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B0F15]/80 backdrop-blur-sm"
                         >
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-bl-full blur-[40px] pointer-events-none" />
+                            <motion.div
+                                initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                                animate={{ scale: 1, opacity: 1, y: 0 }}
+                                className="bg-[#121820] border border-white/5 p-8 rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.6)] max-w-md w-full relative overflow-hidden"
+                            >
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-bl-full blur-[40px] pointer-events-none" />
 
-                            <div className="flex items-center gap-4 mb-6 relative z-10">
-                                <div className="p-3 bg-red-500/10 text-red-500 rounded-2xl border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
-                                    <span className="material-symbols-outlined text-2xl">warning</span>
+                                <div className="flex items-center gap-4 mb-6 relative z-10">
+                                    <div className="p-3 bg-red-500/10 text-red-500 rounded-2xl border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+                                        <span className="material-symbols-outlined text-2xl">warning</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-bold text-white tracking-tight">Delete Session</h3>
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-[#8B9BB4] mt-1">Irreversible Action</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 className="text-xl font-bold text-white tracking-tight">Delete Session</h3>
-                                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#8B9BB4] mt-1">Irreversible Action</p>
+
+                                <p className="text-sm text-slate-400 font-medium leading-relaxed mb-8 relative z-10">
+                                    Are you sure you want to <span className="text-white font-bold">permanently delete</span> this recorded session? All associated audio, transcripts, and analysis data will be lost.
+                                </p>
+
+                                <div className="flex items-center justify-end gap-3 relative z-10">
+                                    <button
+                                        onClick={() => setSessionToDelete(null)}
+                                        disabled={isDeleting}
+                                        className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-slate-300 bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] hover:text-white transition-all disabled:opacity-50"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={confirmDelete}
+                                        disabled={isDeleting}
+                                        className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-white bg-red-500 hover:bg-red-400 border border-red-500/50 shadow-[0_4px_20px_rgba(239,68,68,0.3)] transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group/btn"
+                                    >
+                                        {isDeleting ? (
+                                            <>
+                                                <span className="material-symbols-outlined text-[16px] animate-spin">progress_activity</span>
+                                                Deleting...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span className="material-symbols-outlined text-[16px] group-hover/btn:scale-110 transition-transform">delete_forever</span>
+                                                Delete Permanently
+                                            </>
+                                        )}
+                                    </button>
                                 </div>
-                            </div>
-
-                            <p className="text-sm text-slate-400 font-medium leading-relaxed mb-8 relative z-10">
-                                Are you sure you want to <span className="text-white font-bold">permanently delete</span> this recorded session? All associated audio, transcripts, and analysis data will be lost.
-                            </p>
-
-                            <div className="flex items-center justify-end gap-3 relative z-10">
-                                <button
-                                    onClick={() => setSessionToDelete(null)}
-                                    disabled={isDeleting}
-                                    className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-slate-300 bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] hover:text-white transition-all disabled:opacity-50"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={confirmDelete}
-                                    disabled={isDeleting}
-                                    className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-white bg-red-500 hover:bg-red-400 border border-red-500/50 shadow-[0_4px_20px_rgba(239,68,68,0.3)] transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group/btn"
-                                >
-                                    {isDeleting ? (
-                                        <>
-                                            <span className="material-symbols-outlined text-[16px] animate-spin">progress_activity</span>
-                                            Deleting...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <span className="material-symbols-outlined text-[16px] group-hover/btn:scale-110 transition-transform">delete_forever</span>
-                                            Delete Permanently
-                                        </>
-                                    )}
-                                </button>
-                            </div>
+                            </motion.div>
                         </motion.div>
-                    </motion.div>
-                )}
+                    )
+                }
                 {/* Bulk Delete Confirmation Modal */}
-                {showBulkDeleteModal && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B0F15]/80 backdrop-blur-sm">
-                        <motion.div
-                            initial={{ scale: 0.95, opacity: 0, y: 20 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            className="bg-[#121820] border border-white/5 p-8 rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.6)] max-w-md w-full relative overflow-hidden"
-                        >
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-bl-full blur-[40px] pointer-events-none" />
+                {
+                    showBulkDeleteModal && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B0F15]/80 backdrop-blur-sm">
+                            <motion.div
+                                initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                                animate={{ scale: 1, opacity: 1, y: 0 }}
+                                className="bg-[#121820] border border-white/5 p-8 rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.6)] max-w-md w-full relative overflow-hidden"
+                            >
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-bl-full blur-[40px] pointer-events-none" />
 
-                            <div className="flex items-center gap-4 mb-6 relative z-10">
-                                <div className="p-3 bg-red-500/10 text-red-500 rounded-2xl border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
-                                    <span className="material-symbols-outlined text-2xl">warning</span>
+                                <div className="flex items-center gap-4 mb-6 relative z-10">
+                                    <div className="p-3 bg-red-500/10 text-red-500 rounded-2xl border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+                                        <span className="material-symbols-outlined text-2xl">warning</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-bold text-white tracking-tight">Bulk Delete</h3>
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-[#8B9BB4] mt-1">Irreversible Action</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 className="text-xl font-bold text-white tracking-tight">Bulk Delete</h3>
-                                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#8B9BB4] mt-1">Irreversible Action</p>
+
+                                <p className="text-sm text-slate-400 font-medium leading-relaxed mb-8 relative z-10">
+                                    Are you sure you want to <span className="text-white font-bold">permanently delete {selectedIds.length} selected sessions</span>? All associated audio, transcripts, and analysis data will be lost.
+                                </p>
+
+                                <div className="flex items-center justify-end gap-3 relative z-10">
+                                    <button
+                                        onClick={() => setShowBulkDeleteModal(false)}
+                                        disabled={isBulkDeleting}
+                                        className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-slate-300 bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] hover:text-white transition-all disabled:opacity-50"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={confirmBulkDelete}
+                                        disabled={isBulkDeleting}
+                                        className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-white bg-red-500 hover:bg-red-400 border border-red-500/50 shadow-[0_4px_20px_rgba(239,68,68,0.3)] transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group/btn"
+                                    >
+                                        {isBulkDeleting ? (
+                                            <>
+                                                <span className="material-symbols-outlined text-[16px] animate-spin">progress_activity</span>
+                                                Deleting...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span className="material-symbols-outlined text-[16px] group-hover/btn:scale-110 transition-transform">delete_forever</span>
+                                                Delete {selectedIds.length} Sessions
+                                            </>
+                                        )}
+                                    </button>
                                 </div>
-                            </div>
-
-                            <p className="text-sm text-slate-400 font-medium leading-relaxed mb-8 relative z-10">
-                                Are you sure you want to <span className="text-white font-bold">permanently delete {selectedIds.length} selected sessions</span>? All associated audio, transcripts, and analysis data will be lost.
-                            </p>
-
-                            <div className="flex items-center justify-end gap-3 relative z-10">
-                                <button
-                                    onClick={() => setShowBulkDeleteModal(false)}
-                                    disabled={isBulkDeleting}
-                                    className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-slate-300 bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] hover:text-white transition-all disabled:opacity-50"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={confirmBulkDelete}
-                                    disabled={isBulkDeleting}
-                                    className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-white bg-red-500 hover:bg-red-400 border border-red-500/50 shadow-[0_4px_20px_rgba(239,68,68,0.3)] transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group/btn"
-                                >
-                                    {isBulkDeleting ? (
-                                        <>
-                                            <span className="material-symbols-outlined text-[16px] animate-spin">progress_activity</span>
-                                            Deleting...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <span className="material-symbols-outlined text-[16px] group-hover/btn:scale-110 transition-transform">delete_forever</span>
-                                            Delete {selectedIds.length} Sessions
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-                        </motion.div>
-                    </div>
-                )}
-            </main>
-        </div>
+                            </motion.div>
+                        </div>
+                    )
+                }
+            </main >
+        </div >
     );
 }
