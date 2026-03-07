@@ -15,6 +15,7 @@ __pycache__/
 backend/*.db
 backend/*.log
 backend/uploads/
+research_and_tests/STT_with_transcript/yuva_1772818065.wav
 processed_audio.wav
 
 # OS & Misc
