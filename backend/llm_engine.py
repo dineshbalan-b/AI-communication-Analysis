@@ -1,7 +1,10 @@
 import os
 import json
+import logging
 from dotenv import load_dotenv
 from openai import OpenAI
+
+logger = logging.getLogger("speakclear.llm")
 
 # -------------------------------
 # Load API Key
@@ -17,6 +20,51 @@ client = OpenAI(
     api_key=API_KEY,
     base_url=BASE_URL
 )
+
+# -------------------------------
+# Conversational Chatbot Memory
+# -------------------------------
+
+memory = [
+    {"role": "system", "content": "You are a helpful voice assistant. Remember information shared by the user and answer based on memory."}
+]
+
+def speech_to_text(audio_path):
+    """Convert speech to text using Whisper."""
+    logger.info(f"Transcribing audio from: {audio_path}...")
+    try:
+        with open(audio_path, "rb") as audio_file:
+            transcription = client.audio.transcriptions.create(
+                model="whisper-1",
+                file=audio_file
+            )
+        logger.info("Transcription successful!")
+        return transcription.text
+    except Exception as e:
+        logger.error(f"Error during transcription: {e}")
+        return None
+
+def get_assistant_response(user_text):
+    """Get response using GPT with persistent memory."""
+    memory.append({
+        "role": "user",
+        "content": user_text
+    })
+
+    response = client.chat.completions.create(
+        model="gpt-4.1-nano",
+        messages=memory
+    )
+
+    assistant_text = response.choices[0].message.content
+
+    memory.append({
+        "role": "assistant",
+        "content": assistant_text
+    })
+
+    return assistant_text
+
 
 # -------------------------------
 # Language Detection
@@ -50,7 +98,7 @@ def is_english(transcript):
         result = response.choices[0].message.content.strip().upper()
         return "ENGLISH" == result or "ENGLISH." == result
     except Exception as e:
-        print(f"Error in language detection: {e}")
+        logger.error(f"Error in language detection: {e}")
         return True # Fallback to True to avoid blocking users on API failure
 
 # -------------------------------
@@ -130,41 +178,16 @@ def compute_hybrid_score(rule_score, llm_scores):
 # Generate Spoken Feedback
 # -------------------------------
 
-def generate_spoken_feedback(llm_scores, hybrid_score):
-
-    spoken_text = f"""
-Here is your communication evaluation.
-
-Your overall score is {hybrid_score} out of 100.
-
-Grammar score: {llm_scores['grammar']} out of 10.
-Vocabulary score: {llm_scores['vocabulary']} out of 10.
-Clarity score: {llm_scores['clarity']} out of 10.
-Confidence score: {llm_scores['confidence']} out of 10.
-Relevance score: {llm_scores['relevance']} out of 10.
-
-Overall feedback:
-{llm_scores['final_feedback']}
-
-Improvement suggestions:
-{llm_scores['improvements']}
-"""
-
+def generate_tts_audio(text: str):
     try:
         response = client.audio.speech.create(
             model="gpt-4o-mini-tts",
             voice="alloy",
-            input=spoken_text
+            input=text
         )
-
-        output_path = "final_feedback_audio.mp3"
-
-        with open(output_path, "wb") as f:
-            f.write(response.content)
-
-        return output_path
+        return response.read()
     except Exception as e:
-        print(f"Error generating spoken feedback: {e}")
+        logger.error(f"Error generating spoken feedback: {e}")
         return None
 
 # -------------------------------
@@ -228,5 +251,5 @@ def generate_topics(force_refresh=False):
         return ["My Favorite Hobby", "A Memorable Trip", "The Best Meal I Had", "My Role Model", "Future Goals", "A Productive Day"]
         
     except Exception as e:
-        print(f"Error generating topics: {e}")
+        logger.error(f"Error generating topics: {e}")
         return ["My Favorite Hobby", "A Memorable Trip", "The Best Meal I Had", "My Role Model", "Future Goals", "A Productive Day"]

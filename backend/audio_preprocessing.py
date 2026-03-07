@@ -80,8 +80,8 @@ def preprocess_audio(input_path):
     # Noise reduction
     y = nr.reduce_noise(y=y, sr=sr)
 
-      # Trim only start & end silence
-    y_trimmed, _ = librosa.effects.trim(y, top_db=12)
+    # Trim only start & end silence (increased top_db to prevent cutting off quiet speech)
+    y_trimmed, _ = librosa.effects.trim(y, top_db=30)
 
     # Save temporary VAD audio
     temp_vad_path = "temp_vad.wav"  

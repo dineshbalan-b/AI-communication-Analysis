@@ -9,10 +9,13 @@ from pathlib import Path
 
 from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from openai import OpenAI
+import time
+import io
 
 from auth import create_user, verify_user, init_user_db
 from database import init_evaluation_db, save_evaluation, get_user_progress, delete_evaluation, bulk_delete_evaluations
@@ -25,9 +28,10 @@ from communication_analysis import (
 from llm_engine import (
     evaluate_with_llm,
     compute_hybrid_score,
-    generate_spoken_feedback,
+    generate_tts_audio, # Changed from generate_spoken_feedback
     generate_topics,
-    is_english
+    is_english,
+    speech_to_text
 )
 
 # -------------------------------
@@ -62,7 +66,12 @@ client = OpenAI(
 init_user_db()
 init_evaluation_db()
 
+UPLOADS_DIR = Path(__file__).parent / "uploads"
+UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
+
 app = FastAPI(title="SpeakClear AI API")
+
+app.mount("/api/audio", StaticFiles(directory=UPLOADS_DIR), name="audio")
 
 # Configure CORS to allow the React/Next.js frontend to communicate securely
 app.add_middleware(
@@ -114,24 +123,32 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
             tmp.write(content)
             temp_input_path = tmp.name
 
+        # Unique filename for permanent storage
+        timestamp = int(time.time())
+        safe_username = "".join(c for c in username if c.isalnum() or c in ('-', '_'))
+        permanent_filename = f"{safe_username}_{timestamp}{ext}"
+        permanent_filepath = UPLOADS_DIR / permanent_filename
+        
+        # Save a copy to permanent storage
+        with open(permanent_filepath, "wb") as f:
+            f.write(content)
+            
+        audio_url = f"/api/audio/{permanent_filename}"
+
         # Process Audio
         processed_path = preprocess_audio(temp_input_path)
 
         # Run Transcription and Audio Metrics concurrently to save time
         def get_transcription_sync():
-            with open(processed_path, "rb") as audio_data:
-                return client.audio.transcriptions.create(
-                    model="whisper-1",
-                    file=audio_data
-                )
+            return speech_to_text(processed_path)
 
         # Execute both tasks in parallel
         transcription_task = asyncio.to_thread(get_transcription_sync)
         metrics_task = asyncio.to_thread(analyze_audio, processed_path)
         
-        transcription, audio_metrics = await asyncio.gather(transcription_task, metrics_task)
+        transcript_text, audio_metrics = await asyncio.gather(transcription_task, metrics_task)
         
-        transcript = transcription.text.strip()
+        transcript = transcript_text.strip() if transcript_text else ""
         save_to_db = True
         no_speech = False
         language_rejected = False
@@ -186,6 +203,18 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
             llm_scores = evaluate_with_llm(topic, transcript, audio_metrics, text_metrics)
             hybrid_score = compute_hybrid_score(rule_score, llm_scores)
 
+            # Generate and save TTS Audio Feedback automatically
+            feedback_text = f"Here is your summary evaluation.\n\n{llm_scores.get('final_feedback', '')}\n\nHere are some areas to focus on.\n\n{llm_scores.get('improvements', '')}"
+            audio_bytes = generate_tts_audio(feedback_text)
+            
+            feedback_audio_url = ""
+            if audio_bytes:
+                tts_filename = f"tts_{permanent_filename}"
+                tts_filepath = UPLOADS_DIR / tts_filename
+                with open(tts_filepath, "wb") as f:
+                    f.write(audio_bytes)
+                feedback_audio_url = f"/api/audio/{tts_filename}"
+
         # Save to DB only if speech was detected
         if save_to_db:
             save_evaluation(
@@ -194,11 +223,14 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
                 llm_scores.get("vocabulary", 0),
                 llm_scores.get("clarity", 0),
                 llm_scores.get("confidence", 0),
+                relevance=llm_scores.get("relevance", 0),
                 wpm=text_metrics["wpm"],
                 filler_count=text_metrics["filler_count"],
                 speech_ratio=audio_metrics["speech_ratio"],
                 final_feedback=llm_scores.get("final_feedback", ""),
-                improvements=llm_scores.get("improvements", "")
+                improvements=llm_scores.get("improvements", ""),
+                audio_url=audio_url,
+                feedback_audio_url=feedback_audio_url
             )
 
         # Clean processed file
@@ -217,7 +249,8 @@ async def upload_audio(file: UploadFile = File(...), username: str = Form(...), 
                 "speech_ratio": round(audio_metrics["speech_ratio"], 2)
             },
             "evaluation": llm_scores,
-            "final_score": hybrid_score
+            "final_score": hybrid_score,
+            "feedback_audio_url": feedback_audio_url if save_to_db else ""
         }
 
     except Exception as e:
@@ -249,7 +282,10 @@ async def get_progress(username: str):
             "filler_count": row[10],
             "speech_ratio": row[11],
             "final_feedback": row[12],
-            "improvements": row[13]
+            "improvements": row[13],
+            "audio_url": row[14] if len(row) > 14 else "",
+            "relevance": row[15] if len(row) > 15 else 0,
+            "feedback_audio_url": row[16] if len(row) > 16 else ""
         } for row in data
     ]}
 
@@ -270,6 +306,30 @@ async def bulk_delete(request: BulkDeleteRequest):
     if bulk_delete_evaluations(request.ids):
         return {"status": "success", "message": f"{len(request.ids)} sessions deleted"}
     raise HTTPException(status_code=500, detail="Failed to delete sessions")
+
+class AudioFeedbackRequest(BaseModel):
+    text: str
+
+@app.post("/api/generate-audio-feedback")
+async def generate_audio_feedback(request: AudioFeedbackRequest):
+    if not request.text:
+        raise HTTPException(status_code=400, detail="No text provided")
+        
+    try:
+        audio_bytes = generate_tts_audio(request.text)
+        if not audio_bytes:
+            raise HTTPException(status_code=500, detail="TTS generation failed")
+            
+        return StreamingResponse(
+            io.BytesIO(audio_bytes),
+            media_type="audio/mpeg",
+            headers={
+                "Content-Disposition": "attachment; filename=feedback.mp3"
+            }
+        )
+    except Exception as e:
+        logger.error(f"Generate audio feedback error: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 @app.get("/api/topics")
 async def get_topics(force: bool = False):
