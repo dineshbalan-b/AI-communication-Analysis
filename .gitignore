@@ -48,7 +48,8 @@ uploads/
 error_log.txt
 backend.log
 processed_audio.wav
-*.db
+*.db~
 
 
 API_test/
+STT_with_transcript/
