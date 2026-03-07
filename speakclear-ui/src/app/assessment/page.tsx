@@ -223,23 +223,40 @@ export default function Assessment() {
                                         </p>
 
                                         {method.id === "upload" ? (
-                                            <label className="w-full">
-                                                <input
-                                                    type="file"
-                                                    className="hidden"
-                                                    accept="audio/*"
-                                                    onChange={(e) => {
-                                                        const file = e.target.files?.[0];
-                                                        if (file) {
-                                                            setSelectedFile(file);
-                                                            handleSubmit(file);
-                                                        }
-                                                    }}
-                                                />
-                                                <div className="w-full py-4 bg-white/5 hover:bg-white/10 text-white text-[11px] font-black uppercase tracking-widest rounded-2xl border border-white/5 transition-all text-center">
-                                                    {selectedFile ? selectedFile.name : method.action}
-                                                </div>
-                                            </label>
+                                            <div className="w-full flex flex-col gap-3">
+                                                <label className="w-full cursor-pointer">
+                                                    <input
+                                                        type="file"
+                                                        className="hidden"
+                                                        accept="audio/*"
+                                                        onChange={(e) => {
+                                                            const file = e.target.files?.[0];
+                                                            if (file) {
+                                                                setSelectedFile(file);
+                                                            }
+                                                        }}
+                                                    />
+                                                    <div className="w-full py-4 bg-white/5 hover:bg-white/10 text-white text-[11px] font-black uppercase tracking-widest rounded-2xl border border-white/5 transition-all text-center">
+                                                        {selectedFile ? selectedFile.name : method.action}
+                                                    </div>
+                                                </label>
+
+                                                {/* Submit Button manually triggered */}
+                                                <AnimatePresence>
+                                                    {selectedFile && (
+                                                        <motion.button
+                                                            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                                                            animate={{ opacity: 1, height: 'auto', marginTop: 8 }}
+                                                            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                                                            onClick={() => handleSubmit()}
+                                                            className="w-full py-4 bg-[#13a4ec] hover:bg-[#108CCC] text-white text-[11px] font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-[#13a4ec]/30 transition-all flex justify-center items-center gap-2"
+                                                        >
+                                                            <span>Submit Audio</span>
+                                                            <span className="material-symbols-outlined text-sm">send</span>
+                                                        </motion.button>
+                                                    )}
+                                                </AnimatePresence>
+                                            </div>
                                         ) : (
                                             <button
                                                 onClick={() => {

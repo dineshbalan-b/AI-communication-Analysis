@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
+import AudioPlayer from '@/components/AudioPlayer';
 
 export default function ResultsPage() {
     const router = useRouter();
@@ -35,16 +36,22 @@ export default function ResultsPage() {
         final_feedback: "Evaluation data not available.",
         improvements: "No suggestions available."
     };
+
+    // Safety check for older sessions missing relevance (prevent NaN%)
+    const safeRelevance = evalData.relevance || 0;
+
     const finalScore = results?.final_score || 0;
+    const feedbackAudioUrl = results?.feedback_audio_url || evalData?.feedback_audio_url;
 
     const stats = [
         { label: "OVERALL SCORE", value: finalScore.toString(), sub: "/100", trend: results ? "Session analyzed" : "No data", trendColor: "text-emerald-500", icon: "assessment", iconColor: "text-[#13a4ec]" },
-        { label: "FILLER WORDS", value: metrics.filler_count.toString(), sub: "", trend: "Detected in transcript", trendColor: "text-amber-500", icon: "do_not_disturb_on", iconColor: "text-amber-500" },
+        { label: "FILLER WORDS", value: Math.round(metrics.filler_count).toString(), sub: "", trend: "Detected in transcript", trendColor: "text-amber-500", icon: "do_not_disturb_on", iconColor: "text-amber-500" },
         { label: "SPEECH RATE", value: Math.round(metrics.wpm).toString(), sub: "wpm", trend: metrics.wpm > 130 && metrics.wpm < 160 ? "Ideal pace" : "Adjust pace", trendColor: "text-emerald-500", icon: "speed", iconColor: "text-[#13a4ec]" },
         { label: "SPEECH RATIO", value: Math.round(metrics.speech_ratio * 100).toString(), sub: "%", trend: "Active speaking time", trendColor: "text-emerald-500", icon: "hourglass_empty", iconColor: "text-emerald-500" },
     ];
 
     const breakdowns = [
+        { label: "Topic Relevance", value: safeRelevance * 10, color: "bg-[#13a4ec]" },
         { label: "Grammar & Structure", value: evalData.grammar * 10, color: "bg-[#13a4ec]" },
         { label: "Vocabulary Richness", value: evalData.vocabulary * 10, color: "bg-[#13a4ec]" },
         { label: "Communication Clarity", value: evalData.clarity * 10, color: "bg-[#13a4ec]" },
@@ -260,14 +267,26 @@ export default function ResultsPage() {
                                         animate={{ opacity: 1, x: 0 }}
                                         className="bg-[#121820]/40 border border-white/5 rounded-[32px] p-10 shadow-xl"
                                     >
-                                        <div className="flex items-center gap-4 mb-10">
-                                            <div className="w-12 h-12 bg-[#13a4ec]/10 rounded-2xl flex items-center justify-center text-[#13a4ec]">
-                                                <span className="material-symbols-outlined text-2xl">auto_awesome</span>
+                                        <div className="flex items-center gap-4 mb-10 w-full justify-between">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 bg-[#13a4ec]/10 rounded-2xl flex items-center justify-center text-[#13a4ec]">
+                                                    <span className="material-symbols-outlined text-2xl">auto_awesome</span>
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-xl font-black text-white tracking-tight">AI Feedback & Suggestions</h3>
+                                                    <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Tailored coaching summary</p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h3 className="text-xl font-black text-white tracking-tight">AI Feedback & Suggestions</h3>
-                                                <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Tailored coaching summary</p>
-                                            </div>
+
+                                            {/* Audio Controls */}
+                                            {feedbackAudioUrl && (
+                                                <div className="flex items-center">
+                                                    <AudioPlayer
+                                                        src={`http://127.0.0.1:8010${feedbackAudioUrl}`}
+                                                        autoPlay={true}
+                                                    />
+                                                </div>
+                                            )}
                                         </div>
 
                                         <div className="bg-[#13a4ec]/5 border border-[#13a4ec]/20 rounded-[24px] p-8 mb-12 relative overflow-hidden">
@@ -279,7 +298,7 @@ export default function ResultsPage() {
                                                 <h4 className="text-xs font-black text-[#13a4ec] uppercase tracking-[0.2em]">Summary Evaluation</h4>
                                             </div>
                                             <p className="text-slate-300 font-medium leading-relaxed relative z-10">
-                                                {evalData.final_feedback}
+                                                {String(evalData.final_feedback)}
                                             </p>
                                         </div>
 
