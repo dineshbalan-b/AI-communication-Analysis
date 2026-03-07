@@ -90,7 +90,7 @@ export default function ResultsPage() {
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="bg-[#121820]/60 border border-white/5 rounded-[40px] p-16 md:p-24 text-center relative overflow-hidden backdrop-blur-3xl shadow-2xl"
+                            className="glass-dark rounded-[40px] p-16 md:p-24 text-center relative overflow-hidden shadow-2xl"
                         >
                             <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-bl-full blur-[80px] pointer-events-none" />
                             <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#13a4ec]/5 rounded-tr-full blur-[80px] pointer-events-none" />
@@ -146,7 +146,7 @@ export default function ResultsPage() {
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="bg-[#121820]/60 border border-white/5 rounded-[40px] p-16 md:p-24 text-center relative overflow-hidden backdrop-blur-3xl shadow-2xl"
+                            className="glass-dark rounded-[40px] p-16 md:p-24 text-center relative overflow-hidden shadow-2xl"
                         >
                             <div className="absolute top-0 right-0 w-64 h-64 bg-[#13a4ec]/10 rounded-bl-full blur-[80px] pointer-events-none" />
                             <div className="absolute bottom-0 left-0 w-64 h-64 bg-red-500/5 rounded-tr-full blur-[80px] pointer-events-none" />
@@ -197,7 +197,8 @@ export default function ResultsPage() {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: idx * 0.1 }}
-                                        className="bg-[#121820]/40 border border-white/5 rounded-3xl p-8 relative group overflow-hidden"
+                                        whileHover={{ y: -5, scale: 1.02 }}
+                                        className="glass rounded-3xl p-8 relative group overflow-hidden transition-all duration-500 shadow-lg"
                                     >
                                         <div className="flex items-center justify-between mb-6">
                                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</span>
@@ -318,13 +319,6 @@ export default function ResultsPage() {
                                         </div>
 
                                         <div className="flex flex-col sm:flex-row items-center gap-4 mt-16 pt-10 border-t border-white/5">
-                                            <button
-                                                onClick={() => window.print()}
-                                                className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest border border-white/5 transition-all flex items-center justify-center gap-3"
-                                            >
-                                                <span className="material-symbols-outlined text-lg">print</span>
-                                                Print Report
-                                            </button>
                                             <button
                                                 onClick={() => router.push('/dashboard')}
                                                 className="flex-1 py-4 bg-white text-[#0B0F15] hover:bg-slate-100 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3"
