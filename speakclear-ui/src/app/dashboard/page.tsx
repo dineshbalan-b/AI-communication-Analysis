@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import { motion } from 'framer-motion';
+import AudioPlayer from '@/components/AudioPlayer';
 
 const AudioWave = ({ color = "#13a4ec" }: { color?: string }) => (
     <div className="flex items-end gap-1 h-5">
@@ -146,10 +147,13 @@ export default function Dashboard() {
                 vocabulary: attempt.vocabulary || 0,
                 clarity: attempt.clarity || 0,
                 confidence: attempt.confidence || 0,
+                relevance: attempt.relevance || 0,
                 final_feedback: attempt.final_feedback || "No final feedback stored.",
                 improvements: attempt.improvements || "No improvements stored."
             },
-            final_score: attempt.score || 0
+            final_score: attempt.score || 0,
+            feedback_audio_url: attempt.feedback_audio_url || undefined,
+            audio_url: attempt.audio_url || undefined
         };
         sessionStorage.setItem("last_analysis_result", JSON.stringify(payload));
         router.push("/assessment/results");
@@ -689,47 +693,6 @@ export default function Dashboard() {
                     </div>
                 </motion.div>
 
-                <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-50px" }}
-                    variants={containerVariants}
-                    className="grid grid-cols-1 mb-20"
-                >
-                    <motion.div
-                        variants={itemVariants}
-                        whileHover={{ y: -2, transition: { duration: 0.3 } }}
-                        className="bg-white/[0.02] border border-white/5 backdrop-blur-2xl rounded-[32px] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.4)] relative overflow-hidden group"
-                    >
-                        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-64 h-64 bg-emerald-500/[0.02] rounded-full blur-[100px] pointer-events-none group-hover:bg-emerald-500/[0.04] transition-all duration-700"></div>
-                        <h4 className="text-xl font-bold text-white tracking-tight mb-8 flex items-center gap-3 relative z-10">
-                            <span className="material-symbols-outlined text-emerald-500 p-2 bg-emerald-500/10 rounded-xl border border-emerald-500/20">auto_graph</span>
-                            Development Insights
-                        </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
-                            <div className="flex items-start gap-6 p-8 rounded-[32px] bg-[#121820]/40 border border-white/5 hover:border-emerald-500/40 hover:bg-[#121820]/60 transition-all duration-500 group/ins shadow-lg">
-                                <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-500 group-hover/ins:scale-110 transition-transform border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
-                                    <span className="material-symbols-outlined text-2xl">trending_up</span>
-                                </div>
-                                <div>
-                                    <p className="text-lg font-black text-white mb-2 tracking-tight">Growth Momentum</p>
-                                    <p className="text-[11px] text-[#8B9BB4] leading-relaxed font-semibold">Your performance scores have increased by 8% in the last 3 sessions. Solid progress towards mastery.</p>
-                                </div>
-                            </div>
-                            <div className="flex items-start gap-6 p-8 rounded-[32px] bg-[#121820]/40 border border-white/5 hover:border-[#13a4ec]/40 hover:bg-[#121820]/60 transition-all duration-500 group/ins shadow-lg">
-                                <div className="p-4 rounded-2xl bg-[#13a4ec]/10 text-[#13a4ec] group-hover/ins:scale-110 transition-transform border border-[#13a4ec]/20 shadow-[0_0_15px_rgba(19,164,236,0.1)]">
-                                    <span className="material-symbols-outlined text-2xl">speed</span>
-                                </div>
-                                <div>
-                                    <p className="text-lg font-black text-white mb-2 tracking-tight">Pacing Precision</p>
-                                    <p className="text-[11px] text-[#8B9BB4] leading-relaxed font-semibold">Maintained an optimal 144 WPM cadence in 85% of your recorded assessments. Excellent consistency.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </motion.div>
-                </motion.div>
-
-
                 <motion.section
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -790,6 +753,7 @@ export default function Dashboard() {
                                     </th>
                                     <th className="px-4 py-5 text-[10px] font-black text-[#8B9BB4] uppercase tracking-widest whitespace-nowrap">Date Reported</th>
                                     <th className="px-8 py-5 text-[10px] font-black text-[#8B9BB4] uppercase tracking-widest whitespace-nowrap">Topic</th>
+                                    <th className="px-8 py-5 text-[10px] font-black text-[#8B9BB4] uppercase tracking-widest whitespace-nowrap">Relevance</th>
                                     <th className="px-8 py-5 text-[10px] font-black text-[#8B9BB4] uppercase tracking-widest whitespace-nowrap">Overall Score</th>
                                     <th className="px-8 py-5 text-[10px] font-black text-[#8B9BB4] uppercase tracking-widest whitespace-nowrap">Status</th>
                                     <th className="px-8 py-5 text-[10px] font-black text-[#8B9BB4] uppercase tracking-widest text-right whitespace-nowrap">Action</th>
@@ -798,7 +762,7 @@ export default function Dashboard() {
                             <tbody>
                                 {loading ? (
                                     <tr>
-                                        <td colSpan={6} className="px-8 py-32 text-center text-slate-400 font-medium">
+                                        <td colSpan={7} className="px-8 py-32 text-center text-slate-400 font-medium">
                                             <div className="flex flex-col items-center justify-center gap-4">
                                                 <AudioWave color="#4B6A88" />
                                                 <span className="text-xs uppercase tracking-widest">Syncing with SpeakClear Cloud...</span>
@@ -807,7 +771,7 @@ export default function Dashboard() {
                                     </tr>
                                 ) : history.length === 0 ? (
                                     <tr>
-                                        <td colSpan={6} className="px-8 py-32 text-center text-slate-400">
+                                        <td colSpan={7} className="px-8 py-32 text-center text-slate-400">
                                             <div className="flex flex-col items-center justify-center gap-4">
                                                 <span className="material-symbols-outlined text-4xl opacity-50">data_usage</span>
                                                 <div className="space-y-1">
@@ -842,11 +806,19 @@ export default function Dashboard() {
                                                 </div>
                                             </td>
                                             <td className="px-4 py-6 whitespace-nowrap">
-                                                <p className="text-sm font-bold text-white mb-1">{new Date(attempt.date).toLocaleDateString()}</p>
-                                                <p className="text-[10px] font-medium text-[#4B6A88]">{new Date(attempt.date).toLocaleTimeString()}</p>
+                                                <div className="flex flex-col">
+                                                    <p className="text-sm font-bold text-white mb-1">{new Date(attempt.date).toLocaleDateString()}</p>
+                                                    <p className="text-[10px] font-medium text-[#4B6A88]">{new Date(attempt.date).toLocaleTimeString()}</p>
+                                                </div>
                                             </td>
                                             <td className="px-8 py-6">
                                                 <p className="text-xs font-bold text-[#13a4ec] uppercase tracking-wider">{attempt.topic || "General"}</p>
+                                            </td>
+                                            <td className="px-8 py-6">
+                                                <div className="flex items-center gap-1.5">
+                                                    <span className="material-symbols-outlined text-[14px] text-[#45EBA5]">psychology</span>
+                                                    <p className="text-xs font-bold text-white uppercase tracking-wider">{(attempt.relevance || 0) * 10}%</p>
+                                                </div>
                                             </td>
                                             <td className="px-8 py-6">
                                                 <div className="flex items-center gap-3">
@@ -869,8 +841,8 @@ export default function Dashboard() {
                                             </td>
                                             <td className="px-8 py-6">
                                                 <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${attempt.score >= 80 ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
-                                                        attempt.score >= 60 ? 'bg-[#13a4ec]/10 text-[#13a4ec] border-[#13a4ec]/20' :
-                                                            'bg-red-500/10 text-red-500 border-red-500/20'
+                                                    attempt.score >= 60 ? 'bg-[#13a4ec]/10 text-[#13a4ec] border-[#13a4ec]/20' :
+                                                        'bg-red-500/10 text-red-500 border-red-500/20'
                                                     }`}>
                                                     {attempt.score >= 80 ? 'Mastery' : attempt.score >= 60 ? 'Competent' : 'Developing'}
                                                 </span>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import { motion } from 'framer-motion';
+import AudioPlayer from '@/components/AudioPlayer';
 
 export default function HistoryPage() {
     const [username, setUsername] = useState("");
@@ -141,10 +142,13 @@ export default function HistoryPage() {
                 vocabulary: attempt.vocabulary || 0,
                 clarity: attempt.clarity || 0,
                 confidence: attempt.confidence || 0,
+                relevance: attempt.relevance || 0,
                 final_feedback: attempt.final_feedback || "No final feedback stored.",
                 improvements: attempt.improvements || "No improvements stored."
             },
-            final_score: attempt.score || 0
+            final_score: attempt.score || 0,
+            feedback_audio_url: attempt.feedback_audio_url || undefined,
+            audio_url: attempt.audio_url || undefined
         };
         sessionStorage.setItem("last_analysis_result", JSON.stringify(payload));
         router.push("/assessment/results");
@@ -224,6 +228,7 @@ export default function HistoryPage() {
                                     </th>
                                     <th className="px-6 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Date & Time</th>
                                     <th className="px-10 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Assessment Topic</th>
+                                    <th className="px-10 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Relevance</th>
                                     <th className="px-10 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Score</th>
                                     <th className="px-10 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Performance</th>
                                     <th className="px-10 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest text-right">Action</th>
@@ -277,6 +282,12 @@ export default function HistoryPage() {
                                             </td>
                                             <td className="px-10 py-8 text-[#13a4ec] font-black uppercase text-xs tracking-widest">
                                                 {attempt.topic || "General Practice"}
+                                            </td>
+                                            <td className="px-10 py-8">
+                                                <div className="flex items-center gap-1.5">
+                                                    <span className="material-symbols-outlined text-[14px] text-[#45EBA5]">psychology</span>
+                                                    <p className="text-xs font-bold text-white uppercase tracking-wider">{(attempt.relevance || 0) * 10}%</p>
+                                                </div>
                                             </td>
                                             <td className="px-10 py-8">
                                                 <div className="flex items-center gap-4">
