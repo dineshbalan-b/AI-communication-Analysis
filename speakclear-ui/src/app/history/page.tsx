@@ -169,8 +169,8 @@ export default function HistoryPage() {
                     </div>
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div>
-                            <h2 className="text-4xl font-black text-white tracking-tight">Full Session History</h2>
-                            <p className="text-slate-400 mt-2 font-medium">Review and analyze all your past communication assessments.</p>
+                            <h2 className="text-4xl font-black text-white tracking-tighter italic italic">Session History</h2>
+                            <p className="text-[10px] font-black text-[#13a4ec] uppercase tracking-[0.3em] mt-2 opacity-80">Your Entire Communication Journey</p>
                         </div>
                         {selectedIds.length > 0 && (
                             <motion.button
@@ -190,8 +190,9 @@ export default function HistoryPage() {
                 <motion.section
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-[#121820] border border-[#212E3B] rounded-[32px] overflow-hidden shadow-2xl"
+                    className="glass-dark rounded-[40px] overflow-hidden shadow-2xl relative"
                 >
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-[#13a4ec]/5 rounded-bl-full blur-[80px] pointer-events-none" />
                     <div className="p-8 border-b border-[#212E3B] flex justify-between items-center bg-white/[0.01]">
                         <div className="flex items-center gap-4">
                             <span className="material-symbols-outlined text-[#13a4ec]">history</span>
@@ -207,10 +208,10 @@ export default function HistoryPage() {
                         )}
                     </div>
 
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-auto relative z-10">
                         <table className="w-full">
                             <thead>
-                                <tr className="text-left border-b border-[#212E3B] bg-white/[0.02]">
+                                <tr className="text-left border-b border-white/5 bg-white/[0.02]">
                                     <th className="px-10 py-6 w-16">
                                         <div
                                             onClick={toggleSelectAll}
