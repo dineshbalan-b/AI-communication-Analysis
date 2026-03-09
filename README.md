@@ -74,6 +74,10 @@ npm run dev
 
 The application will be available at `http://localhost:3000`.
 
+## System Architecture
+
+![Architecture](System_architecture.png)
+
 ## 📜 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
