@@ -2,7 +2,6 @@
 
 SpeakClear AI is a premium, AI-driven communication analysis platform designed to help users master their verbal impact. By providing real-time audio and video analysis, SpeakClear identifies speech patterns, filler words, and delivers tailored AI coaching to transform how you speak.
 
-![Dashboard Mockup](https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2070)
 
 ## ✨ Core Features
 
