@@ -13,11 +13,7 @@ export default function SettingsPage() {
     const [isEditing, setIsEditing] = useState(false);
     const [editName, setEditName] = useState("");
     const [toast, setToast] = useState<string | null>(null);
-    const [prefs, setPrefs] = useState([
-        { id: "noise", label: "Automatic Noise Cancellation", sub: "Enhance voice clarity during assessments.", enabled: true },
-        { id: "weekly", label: "Weekly Progress Reports", sub: "Receive detailed analytics in your inbox.", enabled: true },
-        { id: "dark", label: "Dark Mode Ecosystem", sub: "Optimized for high-contrast visibility.", enabled: true, permanent: true },
-    ]);
+
 
     const router = useRouter();
 
@@ -37,17 +33,7 @@ export default function SettingsPage() {
         router.push("/login");
     };
 
-    const togglePref = (id: string) => {
-        setPrefs(prev => prev.map(p => {
-            if (p.id === id && !p.permanent) {
-                return { ...p, enabled: !p.enabled };
-            }
-            if (p.permanent) {
-                showToast("System preference cannot be disabled.");
-            }
-            return p;
-        }));
-    };
+
 
     const showToast = (msg: string) => {
         setToast(msg);
@@ -155,42 +141,7 @@ export default function SettingsPage() {
                         </div>
                     </motion.section>
 
-                    {/* Preferences Section */}
-                    <motion.section
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="bg-[#121820] border border-[#212E3B] rounded-[32px] p-10 shadow-2xl"
-                    >
-                        <h3 className="text-xl font-bold text-white mb-8 flex items-center gap-3">
-                            <span className="material-symbols-outlined text-[#13a4ec]">tune</span>
-                            App Preferences
-                        </h3>
 
-                        <div className="space-y-6">
-                            {prefs.map((pref, i) => (
-                                <motion.div
-                                    key={pref.id}
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.2 + (i * 0.1) }}
-                                    onClick={() => togglePref(pref.id)}
-                                    className={`flex items-center justify-between p-6 rounded-2xl border transition-all cursor-pointer ${pref.enabled ? 'bg-white/[0.04] border-[#13a4ec]/20 hover:border-[#13a4ec]/40' : 'bg-white/[0.01] border-white/5 hover:bg-white/[0.03]'}`}
-                                >
-                                    <div>
-                                        <p className="text-md flex items-center gap-2 font-bold text-white mb-1">
-                                            {pref.label}
-                                            {pref.permanent && <span className="material-symbols-outlined text-xs text-[#13a4ec]">lock</span>}
-                                        </p>
-                                        <p className="text-xs text-slate-500 font-medium">{pref.sub}</p>
-                                    </div>
-                                    <div className={`w-12 h-6 rounded-full relative transition-all duration-300 ${pref.enabled ? 'bg-[#13a4ec] shadow-[0_0_15px_rgba(19,164,236,0.3)]' : 'bg-white/10'}`}>
-                                        <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all duration-300 ${pref.enabled ? 'right-1' : 'left-1'}`} />
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </motion.section>
 
                     {/* Logout & Danger Zone */}
                     <motion.section

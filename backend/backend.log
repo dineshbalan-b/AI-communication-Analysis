@@ -468,3 +468,763 @@ sqlite3.ProgrammingError: Incorrect number of bindings supplied. The current sta
 2026-03-07 14:47:33,536 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
 2026-03-07 14:47:33,537 [INFO] speakclear.llm: Transcription successful!
 2026-03-07 14:47:34,152 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-07 15:43:42,017 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 15:06:30,270 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:06:30,274 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:06:30,834 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:06:30,834 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:07:03,411 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:07:03,411 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:07:03,763 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:07:03,763 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:07:10,392 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:07:10,393 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:07:16,247 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:07:16,248 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:07:24,721 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:07:24,723 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:07:25,081 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:07:25,083 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:07:27,281 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:07:27,285 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:07:29,416 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:07:29,416 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:07:30,584 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:07:30,586 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:07:31,562 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:07:31,563 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:07:32,505 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:07:32,506 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:07:33,433 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:07:33,433 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:10:00,297 [ERROR] speakclear: Error during audio upload/processing: 
+2026-03-08 15:10:00,299 [ERROR] speakclear: Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 176, in load
+    y, sr_native = __soundfile_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 209, in __soundfile_load
+    context = sf.SoundFile(path)
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 690, in __init__
+    self._file = self._open(file, mode_int, closefd)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 1265, in _open
+    raise LibsndfileError(err, prefix="Error opening {0!r}: ".format(self.name))
+soundfile.LibsndfileError: Error opening 'C:\\Users\\dines\\AppData\\Local\\Temp\\tmp2t9sw8xk.webm': Format not recognised.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\app.py", line 138, in upload_audio
+    processed_path = preprocess_audio(temp_input_path)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\audio_preprocessing.py", line 75, in preprocess_audio
+    y, sr = librosa.load(safe_wav_path, sr=16000, mono=True)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 184, in load
+    y, sr_native = __audioread_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\util\decorators.py", line 63, in __wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 240, in __audioread_load
+    reader = audioread.audio_open(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\audioread\__init__.py", line 131, in audio_open
+    raise NoBackendError()
+audioread.exceptions.NoBackendError
+
+2026-03-08 15:10:07,537 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:10:07,538 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:10:07,871 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:10:07,871 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:10:10,480 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:10:10,482 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:10:11,787 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:10:11,790 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:10:27,298 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:10:27,299 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:10:27,642 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:10:27,643 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:11:12,850 [ERROR] speakclear: Error during audio upload/processing: 
+2026-03-08 15:11:12,854 [ERROR] speakclear: Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 176, in load
+    y, sr_native = __soundfile_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 209, in __soundfile_load
+    context = sf.SoundFile(path)
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 690, in __init__
+    self._file = self._open(file, mode_int, closefd)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 1265, in _open
+    raise LibsndfileError(err, prefix="Error opening {0!r}: ".format(self.name))
+soundfile.LibsndfileError: Error opening 'C:\\Users\\dines\\AppData\\Local\\Temp\\tmptf5h5oq4.webm': Format not recognised.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\app.py", line 138, in upload_audio
+    processed_path = preprocess_audio(temp_input_path)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\audio_preprocessing.py", line 75, in preprocess_audio
+    y, sr = librosa.load(safe_wav_path, sr=16000, mono=True)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 184, in load
+    y, sr_native = __audioread_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\util\decorators.py", line 63, in __wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 240, in __audioread_load
+    reader = audioread.audio_open(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\audioread\__init__.py", line 131, in audio_open
+    raise NoBackendError()
+audioread.exceptions.NoBackendError
+
+2026-03-08 15:11:15,867 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:11:15,867 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:11:16,217 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-03-08 15:11:16,217 [ERROR] speakclear.llm: Error generating topics: Error code: 401 - {'error': {'message': 'Authentication Error, Invalid proxy server token passed. Received API Key = sk-...pSMS, Key Hash (Token) =af6f0cad92aca05e6e7a54ccceba81747b998d2f0e7c1e0e8146c0f586b0719e. Unable to find token in cache or `LiteLLM_VerificationTokenTable`', 'type': 'token_not_found_in_db', 'param': 'key', 'code': '401'}}
+2026-03-08 15:14:28,557 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 15:14:42,167 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 15:14:50,054 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 15:14:57,151 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 15:15:02,906 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 15:15:10,192 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 15:15:16,170 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 15:15:21,473 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 15:17:36,768 [ERROR] speakclear: Error during audio upload/processing: 
+2026-03-08 15:17:36,789 [ERROR] speakclear: Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 176, in load
+    y, sr_native = __soundfile_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 209, in __soundfile_load
+    context = sf.SoundFile(path)
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 690, in __init__
+    self._file = self._open(file, mode_int, closefd)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 1265, in _open
+    raise LibsndfileError(err, prefix="Error opening {0!r}: ".format(self.name))
+soundfile.LibsndfileError: Error opening 'C:\\Users\\dines\\AppData\\Local\\Temp\\tmpgm154o1z.webm': Format not recognised.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\app.py", line 138, in upload_audio
+    processed_path = preprocess_audio(temp_input_path)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\audio_preprocessing.py", line 75, in preprocess_audio
+    y, sr = librosa.load(safe_wav_path, sr=16000, mono=True)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 184, in load
+    y, sr_native = __audioread_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\util\decorators.py", line 63, in __wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 240, in __audioread_load
+    reader = audioread.audio_open(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\audioread\__init__.py", line 131, in audio_open
+    raise NoBackendError()
+audioread.exceptions.NoBackendError
+
+2026-03-08 15:19:11,091 [INFO] speakclear.llm: Transcribing audio from: processed_audio.wav...
+2026-03-08 15:19:29,393 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 15:19:29,393 [INFO] speakclear.llm: Transcription successful!
+2026-03-08 15:19:30,009 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 15:20:26,637 [INFO] speakclear.llm: Transcribing audio from: processed_audio.wav...
+2026-03-08 15:20:30,609 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 15:20:30,615 [INFO] speakclear.llm: Transcription successful!
+2026-03-08 15:20:31,415 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 15:20:33,595 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 15:20:43,009 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 17:46:00,029 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 17:46:04,630 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 17:49:19,532 [ERROR] speakclear: Error during audio upload/processing: 
+2026-03-08 17:49:19,542 [ERROR] speakclear: Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 176, in load
+    y, sr_native = __soundfile_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 209, in __soundfile_load
+    context = sf.SoundFile(path)
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 690, in __init__
+    self._file = self._open(file, mode_int, closefd)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 1265, in _open
+    raise LibsndfileError(err, prefix="Error opening {0!r}: ".format(self.name))
+soundfile.LibsndfileError: Error opening 'C:\\Users\\dines\\AppData\\Local\\Temp\\tmp4u3fmcir.webm': Format not recognised.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\app.py", line 138, in upload_audio
+    processed_path = preprocess_audio(temp_input_path)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\audio_preprocessing.py", line 75, in preprocess_audio
+    y, sr = librosa.load(safe_wav_path, sr=16000, mono=True)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 184, in load
+    y, sr_native = __audioread_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\util\decorators.py", line 63, in __wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 240, in __audioread_load
+    reader = audioread.audio_open(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\audioread\__init__.py", line 131, in audio_open
+    raise NoBackendError()
+audioread.exceptions.NoBackendError
+
+2026-03-08 18:00:54,637 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:01:43,263 [ERROR] speakclear: Error during audio upload/processing: 
+2026-03-08 18:01:43,263 [ERROR] speakclear: Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 176, in load
+    y, sr_native = __soundfile_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 209, in __soundfile_load
+    context = sf.SoundFile(path)
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 690, in __init__
+    self._file = self._open(file, mode_int, closefd)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 1265, in _open
+    raise LibsndfileError(err, prefix="Error opening {0!r}: ".format(self.name))
+soundfile.LibsndfileError: Error opening 'C:\\Users\\dines\\AppData\\Local\\Temp\\tmphmi242w9.webm': Format not recognised.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\app.py", line 138, in upload_audio
+    processed_path = preprocess_audio(temp_input_path)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\audio_preprocessing.py", line 75, in preprocess_audio
+    y, sr = librosa.load(safe_wav_path, sr=16000, mono=True)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 184, in load
+    y, sr_native = __audioread_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<decorator-gen-4>", line 2, in __audioread_load
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\util\decorators.py", line 63, in __wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 240, in __audioread_load
+    reader = audioread.audio_open(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\audioread\__init__.py", line 131, in audio_open
+    raise NoBackendError()
+audioread.exceptions.NoBackendError
+
+2026-03-08 18:02:17,159 [ERROR] speakclear: Error during audio upload/processing: 
+2026-03-08 18:02:17,164 [ERROR] speakclear: Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 176, in load
+    y, sr_native = __soundfile_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 209, in __soundfile_load
+    context = sf.SoundFile(path)
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 690, in __init__
+    self._file = self._open(file, mode_int, closefd)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 1265, in _open
+    raise LibsndfileError(err, prefix="Error opening {0!r}: ".format(self.name))
+soundfile.LibsndfileError: Error opening 'C:\\Users\\dines\\AppData\\Local\\Temp\\tmp88gmuiph.webm': Format not recognised.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\app.py", line 138, in upload_audio
+    processed_path = preprocess_audio(temp_input_path)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\audio_preprocessing.py", line 75, in preprocess_audio
+    y, sr = librosa.load(safe_wav_path, sr=16000, mono=True)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 184, in load
+    y, sr_native = __audioread_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<decorator-gen-4>", line 2, in __audioread_load
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\util\decorators.py", line 63, in __wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 240, in __audioread_load
+    reader = audioread.audio_open(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\audioread\__init__.py", line 131, in audio_open
+    raise NoBackendError()
+audioread.exceptions.NoBackendError
+
+2026-03-08 18:02:58,297 [ERROR] speakclear: Error during audio upload/processing: 
+2026-03-08 18:02:58,299 [ERROR] speakclear: Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 176, in load
+    y, sr_native = __soundfile_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 209, in __soundfile_load
+    context = sf.SoundFile(path)
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 690, in __init__
+    self._file = self._open(file, mode_int, closefd)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 1265, in _open
+    raise LibsndfileError(err, prefix="Error opening {0!r}: ".format(self.name))
+soundfile.LibsndfileError: Error opening 'C:\\Users\\dines\\AppData\\Local\\Temp\\tmp4cq4333f.webm': Format not recognised.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\app.py", line 138, in upload_audio
+    processed_path = preprocess_audio(temp_input_path)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\audio_preprocessing.py", line 75, in preprocess_audio
+    y, sr = librosa.load(safe_wav_path, sr=16000, mono=True)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 184, in load
+    y, sr_native = __audioread_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<decorator-gen-4>", line 2, in __audioread_load
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\util\decorators.py", line 63, in __wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 240, in __audioread_load
+    reader = audioread.audio_open(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\audioread\__init__.py", line 131, in audio_open
+    raise NoBackendError()
+audioread.exceptions.NoBackendError
+
+2026-03-08 18:03:10,840 [ERROR] speakclear: Error during audio upload/processing: 
+2026-03-08 18:03:10,842 [ERROR] speakclear: Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 176, in load
+    y, sr_native = __soundfile_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 209, in __soundfile_load
+    context = sf.SoundFile(path)
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 690, in __init__
+    self._file = self._open(file, mode_int, closefd)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 1265, in _open
+    raise LibsndfileError(err, prefix="Error opening {0!r}: ".format(self.name))
+soundfile.LibsndfileError: Error opening 'C:\\Users\\dines\\AppData\\Local\\Temp\\tmp4mnlnyoy.webm': Format not recognised.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\app.py", line 138, in upload_audio
+    processed_path = preprocess_audio(temp_input_path)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\audio_preprocessing.py", line 75, in preprocess_audio
+    y, sr = librosa.load(safe_wav_path, sr=16000, mono=True)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 184, in load
+    y, sr_native = __audioread_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<decorator-gen-4>", line 2, in __audioread_load
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\util\decorators.py", line 63, in __wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 240, in __audioread_load
+    reader = audioread.audio_open(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\audioread\__init__.py", line 131, in audio_open
+    raise NoBackendError()
+audioread.exceptions.NoBackendError
+
+2026-03-08 18:07:38,267 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:08:05,554 [ERROR] speakclear: Error during audio upload/processing: 
+2026-03-08 18:08:05,561 [ERROR] speakclear: Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 176, in load
+    y, sr_native = __soundfile_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 209, in __soundfile_load
+    context = sf.SoundFile(path)
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 690, in __init__
+    self._file = self._open(file, mode_int, closefd)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\soundfile.py", line 1265, in _open
+    raise LibsndfileError(err, prefix="Error opening {0!r}: ".format(self.name))
+soundfile.LibsndfileError: Error opening 'C:\\Users\\dines\\AppData\\Local\\Temp\\tmpjz8qqlyu.webm': Format not recognised.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\app.py", line 138, in upload_audio
+    processed_path = preprocess_audio(temp_input_path)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\audio_preprocessing.py", line 75, in preprocess_audio
+    y, sr = librosa.load(safe_wav_path, sr=16000, mono=True)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 184, in load
+    y, sr_native = __audioread_load(path, offset, duration, dtype)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<decorator-gen-4>", line 2, in __audioread_load
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\util\decorators.py", line 63, in __wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\librosa\core\audio.py", line 240, in __audioread_load
+    reader = audioread.audio_open(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\audioread\__init__.py", line 131, in audio_open
+    raise NoBackendError()
+audioread.exceptions.NoBackendError
+
+2026-03-08 18:14:16,143 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:14:54,289 [INFO] speakclear.llm: Transcribing audio from: processed_audio.wav...
+2026-03-08 18:14:58,918 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 18:14:58,925 [INFO] speakclear.llm: Transcription successful!
+2026-03-08 18:14:59,479 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:15:45,285 [INFO] speakclear.llm: Transcribing audio from: processed_audio.wav...
+2026-03-08 18:15:56,375 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 18:15:56,378 [INFO] speakclear.llm: Transcription successful!
+2026-03-08 18:15:57,078 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:15:58,863 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:16:06,754 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 18:32:13,202 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:32:44,940 [INFO] speakclear.llm: Transcribing audio from: processed_audio.wav...
+2026-03-08 18:33:00,745 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 18:33:00,748 [INFO] speakclear.llm: Transcription successful!
+2026-03-08 18:33:01,472 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:33:58,241 [INFO] speakclear.llm: Transcribing audio from: processed_audio.wav...
+2026-03-08 18:34:01,119 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 18:34:01,122 [INFO] speakclear.llm: Transcription successful!
+2026-03-08 18:34:01,780 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:34:03,738 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:34:14,659 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 18:36:12,013 [INFO] speakclear.llm: Transcribing audio from: processed_audio.wav...
+2026-03-08 18:36:15,010 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 18:36:15,010 [INFO] speakclear.llm: Transcription successful!
+2026-03-08 18:36:15,558 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:36:17,528 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:36:25,791 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 18:40:51,114 [INFO] speakclear.llm: Transcribing audio from: processed_audio.wav...
+2026-03-08 18:41:03,731 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 18:41:03,738 [INFO] speakclear.llm: Transcription successful!
+2026-03-08 18:41:04,345 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:46:00,928 [INFO] speakclear.llm: Transcribing audio from: processed_audio.wav...
+2026-03-08 18:46:10,539 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 18:46:10,542 [INFO] speakclear.llm: Transcription successful!
+2026-03-08 18:46:11,463 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:46:14,225 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:46:24,374 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 18:56:51,572 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:57:03,873 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:58:04,859 [INFO] speakclear.llm: Transcribing audio from: processed_audio.wav...
+2026-03-08 18:58:07,331 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 18:58:07,339 [INFO] speakclear.llm: Transcription successful!
+2026-03-08 18:58:08,016 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:58:10,345 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 18:58:20,451 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 19:07:32,701 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 19:26:33,946 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 19:26:57,277 [INFO] speakclear.llm: Transcribing audio from: processed_audio.wav...
+2026-03-08 19:27:00,606 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 19:27:00,614 [INFO] speakclear.llm: Transcription successful!
+2026-03-08 19:27:01,204 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 19:31:13,481 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 19:31:24,816 [ERROR] speakclear: Error during audio upload/processing: [WinError 2] The system cannot find the file specified
+2026-03-08 19:31:24,875 [ERROR] speakclear: Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\app.py", line 134, in upload_audio
+    processed_path = preprocess_audio(temp_input_path)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\audio_preprocessing.py", line 34, in preprocess_audio
+    subprocess.run([
+  File "C:\Users\dines\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\dines\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+
+2026-03-08 19:31:38,356 [ERROR] speakclear: Error during audio upload/processing: [WinError 2] The system cannot find the file specified
+2026-03-08 19:31:38,360 [ERROR] speakclear: Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\app.py", line 134, in upload_audio
+    processed_path = preprocess_audio(temp_input_path)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\audio_preprocessing.py", line 34, in preprocess_audio
+    subprocess.run([
+  File "C:\Users\dines\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\dines\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+
+2026-03-08 19:31:56,189 [ERROR] speakclear: Error during audio upload/processing: [WinError 2] The system cannot find the file specified
+2026-03-08 19:31:56,189 [ERROR] speakclear: Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\app.py", line 134, in upload_audio
+    processed_path = preprocess_audio(temp_input_path)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\audio_preprocessing.py", line 34, in preprocess_audio
+    subprocess.run([
+  File "C:\Users\dines\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\dines\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+
+2026-03-08 19:32:37,953 [INFO] speakclear.llm: Transcribing audio from: processed_audio.wav...
+2026-03-08 19:32:42,595 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 19:32:42,603 [INFO] speakclear.llm: Transcription successful!
+2026-03-08 19:32:43,609 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 19:32:45,503 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 19:32:53,099 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 19:37:20,663 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 19:37:31,302 [ERROR] speakclear: Error during audio upload/processing: [WinError 2] The system cannot find the file specified
+2026-03-08 19:37:31,319 [ERROR] speakclear: Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\app.py", line 134, in upload_audio
+    processed_path = preprocess_audio(temp_input_path)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\audio_preprocessing.py", line 31, in preprocess_audio
+    audio = AudioSegment.from_file(input_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\pydub\audio_segment.py", line 728, in from_file
+    info = mediainfo_json(orig_file, read_ahead_limit=read_ahead_limit)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\pydub\utils.py", line 274, in mediainfo_json
+    res = Popen(command, stdin=stdin_parameter, stdout=PIPE, stderr=PIPE)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\dines\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+
+2026-03-08 19:37:42,808 [ERROR] speakclear: Error during audio upload/processing: [WinError 2] The system cannot find the file specified
+2026-03-08 19:37:42,813 [ERROR] speakclear: Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\app.py", line 134, in upload_audio
+    processed_path = preprocess_audio(temp_input_path)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\audio_preprocessing.py", line 31, in preprocess_audio
+    audio = AudioSegment.from_file(input_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\pydub\audio_segment.py", line 728, in from_file
+    info = mediainfo_json(orig_file, read_ahead_limit=read_ahead_limit)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\.venv\Lib\site-packages\pydub\utils.py", line 274, in mediainfo_json
+    res = Popen(command, stdin=stdin_parameter, stdout=PIPE, stderr=PIPE)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dines\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\dines\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+
+2026-03-08 19:43:59,236 [INFO] speakclear.llm: Transcribing audio from: processed_audio.wav...
+2026-03-08 19:44:03,177 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 19:44:03,189 [INFO] speakclear.llm: Transcription successful!
+2026-03-08 19:44:03,872 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 19:44:06,622 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 19:44:16,564 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 19:49:31,923 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 19:49:55,889 [INFO] speakclear.llm: Transcribing audio from: processed_audio.wav...
+2026-03-08 19:49:59,140 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 19:49:59,146 [INFO] speakclear.llm: Transcription successful!
+2026-03-08 19:49:59,775 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 19:50:29,381 [INFO] speakclear.llm: Transcribing audio from: processed_audio.wav...
+2026-03-08 19:50:41,226 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 19:50:41,230 [INFO] speakclear.llm: Transcription successful!
+2026-03-08 19:50:42,298 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 19:50:44,373 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 19:50:53,322 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 19:51:56,007 [INFO] speakclear.llm: Transcribing audio from: processed_audio.wav...
+2026-03-08 19:51:59,570 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 19:51:59,572 [INFO] speakclear.llm: Transcription successful!
+2026-03-08 19:52:00,519 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 19:52:03,240 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 19:52:14,416 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 21:15:39,489 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 21:15:56,573 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 21:16:11,441 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 21:16:15,789 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 21:16:23,272 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 21:17:46,000 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 21:18:01,772 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 21:18:02,745 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 21:18:05,574 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 21:18:17,796 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 21:39:43,759 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 21:39:47,309 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 21:39:48,451 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 21:39:50,690 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 21:40:00,664 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 22:52:29,332 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 22:52:45,591 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 22:52:48,923 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 22:52:51,650 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 22:52:54,543 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 22:52:57,872 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 22:53:01,472 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 22:53:52,754 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 22:55:11,458 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 22:55:16,273 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 22:55:17,015 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 22:55:19,758 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 22:55:19,909 [ERROR] speakclear.llm: JSON extraction failed: Expecting ',' delimiter: line 12 column 233 (char 1595) | Content: {
+  "grammar": 8,
+  "vocabulary": 7,
+  "structure": 8,
+  "clarity": 8,
+  "confidence": 7,
+  "relevan...
+2026-03-08 22:55:20,545 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 500 Internal Server Error"
+2026-03-08 22:55:20,554 [INFO] openai._base_client: Retrying request to /audio/speech in 0.422426 seconds
+2026-03-08 22:55:21,576 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 500 Internal Server Error"
+2026-03-08 22:55:21,576 [INFO] openai._base_client: Retrying request to /audio/speech in 0.815126 seconds
+2026-03-08 22:55:23,004 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 500 Internal Server Error"
+2026-03-08 22:55:23,006 [ERROR] speakclear.llm: TTS error: Internal Server Error
+2026-03-08 22:57:22,098 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 22:57:24,774 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 22:57:24,809 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 22:57:27,000 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 22:57:27,011 [ERROR] speakclear: Error during audio upload/processing: [WinError 32] The process cannot access the file because it is being used by another process: 'processed_audio.wav'
+2026-03-08 22:57:27,015 [ERROR] speakclear: Traceback (most recent call last):
+  File "C:\Users\dines\Desktop\projects\AI-communication-Analysis-main\backend\app.py", line 233, in upload_audio
+    os.remove(processed_path)
+PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'processed_audio.wav'
+
+2026-03-08 22:57:27,217 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 22:57:50,910 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 22:59:07,767 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 22:59:12,573 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 22:59:13,139 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 22:59:15,428 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 22:59:24,506 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 23:00:51,933 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 23:01:04,381 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 23:01:04,974 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 23:01:06,872 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 23:01:15,515 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 23:02:04,961 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 23:02:10,209 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 23:02:10,926 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 23:02:12,998 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 23:02:22,394 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 23:06:28,887 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 23:06:50,688 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 23:06:55,072 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 23:07:25,964 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 23:07:30,806 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 23:07:31,386 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 23:07:33,853 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 23:07:44,216 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 23:10:42,681 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 23:10:44,038 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 23:11:30,354 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 23:11:34,459 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 23:11:35,174 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 23:11:36,913 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 23:11:45,614 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 23:14:40,924 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 23:14:46,597 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 23:14:47,304 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 23:14:49,764 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 23:15:00,202 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-08 23:22:13,363 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 23:22:22,447 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 23:22:29,764 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 23:22:32,272 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-08 23:23:05,040 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 23:23:12,789 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 23:24:16,731 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 23:24:31,611 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 23:25:01,707 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 23:25:02,958 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-08 23:26:29,574 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-08 23:26:33,587 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-09 01:22:20,693 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 01:25:30,903 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-09 01:25:41,678 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-09 01:25:42,403 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 01:25:44,626 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 01:25:54,088 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-09 09:09:11,337 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:12:36,400 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-09 09:12:42,313 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-09 09:14:00,314 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-09 09:14:10,163 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-09 09:14:10,755 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:14:13,203 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:14:23,863 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-09 09:36:21,673 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-09 09:36:29,657 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-09 09:36:30,274 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:36:33,072 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:36:44,586 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-09 09:40:51,473 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:40:56,040 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:41:00,080 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:41:33,020 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:41:35,591 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:41:38,439 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:42:36,683 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-09 09:42:47,695 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-09 09:42:48,253 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:42:50,587 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:42:52,283 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-09 09:48:22,289 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-09 09:48:31,224 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-09 09:48:31,811 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:48:34,040 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:48:35,876 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-09 09:50:18,113 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:51:19,959 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-09 09:51:29,379 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-09 09:51:29,929 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:51:31,988 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 09:51:43,255 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-09 11:06:05,064 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 11:06:12,984 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 11:06:18,894 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 11:06:46,997 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-09 11:06:50,624 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-09 11:07:10,607 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-09 11:07:13,304 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-09 13:58:08,340 [INFO] openai._base_client: Retrying request to /chat/completions in 0.448129 seconds
+2026-03-09 13:58:13,806 [INFO] openai._base_client: Retrying request to /chat/completions in 0.822919 seconds
+2026-03-09 13:58:19,903 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 13:58:24,520 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 13:58:27,696 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 13:58:31,998 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 13:58:34,862 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 13:58:37,521 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 13:58:40,127 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 14:09:27,825 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-09 14:09:38,323 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-09 14:09:39,170 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 14:09:42,626 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 14:09:52,659 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-09 15:03:41,548 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 15:05:41,677 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-09 15:05:50,226 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-09 15:05:50,957 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 15:05:55,338 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-09 15:06:06,764 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"

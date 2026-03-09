@@ -1,14 +1,16 @@
+"""
+Database Module
+Handles SQLite operations for storing and retrieving evaluation results.
+"""
+
 import sqlite3
 from datetime import datetime
 
 DB_NAME = "evaluations.db"
 
 
-# -------------------------------
-# Initialize Evaluation Table
-# -------------------------------
-
 def init_evaluation_db():
+    """Create evaluations table with all required columns."""
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
 
@@ -34,120 +36,75 @@ def init_evaluation_db():
         )
     """)
 
-    # Attempt to add audio_url column if it doesn't exist to avoid dropping existing data
-    try:
-        c.execute("ALTER TABLE evaluations ADD COLUMN audio_url TEXT DEFAULT ''")
-    except sqlite3.OperationalError:
-        pass # Column already exists
-        
-    # Attempt to add relevance column
-    try:
-        c.execute("ALTER TABLE evaluations ADD COLUMN relevance REAL DEFAULT 0")
-    except sqlite3.OperationalError:
-        pass
-
-    # Attempt to add feedback_audio_url column
-    try:
-        c.execute("ALTER TABLE evaluations ADD COLUMN feedback_audio_url TEXT DEFAULT ''")
-    except sqlite3.OperationalError:
-        pass
+    # Add columns for older databases (safe — silently skips if column exists)
+    for alter_sql in [
+        "ALTER TABLE evaluations ADD COLUMN audio_url TEXT DEFAULT ''",
+        "ALTER TABLE evaluations ADD COLUMN relevance REAL DEFAULT 0",
+        "ALTER TABLE evaluations ADD COLUMN feedback_audio_url TEXT DEFAULT ''",
+    ]:
+        try:
+            c.execute(alter_sql)
+        except sqlite3.OperationalError:
+            pass
 
     conn.commit()
     conn.close()
 
-
-# -------------------------------
-# Save Evaluation
-# -------------------------------
 
 def save_evaluation(username, topic, transcript, hybrid_score,
                     grammar, vocabulary, clarity, confidence, relevance=0,
-                    wpm=0, filler_count=0, speech_ratio=0, 
+                    wpm=0, filler_count=0, speech_ratio=0,
                     final_feedback="", improvements="", audio_url="", feedback_audio_url=""):
-
+    """Save a completed evaluation to the database."""
     conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-
-    c.execute("""
+    conn.execute("""
         INSERT INTO evaluations (
-            username, date, topic, transcript, hybrid_score, 
-            grammar, vocabulary, clarity, confidence, relevance, 
-            wpm, filler_count, speech_ratio, final_feedback, 
+            username, date, topic, transcript, hybrid_score,
+            grammar, vocabulary, clarity, confidence, relevance,
+            wpm, filler_count, speech_ratio, final_feedback,
             improvements, audio_url, feedback_audio_url
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
-        username,
-        datetime.now().strftime("%Y-%m-%d %H:%M"),
-        topic,
-        transcript,
-        hybrid_score,
-        grammar,
-        vocabulary,
-        clarity,
-        confidence,
-        relevance,
-        wpm,
-        filler_count,
-        speech_ratio,
-        final_feedback,
-        improvements,
-        audio_url,
-        feedback_audio_url
+        username, datetime.now().strftime("%Y-%m-%d %H:%M"),
+        topic, transcript, hybrid_score,
+        grammar, vocabulary, clarity, confidence, relevance,
+        wpm, filler_count, speech_ratio, final_feedback,
+        improvements, audio_url, feedback_audio_url
     ))
-
     conn.commit()
     conn.close()
 
 
-# -------------------------------
-# Get User Progress
-# -------------------------------
-
 def get_user_progress(username):
-
+    """Retrieve all evaluations for a user, ordered by most recent first."""
     conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-
-    c.execute("""
-        SELECT rowid, date, topic, hybrid_score, grammar, vocabulary, clarity, confidence, 
-               transcript, wpm, filler_count, speech_ratio, final_feedback, improvements, audio_url, relevance, feedback_audio_url
+    cursor = conn.execute("""
+        SELECT rowid, date, topic, hybrid_score, grammar, vocabulary, clarity, confidence,
+               transcript, wpm, filler_count, speech_ratio, final_feedback, improvements,
+               audio_url, relevance, feedback_audio_url
         FROM evaluations
         WHERE username=?
         ORDER BY date DESC
     """, (username,))
-
-    data = c.fetchall()
+    data = cursor.fetchall()
     conn.close()
-
     return data
 
 
-# -------------------------------
-# Delete Evaluation
-# -------------------------------
-
 def delete_evaluation(rowid):
+    """Delete a single evaluation by row ID."""
     conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-
-    c.execute("DELETE FROM evaluations WHERE rowid=?", (rowid,))
-
+    conn.execute("DELETE FROM evaluations WHERE rowid=?", (rowid,))
     conn.commit()
     conn.close()
     return True
 
+
 def bulk_delete_evaluations(rowids):
-    """Delete multiple evaluations by their rowids."""
+    """Delete multiple evaluations by their row IDs."""
     conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    
-    # Use executemany for efficiency or a simple IN clause
-    # For safety with a small number of IDs, IN clause is fine
     placeholders = ','.join(['?'] * len(rowids))
-    query = f"DELETE FROM evaluations WHERE rowid IN ({placeholders})"
-    
-    c.execute(query, rowids)
-    
+    conn.execute(f"DELETE FROM evaluations WHERE rowid IN ({placeholders})", rowids)
     conn.commit()
     conn.close()
     return True

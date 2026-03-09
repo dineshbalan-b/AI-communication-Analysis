@@ -1,48 +1,37 @@
+"""
+Authentication Module
+Handles user registration, login, and password hashing.
+"""
+
 import sqlite3
 import hashlib
 
 DB_NAME = "users.db"
 
 
-# -------------------------------
-# Create Users Table (Run Once)
-# -------------------------------
-
 def init_user_db():
+    """Create users table if it doesn't exist."""
     conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-
-    c.execute("""
+    conn.execute("""
         CREATE TABLE IF NOT EXISTS users (
             username TEXT PRIMARY KEY,
             password TEXT
         )
     """)
-
     conn.commit()
     conn.close()
 
 
-# -------------------------------
-# Hash Password
-# -------------------------------
-
 def hash_password(password):
+    """Hash password using SHA-256."""
     return hashlib.sha256(password.encode()).hexdigest()
 
 
-# -------------------------------
-# Create User
-# -------------------------------
-
 def create_user(username, password):
+    """Register a new user. Returns True on success, False if username exists."""
     conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-
-    hashed = hash_password(password)
-
     try:
-        c.execute("INSERT INTO users VALUES (?, ?)", (username, hashed))
+        conn.execute("INSERT INTO users VALUES (?, ?)", (username, hash_password(password)))
         conn.commit()
         return True
     except sqlite3.IntegrityError:
@@ -51,22 +40,13 @@ def create_user(username, password):
         conn.close()
 
 
-# -------------------------------
-# Verify User
-# -------------------------------
-
 def verify_user(username, password):
+    """Verify user credentials. Returns True if valid."""
     conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-
-    hashed = hash_password(password)
-
-    c.execute(
-        "SELECT * FROM users WHERE username=? AND password=?",
-        (username, hashed)
+    cursor = conn.execute(
+        "SELECT 1 FROM users WHERE username=? AND password=?",
+        (username, hash_password(password))
     )
-
-    result = c.fetchone()
+    result = cursor.fetchone()
     conn.close()
-
     return result is not None

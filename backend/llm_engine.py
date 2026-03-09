@@ -1,254 +1,211 @@
 import os
 import json
+import time
 import logging
+import re
 from dotenv import load_dotenv
 from openai import OpenAI
 
 logger = logging.getLogger("speakclear.llm")
 
-# -------------------------------
-# Load API Key
-# -------------------------------
+
+# API Configuration
 
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
 BASE_URL = os.getenv("BASE_URL")
+
 if not API_KEY:
     raise ValueError("API_KEY not found in .env file")
 
-client = OpenAI(
-    api_key=API_KEY,
-    base_url=BASE_URL
-)
+client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
 
-# -------------------------------
-# Conversational Chatbot Memory
-# -------------------------------
 
-memory = [
-    {"role": "system", "content": "You are a helpful voice assistant. Remember information shared by the user and answer based on memory."}
-]
 
-def speech_to_text(audio_path):
-    """Convert speech to text using Whisper."""
-    logger.info(f"Transcribing audio from: {audio_path}...")
+# Helpers
+
+def _extract_json(text):
+    """Robustly extract JSON from a string, handling markdown triple backticks."""
     try:
-        with open(audio_path, "rb") as audio_file:
-            transcription = client.audio.transcriptions.create(
-                model="whisper-1",
-                file=audio_file
-            )
-        logger.info("Transcription successful!")
-        return transcription.text
+        # Try to find JSON block
+        match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', text, re.DOTALL)
+        if match:
+            return json.loads(match.group(1))
+        # Fallback to finding first { and last }
+        start = text.find('{')
+        end = text.rfind('}')
+        if start != -1 and end != -1:
+            return json.loads(text[start:end+1])
+        return json.loads(text)
     except Exception as e:
-        logger.error(f"Error during transcription: {e}")
+        logger.error(f"JSON extraction failed: {e} | Content: {text[:100]}...")
         return None
 
-def get_assistant_response(user_text):
-    """Get response using GPT with persistent memory."""
-    memory.append({
-        "role": "user",
-        "content": user_text
-    })
-
-    response = client.chat.completions.create(
-        model="gpt-4.1-nano",
-        messages=memory
-    )
-
-    assistant_text = response.choices[0].message.content
-
-    memory.append({
-        "role": "assistant",
-        "content": assistant_text
-    })
-
-    return assistant_text
 
 
-# -------------------------------
+# Speech-to-Text (Whisper)
+
+
+def speech_to_text(audio_path):
+    """Convert speech audio to text using OpenAI Whisper and detect language."""
+    logger.info(f"Transcribing {audio_path}...")
+    try:
+        with open(audio_path, "rb") as audio_file:
+            response = client.audio.transcriptions.create(
+                model="whisper-1",
+                file=audio_file,
+                response_format="verbose_json"
+            )
+        
+        # Extract text and detected language code (e.g., 'en', 'ta')
+        transcript = getattr(response, 'text', '')
+        language = getattr(response, 'language', 'en')
+        
+        return transcript, language
+    except Exception as e:
+        logger.error(f"Transcription error: {e}")
+        return None, "en"
+
+
+
 # Language Detection
-# -------------------------------
+
 
 def is_english(transcript):
-    """
-    Detects if the primarily used language in the transcript is English.
-    Returns True if English, False otherwise.
-    """
-    if not transcript or len(transcript.strip()) < 3:
-        return True # Default to True for very short snippets to let VAD/Short content logic handle it
+    """Detect if the transcript is primarily in English with strict phonetic check."""
+    if not transcript or len(transcript.strip()) < 5:
+        return True
 
     prompt = f"""
-    Analyze the following text and determine if it is primarily written or spoken in English.
+    Analyze if this text is meaningful, grammatically structured English:
+    "{transcript}"
     
-    Text: "{transcript}"
-    
-    If the text is in English (even with minor errors), return strictly the word "ENGLISH".
-    If the text is in any other language (e.g., Spanish, French, Hindi, etc.), return strictly "NON_ENGLISH".
-    """
+    Tasks:
+    1. Is this legitimate, meaningful English communication?
+    2. Is this 'phonetic gibberish' (English words that represent the sound of another language like Tamil)?
+    3. Is it a transcription hallucination of background noise?
 
+    If it is legitimate English communication, return 'ENGLISH'.
+    If it is sounds, gibberish, or another language, return 'NON_ENGLISH'.
+    
+    Return ONLY 'ENGLISH' or 'NON_ENGLISH'.
+    """
     try:
         response = client.chat.completions.create(
             model="gpt-4.1-nano",
             messages=[{"role": "user", "content": prompt}],
             temperature=0,
-            max_tokens=10
+            max_tokens=5
         )
-        
-        result = response.choices[0].message.content.strip().upper()
-        return "ENGLISH" == result or "ENGLISH." == result
-    except Exception as e:
-        logger.error(f"Error in language detection: {e}")
-        return True # Fallback to True to avoid blocking users on API failure
+        return "ENGLISH" in response.choices[0].message.content.upper()
+    except Exception:
+        return True
 
-# -------------------------------
-# LLM Evaluation
-# -------------------------------
 
-def evaluate_with_llm(topic, transcript, audio_metrics, text_metrics):
 
+# LLM-Based Evaluation
+
+
+def evaluate_with_llm(topic, transcript, audio_metrics, text_metrics, historical_context=None):
+    """
+    Use GPT to evaluate communication skills with historical context.
+    """
     prompt = f"""
-You are an expert communication and language evaluator.
+You are an expert communication coach.
 
-Topic:
-{topic}
-
-Transcript:
-{transcript}
+Topic: {topic}
+Transcript: {transcript}
 
 Objective Metrics:
-- Words per minute: {text_metrics['wpm']}
-- Filler words: {text_metrics['filler_count']}
-- Vocabulary richness: {text_metrics['vocab_richness']}
-- Average pause: {audio_metrics['avg_pause']}
-- Speech ratio: {audio_metrics['speech_ratio']}
+- WPM: {text_metrics['wpm']:.1f}
+- Fillers: {text_metrics['filler_count']}
+- Vocab Richness: {text_metrics['vocab_richness']:.2f}
+- Avg Pause: {audio_metrics['avg_pause']:.2f}s
+- Speech Ratio: {audio_metrics['speech_ratio']:.2f}
 
-Evaluate the speaker on:
+Progress Context: {historical_context or "No previous history."}
 
-1. Grammar accuracy (0-10)
-2. Vocabulary sophistication (0-10)
-3. Sentence structure quality (0-10)
-4. Clarity of expression (0-10)
-5. Confidence perception (0-10)
-6. Topic relevance (0-10)
-7. Overall communication score (0-10)
+Evaluate (0-10): Grammar, Vocabulary, Structure, Clarity, Confidence, Relevance, Overall.
+Compare with history if available.
 
-Then generate:
-- A professional overall feedback paragraph (max 150 words)
-- Clear improvement suggestions
-
-Return strictly in valid JSON format:
-
+Return strictly JSON:
 {{
-  "grammar": 0-10,
-  "vocabulary": 0-10,
-  "structure": 0-10,
-  "clarity": 0-10,
-  "confidence": 0-10,
-  "relevance": 0-10,
-  "overall": 0-10,
-  "final_feedback": "...",
-  "improvements": "..."
+  "grammar": 0-10, "vocabulary": 0-10, "structure": 0-10,
+  "clarity": 0-10, "confidence": 0-10, "relevance": 0-10, "overall": 0-10,
+  "final_feedback": "...", "improvements": "..."
 }}
 """
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4.1-nano",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3
+        )
+        result = _extract_json(response.choices[0].message.content)
+        return result or {
+            "grammar": 0, "vocabulary": 0, "structure": 0, "clarity": 0, 
+            "confidence": 0, "relevance": 0, "overall": 0,
+            "final_feedback": "Error parsing evaluation. Please try again.",
+            "improvements": "N/A"
+        }
+    except Exception as e:
+        logger.error(f"LLM Eval error: {e}")
+        return None
 
-    response = client.chat.completions.create(
-        model="gpt-4.1-nano",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.3
-    )
-
-    content = response.choices[0].message.content
-    return json.loads(content)
 
 
-# -------------------------------
-# Hybrid Score
-# -------------------------------
+# Hybrid Score Calculation
+
 
 def compute_hybrid_score(rule_score, llm_scores):
-
-    llm_scaled = llm_scores["overall"] * 10  # convert 0-10 → 0-100
-    final_score = (0.4 * rule_score) + (0.6 * llm_scaled)
-
-    return round(final_score)
+    """Combine rule-based and LLM scores (40/60 split)."""
+    if not llm_scores: return rule_score
+    return round((0.4 * rule_score) + (0.6 * llm_scores.get("overall", 0) * 10))
 
 
-# -------------------------------
-# Generate Spoken Feedback
-# -------------------------------
 
-def generate_tts_audio(text: str):
+# Text-to-Speech Feedback
+
+
+def generate_tts_audio(text):
+    """Generate spoken audio feedback using OpenAI TTS."""
     try:
         response = client.audio.speech.create(
             model="gpt-4o-mini-tts",
             voice="nova",
-            input=text
+            input=text[:4000] # Safe limit
         )
         return response.read()
     except Exception as e:
-        logger.error(f"Error generating spoken feedback: {e}")
+        logger.error(f"TTS error: {e}")
         return None
 
-# -------------------------------
-# Generate Dynamic Topics
-# -------------------------------
 
-_TOPIC_CACHE = []
-_LAST_FETCH_TIME = 0
+
+# Dynamic Topic Generation
+
+
+_TOPIC_CACHE, _LAST_FETCH_TIME = [], 0
+_DEFAULT_TOPICS = ["Daily Routine", "Travel Story", "Work Goals", "Tech Trends", "Hobbies", "Book Review"]
 
 def generate_topics(force_refresh=False):
-    """
-    Generates a list of 6 simple and everyday communication practice topics.
-    Uses caching to avoid hitting the API on every request unless forced.
-    """
+    """Generate practice topics with 1-hour cache."""
     global _TOPIC_CACHE, _LAST_FETCH_TIME
-    import time
-
-    current_time = time.time()
-    # Cache for 1 hour (3600 seconds)
-    if not force_refresh and _TOPIC_CACHE and (current_time - _LAST_FETCH_TIME < 3600):
+    if not force_refresh and _TOPIC_CACHE and (time.time() - _LAST_FETCH_TIME < 3600):
         return _TOPIC_CACHE
 
     try:
-        seed = current_time
-        prompt = f"""
-        Generate 6 simple and everyday communication practice topics. 
-        Each topic should be easy to talk about for 1-2 minutes.
-        Include common daily scenarios (Hobby, Food, Travel, School/Work, Family).
-        CRITICAL: Ensure all 6 topics are completely unique and different from each other.
-        Variety hint: {seed}
-        Return ONLY a JSON list of strings under key "topics".
-        Example: {{"topics": ["My Favorite Hobby", "A Memorable Vacation", "How to Make Tea", "My Weekend Plans", "Favorite Childhood Movie", "My Best Friend"]}}
-        """
-
+        prompt = "Generate 6 unique communication practice topics. Return JSON: {\"topics\": [\"topic1\", ...]}"
         response = client.chat.completions.create(
-            model="gpt-4.1-nano", # Using the smaller nano model for speed
+            model="gpt-4.1-nano",
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"}
         )
-
-        res_text = response.choices[0].message.content
-        data = json.loads(res_text)
-        
-        # Extract list regardless of key name used by AI
-        if isinstance(data, list):
-            _TOPIC_CACHE = data[:6]
-        elif isinstance(data, dict):
-            if "topics" in data:
-                _TOPIC_CACHE = data["topics"][:6]
-            else:
-                for val in data.values():
-                    if isinstance(val, list):
-                        _TOPIC_CACHE = val[:6]
-                        break
-        
-        if _TOPIC_CACHE:
-            _LAST_FETCH_TIME = current_time
+        data = _extract_json(response.choices[0].message.content)
+        if data and "topics" in data:
+            _TOPIC_CACHE = data["topics"][:6]
+            _LAST_FETCH_TIME = time.time()
             return _TOPIC_CACHE
-        
-        return ["My Favorite Hobby", "A Memorable Trip", "The Best Meal I Had", "My Role Model", "Future Goals", "A Productive Day"]
-        
-    except Exception as e:
-        logger.error(f"Error generating topics: {e}")
-        return ["My Favorite Hobby", "A Memorable Trip", "The Best Meal I Had", "My Role Model", "Future Goals", "A Productive Day"]
+    except Exception:
+        pass
+    return _DEFAULT_TOPICS

@@ -229,7 +229,7 @@ export default function HistoryPage() {
                                     </th>
                                     <th className="px-6 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Date & Time</th>
                                     <th className="px-10 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Assessment Topic</th>
-                                    <th className="px-10 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Relevance</th>
+
                                     <th className="px-10 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Score</th>
                                     <th className="px-10 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest">Performance</th>
                                     <th className="px-10 py-6 text-[10px] font-black text-[#4B6A88] uppercase tracking-widest text-right">Action</th>
@@ -284,12 +284,7 @@ export default function HistoryPage() {
                                             <td className="px-10 py-8 text-[#13a4ec] font-black uppercase text-xs tracking-widest">
                                                 {attempt.topic || "General Practice"}
                                             </td>
-                                            <td className="px-10 py-8">
-                                                <div className="flex items-center gap-1.5">
-                                                    <span className="material-symbols-outlined text-[14px] text-[#45EBA5]">psychology</span>
-                                                    <p className="text-xs font-bold text-white uppercase tracking-wider">{(attempt.relevance || 0) * 10}%</p>
-                                                </div>
-                                            </td>
+
                                             <td className="px-10 py-8">
                                                 <div className="flex items-center gap-4">
                                                     <span className="text-2xl font-black text-white tabular-nums">{attempt.score}</span>

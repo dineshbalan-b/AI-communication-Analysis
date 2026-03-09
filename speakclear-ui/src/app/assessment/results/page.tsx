@@ -51,7 +51,6 @@ export default function ResultsPage() {
     ];
 
     const breakdowns = [
-        { label: "Topic Relevance", value: safeRelevance * 10, color: "bg-[#13a4ec]" },
         { label: "Grammar & Structure", value: evalData.grammar * 10, color: "bg-[#13a4ec]" },
         { label: "Vocabulary Richness", value: evalData.vocabulary * 10, color: "bg-[#13a4ec]" },
         { label: "Communication Clarity", value: evalData.clarity * 10, color: "bg-[#13a4ec]" },
@@ -284,7 +283,6 @@ export default function ResultsPage() {
                                                 <div className="flex items-center">
                                                     <AudioPlayer
                                                         src={`http://127.0.0.1:8010${feedbackAudioUrl}`}
-                                                        autoPlay={true}
                                                     />
                                                 </div>
                                             )}

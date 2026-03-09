@@ -1,89 +1,90 @@
-import numpy as np
 import re
+import numpy as np
+import librosa
 
 
 # --------------------------------
-# AUDIO ANALYSIS
+# Audio Analysis
 # --------------------------------
 
 def analyze_audio(audio_path):
-    import librosa
-
+    """
+    Extract audio metrics from a WAV file:
+    - Vectorized pause statistics (NumPy)
+    - Speech ratio
+    - Efficient pitch variance
+    """
     y, sr = librosa.load(audio_path, sr=16000, mono=True)
-
     duration = librosa.get_duration(y=y, sr=sr)
 
-    # Short-term energy
-    frame_length = 2048
+    # Compute short-term energy (RMS)
     hop_length = 512
+    rms = librosa.feature.rms(y=y, frame_length=2048, hop_length=hop_length)[0]
 
-    rms = librosa.feature.rms(
-        y=y,
-        frame_length=frame_length,
-        hop_length=hop_length
-    )[0]
+    # Classify frames as speech or silence
+    # Absolute floor: if mean energy is very low, it's just silence/noise
+    mean_rms = np.mean(rms)
+    if mean_rms < 0.001:  # Absolute floor for silence
+        return {
+            "duration": duration,
+            "speech_ratio": 0.0,
+            "total_pause_time": duration,
+            "avg_pause": duration,
+            "max_pause": duration,
+            "pause_count": 1,
+            "pitch_variance": 0,
+            "energy_variance": 0,
+        }
 
-    # Silence threshold
-    silence_threshold = np.mean(rms) * 0.5
+    silence_threshold = max(mean_rms * 0.5, 0.0005)  # Cap threshold floor
+    is_silence = (rms < silence_threshold).astype(int)
+    speech_ratio = 1.0 - np.mean(is_silence)
 
-    silence_frames = rms < silence_threshold
-    speech_frames = rms >= silence_threshold
-
-    total_frames = len(rms)
-    silence_ratio = np.sum(silence_frames) / total_frames
-    speech_ratio = np.sum(speech_frames) / total_frames
-
-    # Pause durations
-    pause_durations = []
-    current_pause = 0
-
+    # Vectorized Pause Detection (Transitions)
+    # Find where silence starts (0->1) and ends (1->0)
+    diff = np.diff(np.concatenate(([0], is_silence, [0])))
+    starts = np.where(diff == 1)[0]
+    ends = np.where(diff == -1)[0]
+    
     frame_duration = hop_length / sr
+    pause_durations = (ends - starts) * frame_duration
+    
+    # Filter out extremely short "micro-pauses" < 100ms
+    pause_durations = pause_durations[pause_durations > 0.1]
 
-    for is_silence in silence_frames:
-        if is_silence:
-            current_pause += frame_duration
-        else:
-            if current_pause > 0:
-                pause_durations.append(current_pause)
-                current_pause = 0
-
-    if current_pause > 0:
-        pause_durations.append(current_pause)
-
-    total_pause_time = sum(pause_durations)
-    avg_pause = np.mean(pause_durations) if pause_durations else 0
-    max_pause = max(pause_durations) if pause_durations else 0
-    pause_count = len(pause_durations)
-
-    # Pitch variation (confidence indicator)
-    pitches, magnitudes = librosa.piptrack(y=y, sr=sr)
-    pitch_values = pitches[magnitudes > np.median(magnitudes)]
-
-    pitch_variance = np.var(pitch_values) if len(pitch_values) > 0 else 0
-
-    # Energy variation
-    energy_variance = np.var(rms)
+    # Efficient Pitch Tracking
+    pitches, magnitudes = librosa.piptrack(y=y, sr=sr, hop_length=hop_length)
+    # Get strongest pitch per frame
+    pitch_values = []
+    for t in range(pitches.shape[1]):
+        index = magnitudes[:, t].argmax()
+        pitch = pitches[index, t]
+        if pitch > 0:
+            pitch_values.append(pitch)
+    
+    pitch_variance = np.var(pitch_values) if pitch_values else 0
 
     return {
         "duration": duration,
         "speech_ratio": speech_ratio,
-        "total_pause_time": total_pause_time,
-        "avg_pause": avg_pause,
-        "max_pause": max_pause,
-        "pause_count": pause_count,
+        "total_pause_time": np.sum(pause_durations),
+        "avg_pause": np.mean(pause_durations) if len(pause_durations) > 0 else 0,
+        "max_pause": np.max(pause_durations) if len(pause_durations) > 0 else 0,
+        "pause_count": len(pause_durations),
         "pitch_variance": pitch_variance,
-        "energy_variance": energy_variance
+        "energy_variance": np.var(rms),
     }
 
 
 # --------------------------------
-# TEXT ANALYSIS
+# Text Analysis
 # --------------------------------
 
 def analyze_text(transcript, speaking_time_seconds):
-
+    """
+    Extract text metrics from transcript using regex word boundaries.
+    """
     transcript = transcript.lower()
-
     words = re.findall(r'\b\w+\b', transcript)
     total_words = len(words)
 
@@ -91,40 +92,41 @@ def analyze_text(transcript, speaking_time_seconds):
     minutes = speaking_time_seconds / 60
     wpm = total_words / minutes if minutes > 0 else 0
 
-    # Filler words
+    # Filler words - Using word boundaries for accuracy
     filler_words = ["um", "uh", "like", "you know", "actually", "basically"]
-    filler_count = sum(transcript.count(filler) for filler in filler_words)
+    filler_count = 0
+    for filler in filler_words:
+        # Avoid double-counting "you know" vs "know"
+        pattern = rf'\b{re.escape(filler)}\b'
+        filler_count += len(re.findall(pattern, transcript))
 
     # Vocabulary richness
-    unique_words = len(set(words))
-    vocab_richness = unique_words / total_words if total_words > 0 else 0
+    vocab_richness = len(set(words)) / total_words if total_words > 0 else 0
 
-    # Sentence analysis
-    sentences = re.split(r'[.!?]', transcript)
-    sentences = [s.strip() for s in sentences if s.strip()]
-
-    avg_sentence_length = (
-        total_words / len(sentences) if len(sentences) > 0 else 0
-    )
+    # Sentence length
+    sentences = [s.strip() for s in re.split(r'[.!?]', transcript) if s.strip()]
+    avg_sentence_length = total_words / len(sentences) if sentences else 0
 
     return {
         "total_words": total_words,
         "wpm": wpm,
         "filler_count": filler_count,
         "vocab_richness": vocab_richness,
-        "avg_sentence_length": avg_sentence_length
+        "avg_sentence_length": avg_sentence_length,
     }
 
 
 # --------------------------------
-# FINAL COMMUNICATION SCORE
+# Rule-Based Communication Score
 # --------------------------------
 
 def compute_communication_score(audio_metrics, text_metrics):
-
+    """
+    Compute a communication score (0-100).
+    """
     score = 0
 
-    # Fluency scoring (WPM)
+    # Fluency (WPM)
     if 110 <= text_metrics["wpm"] <= 160:
         score += 20
     elif 90 <= text_metrics["wpm"] <= 180:
@@ -133,28 +135,16 @@ def compute_communication_score(audio_metrics, text_metrics):
         score += 5
 
     # Pause control
-    if audio_metrics["avg_pause"] < 1.5:
-        score += 15
-    else:
-        score += 5
+    score += 15 if audio_metrics["avg_pause"] < 1.5 else 5
 
     # Filler usage
-    if text_metrics["filler_count"] <= 2:
-        score += 15
-    else:
-        score += 5
+    score += 15 if text_metrics["filler_count"] <= 2 else 5
 
-    # Vocabulary richness
-    if text_metrics["vocab_richness"] > 0.6:
-        score += 15
-    else:
-        score += 8
+    # Vocabulary
+    score += 15 if text_metrics["vocab_richness"] > 0.6 else 8
 
-    # Pitch variation (avoid monotone)
-    if audio_metrics["pitch_variance"] > 50:
-        score += 15
-    else:
-        score += 5
+    # Pitch variation
+    score += 15 if audio_metrics["pitch_variance"] > 30 else 5
 
     # Speech ratio
     if 0.65 <= audio_metrics["speech_ratio"] <= 0.9:

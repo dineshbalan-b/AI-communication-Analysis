@@ -9,7 +9,7 @@ export default function AudioPlayer({ src, autoPlay = false, className = "" }: {
     const [duration, setDuration] = useState(0);
 
     useEffect(() => {
-        if (autoPlay && audioRef.current) {
+        if (autoPlay === true && audioRef.current) {
             // Browsers might block autoplay, so catch the error silently
             audioRef.current.play().then(() => {
                 setIsPlaying(true);
