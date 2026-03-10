@@ -35,7 +35,7 @@ SpeakClear AI is a premium, AI-driven communication analysis platform designed t
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/GiriPrasathGA/AI-communication-Analysis-main.git
+   git clone https://github.com/dineshbalan-b/AI-communication-Analysis.git
    cd AI-communication-Analysis-main
    ```
 
