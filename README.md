@@ -45,29 +45,24 @@ SpeakClear AI is a premium, AI-driven communication analysis platform designed t
    - **Mac/Linux**: `source .venv/bin/activate`
 4. Install dependencies:
    ```bash
-   pip install -r backend/requirements.txt
-   ```
-5. Create a `.env` file in the `backend/` directory and add your key:
-   ```env
-   OPENAI_API_KEY=your_api_key_here
+   git clone https://github.com/dineshbalan-b/AI-communication-Analysis.git
+   cd AI-communication-Analysis-main
    ```
 
-#### Frontend Setup
-1. Navigate to the UI folder:
-   ```bash
-   cd speakclear-ui
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+2. **Backend Setup**:
+   - Create a virtual environment: `python -m venv .venv`
+   - Activate it: `.venv\Scripts\activate` (Windows) or `source .venv/bin/activate` (Mac/Linux)
+   - Install dependencies: `pip install -r backend/requirements.txt`
+   - Create a `.env` file in the `backend/` directory and add your `OPENAI_API_KEY`.
 
----
+3. **Frontend Setup**:
+   - Navigate to the UI folder: `cd speakclear-ui`
+   - Install dependencies: `npm install`
 
-##  Running the Application
+### Running the Application
 
-### Option A: The Easy Way (Windows Only)
-Run the provided PowerShell script to start both the backend and frontend simultaneously:
+For Windows users, you can use the provided PowerShell script to start both servers simultaneously:
+
 ```powershell
 ./run_servers.ps1
 ```
@@ -86,7 +81,9 @@ cd speakclear-ui
 npm run dev
 ```
 
-The application will be available at **http://localhost:3000**.
+The application will be available at `http://localhost:3000`.
 
----
+## System Architecture
+
+![Architecture](System_architecture.png)
 
