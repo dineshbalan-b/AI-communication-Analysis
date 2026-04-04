@@ -25,7 +25,7 @@ export default function Assessment() {
     const fetchTopics = async (force = false) => {
         setRefreshing(true);
         try {
-            const resp = await fetch(`http://127.0.0.1:8010/api/topics${force ? "?force=true" : ""}`);
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8010'}/api/topics${force ? "?force=true" : ""}`);
             const data = await resp.json();
             if (data.status === "success") {
                 setTopics(data.topics);

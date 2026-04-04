@@ -52,7 +52,7 @@ export default function HistoryPage() {
 
     const fetchHistory = async (user: string) => {
         try {
-            const resp = await fetch(`http://127.0.0.1:8010/api/progress?username=${user}`);
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8010'}/api/progress?username=${user}`);
             const data = await resp.json();
             if (data.status === "success") {
                 setHistory(data.data); // Backend already sorts DESC
@@ -73,7 +73,7 @@ export default function HistoryPage() {
         setIsDeleting(true);
 
         try {
-            const resp = await fetch(`http://127.0.0.1:8010/api/session/${sessionToDelete}`, {
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8010'}/api/session/${sessionToDelete}`, {
                 method: 'DELETE'
             });
             const data = await resp.json();
@@ -97,7 +97,7 @@ export default function HistoryPage() {
     const confirmBulkDelete = async () => {
         setIsBulkDeleting(true);
         try {
-            const resp = await fetch(`http://127.0.0.1:8010/api/sessions/bulk-delete`, {
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8010'}/api/sessions/bulk-delete`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ids: selectedIds })

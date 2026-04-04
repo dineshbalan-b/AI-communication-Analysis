@@ -65,12 +65,17 @@ UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
 app = FastAPI(title="SpeakClear AI API")
 app.mount("/api/audio", StaticFiles(directory=UPLOADS_DIR), name="audio")
 
+frontend_url = os.getenv("FRONTEND_URL")
+origins = [
+    "http://localhost:3000", "http://127.0.0.1:3000",
+    "http://localhost:8010", "http://127.0.0.1:8010"
+]
+if frontend_url:
+    origins.append(frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000", "http://127.0.0.1:3000",
-        "http://localhost:8010", "http://127.0.0.1:8010"
-    ],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -282,7 +282,7 @@ export default function ResultsPage() {
                                             {feedbackAudioUrl && (
                                                 <div className="flex items-center">
                                                     <AudioPlayer
-                                                        src={`http://127.0.0.1:8010${feedbackAudioUrl}`}
+                                                        src={`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8010'}${feedbackAudioUrl}`}
                                                     />
                                                 </div>
                                             )}

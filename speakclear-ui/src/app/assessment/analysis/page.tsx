@@ -65,7 +65,7 @@ export default function AnalysisPage() {
             formData.append("username", username);
             formData.append("topic", topic);
 
-            const apiResponse = await fetch("http://127.0.0.1:8010/api/upload", {
+            const apiResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8010'}/api/upload`, {
                 method: "POST",
                 body: formData,
             });

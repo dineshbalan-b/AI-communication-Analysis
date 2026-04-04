@@ -36,7 +36,8 @@ export default function Login() {
         setErrorMsg("");
         setIsLoading(true);
 
-        const endpoint = mode === "login" ? "http://127.0.0.1:8010/api/login" : "http://127.0.0.1:8010/api/register";
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8010";
+        const endpoint = mode === "login" ? `${baseUrl}/api/login` : `${baseUrl}/api/register`;
         const formData = new FormData();
         formData.append("username", username);
         formData.append("password", password);

@@ -3,9 +3,8 @@ import numpy as np
 import librosa
 
 
-# --------------------------------
 # Audio Analysis
-# --------------------------------
+
 
 def analyze_audio(audio_path):
     """
@@ -76,9 +75,9 @@ def analyze_audio(audio_path):
     }
 
 
-# --------------------------------
+
 # Text Analysis
-# --------------------------------
+
 
 def analyze_text(transcript, speaking_time_seconds):
     """
@@ -116,9 +115,9 @@ def analyze_text(transcript, speaking_time_seconds):
     }
 
 
-# --------------------------------
+
 # Rule-Based Communication Score
-# --------------------------------
+
 
 def compute_communication_score(audio_metrics, text_metrics):
     """

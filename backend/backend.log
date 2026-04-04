@@ -1228,3 +1228,16 @@ PermissionError: [WinError 32] The process cannot access the file because it is 
 2026-03-09 15:05:50,957 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
 2026-03-09 15:05:55,338 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
 2026-03-09 15:06:06,764 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-15 16:43:47,140 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-15 16:43:58,022 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-15 16:45:53,885 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-15 16:46:05,081 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-15 16:46:06,403 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-15 16:46:08,718 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-15 16:46:21,377 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/speech "HTTP/1.1 200 OK"
+2026-03-30 15:08:39,177 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-30 15:08:42,544 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-30 15:08:44,937 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-30 15:08:47,168 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/chat/completions "HTTP/1.1 200 OK"
+2026-03-30 15:10:13,681 [INFO] speakclear.llm: Transcribing processed_audio.wav...
+2026-03-30 15:10:20,894 [INFO] httpx: HTTP Request: POST https://apidev.navigatelabsai.com/audio/transcriptions "HTTP/1.1 200 OK"
